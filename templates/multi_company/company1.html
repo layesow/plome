@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Company</title>
+    <!-- Add your CSS and JavaScript includes here, if needed -->
+</head>
+<body>
+    <h1>Select Your Company</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        <label for="company">Choose a Company:</label>
+        <select name="company" id="company">
+            {% for company in companies %}
+                <option value="{{ company.id }}">{{ company.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Select</button>
+    </form>
+
+    <!-- Add any additional content or styling as needed -->
+
+</body>
+</html>

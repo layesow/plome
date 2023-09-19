@@ -1,0 +1,142 @@
+<!-- edit_doisser_lead.html -->
+<div class="modal fade" id="editModal-{{ doisser.id }}" tabindex="-1" role="dialog"
+                            aria-labelledby="editModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="editModalLabel">Edit Lead
+                                  </h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+            <div class="modal-body">
+                                  <form id="editForm-{{ doisser.id }}" method="post"
+                                    action="{% url 'edit_doisser_lead' doisser.id %}">
+                                    {% csrf_token %}
+                       
+                    <!-- Fields for each attribute -->
+                    <div class="form-group">
+                        <label for="date_dinscription">Date d'Inscription</label>
+                        <input type="text" required autocomplete="off" class="form-control" id="date_dinscription" name="date_dinscription" value="{{ doisser.date_dinscription }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="numero_edof">Numero EDof</label>
+                        <input type="text"  required autocomplete="off" class="form-control" id="numero_edof" name="numero_edof" value="{{ doisser.numero_edof }}" >
+                    </div>
+                    <div class="form-group">
+                        <label for="nom">Nom</label>
+                        <input type="text"  required autocomplete="off" class="form-control" id="nom" name="nom" value="{{ doisser.nom }}" >
+                    </div>
+                    <div class="form-group">
+                        <label for="prenom">Prenom</label>
+                        <input type="text"  required autocomplete="off" class="form-control" id="prenom" name="prenom" value="{{ doisser.prenom }}" >
+                    </div>
+                    <div class="form-group">
+                        <label for="telephone">Telephone</label>
+                        <input type="text" required autocomplete="off" class="form-control" id="telephone" name="telephone" value="{{ doisser.telephone }}" >
+                    </div>
+                    <div class="form-group">
+                        <label for="mail">Mail</label>
+                        <input type="email" required autocomplete="off" class="form-control" id="mail" name="mail" value="{{ doisser.mail }}" >
+                    </div>
+                    <div class="form-group">
+                        <label for="address_postal">Address Postal</label>
+                        <input type="text" required autocomplete="off" class="form-control" id="address_postal" name="address_postal" value="{{ doisser.address_postal }}" >
+                    </div>
+                    <div class="form-group">
+                    <label for="statut_edof">Statut EDof</label>
+                    <input type="text"  required autocomplete="off" class="form-control" id="statut_edof" name="statut_edof" value="{{ doisser.statut_edof }}" >
+                    </div>
+                    <div class="form-group">
+                        <label for="challenge">Challenge</label>
+                        <input type="text" required autocomplete="off" class="form-control" id="challenge" name="challenge" value="{{ doisser.challenge }}" >
+                    </div>
+                    <div class="form-group">
+                        <label for="colis_a_preparer">Colis a Preparer</label>
+                        <input type="text" required autocomplete="off" class="form-control" id="colis_a_preparer" name="colis_a_preparer" value="{{ doisser.colis_a_preparer }}" >
+                    </div>
+                    <div class="form-group">
+                        <label for="prix_net">Prix Net</label>
+                        <input type="text" required autocomplete="off" class="form-control" id="prix_net" name="prix_net" value="{{ doisser.prix_net }}" >
+                    </div>
+                    <div class="form-group">
+                        <label for="criteres_com">Criteres Com</label>
+                        <input type="text" required autocomplete="off" class="form-control" id="criteres_com" name="criteres_com" value="{{ doisser.criteres_com }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="date_prevue_d_entree_en_formation">Date Prevue d'Entree en Formation</label>
+                        <input type="text" required autocomplete="off" class="form-control" id="date_prevue_d_entree_en_formation" name="date_prevue_d_entree_en_formation" value="{{ doisser.date_prevue_d_entree_en_formation }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="date_prevue_de_fin_de_formation">Date Prevue de Fin de Formation</label>
+                        <input type="text" required autocomplete="off" class="form-control" id="date_prevue_de_fin_de_formation" name="date_prevue_de_fin_de_formation" value="{{ doisser.date_prevue_de_fin_de_formation }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="appel_effectue_le_date_time">Appel Effectue le Date/Time</label>
+                        <input type="text" required autocomplete="off" class="form-control" id="appel_effectue_le_date_time" name="appel_effectue_le_date_time" value="{{ doisser.appel_effectue_le_date_time }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="appel_effectue_le_motifs">Appel Effectue le Motifs</label>
+                        <input type="text" required autocomplete="off" class="form-control" id="appel_effectue_le_motifs" name="appel_effectue_le_motifs" value="{{ doisser.appel_effectue_le_motifs }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="rdv_confirme_dateandtime">RDV Confirme Date and Time</label>
+                        <input type="text" required autocomplete="off" class="form-control" id="rdv_confirme_dateandtime" name="rdv_confirme_dateandtime" value="{{ doisser.rdv_confirme_dateandtime }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="rdv_confirme_confirmateur">RDV Confirme Confirmateur</label>
+                        <input type="text" required autocomplete="off" class="form-control" id="rdv_confirme_confirmateur" name="rdv_confirme_confirmateur" value="{{ doisser.rdv_confirme_confirmateur }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="rdv_confirme_statut_service_confirmateur">RDV Confirme Statut Service Confirmateur</label>
+                        <input type="text" required autocomplete="off" class="form-control" id="rdv_confirme_statut_service_confirmateur" name="rdv_confirme_statut_service_confirmateur" value="{{ doisser.rdv_confirme_statut_service_confirmateur }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="inscription_visio_entree_audio">Inscription Visio Entree Audio</label>
+                        <input type="text" required autocomplete="off" class="form-control" id="inscription_visio_entree_audio" name="inscription_visio_entree_audio" value="{{ doisser.inscription_visio_entree_audio }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="inscription_visio_entree_niveau_de_relance">Inscription Visio Entree Niveau de Relance</label>
+                        <input type="text" required autocomplete="off" class="form-control" id="inscription_visio_entree_niveau_de_relance" name="inscription_visio_entree_niveau_de_relance" value="{{ doisser.inscription_visio_entree_niveau_de_relance }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="inscription_visio_entree_somme_facturee">Inscription Visio Entree Somme Facturee</label>
+                        <input type="text" required autocomplete="off" class="form-control" id="inscription_visio_entree_somme_facturee" name="inscription_visio_entree_somme_facturee" value="{{ doisser.inscription_visio_entree_somme_facturee }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="inscription_visio_entree_date_de_facturation">Inscription Visio Entree Date de Facturation</label>
+                        <input type="text" required autocomplete="off" class="form-control" id="inscription_visio_entree_date_de_facturation" name="inscription_visio_entree_date_de_facturation" value="{{ doisser.inscription_visio_entree_date_de_facturation }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="inscription_visio_entree_date_d_encaissement">Inscription Visio Entree Date d'Encaissement</label>
+                        <input type="text" required autocomplete="off" class="form-control" id="inscription_visio_entree_date_d_encaissement" name="inscription_visio_entree_date_d_encaissement" value="{{ doisser.inscription_visio_entree_date_d_encaissement }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="inscription_visio_entree_facture">Inscription Visio Entree Facture</label>
+                        <input type="text" required autocomplete="off" class="form-control" id="inscription_visio_entree_facture" name="inscription_visio_entree_facture" value="{{ doisser.inscription_visio_entree_facture }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="inscription_visio_entree_num_facture">Inscription Visio Entree Num Facture</label>
+                        <input type="text" required autocomplete="off" class="form-control" id="inscription_visio_entree_num_facture" name="inscription_visio_entree_num_facture" value="{{ doisser.inscription_visio_entree_num_facture }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="inscription_visio_entree_numero_de_suivi_vers_point_relais">Inscription Visio Entree Numero de Suivi vers Point Relais</label>
+                        <input type="text" required autocomplete="off" class="form-control" id="inscription_visio_entree_numero_de_suivi_vers_point_relais" name="inscription_visio_entree_numero_de_suivi_vers_point_relais" value="{{ doisser.inscription_visio_entree_numero_de_suivi_vers_point_relais }}">
+                    </div>
+                    <div class="form-group">
+                    <label for="inscription_visio_entree_commentaires">Inscription Visio Entree Commentaires</label>
+                    <input type="text" required autocomplete="off" class="form-control" id="inscription_visio_entree_commentaires" name="inscription_visio_entree_commentaires" value="{{ doisser.inscription_visio_entree_commentaires }}">
+                </div>
+                <div class="form-group">
+                    <label for="inscription_visio_entree_statut_colis">Inscription Visio Entree Statut Colis</label>
+                    <input type="text" required autocomplete="off" class="form-control" id="inscription_visio_entree_statut_colis" name="inscription_visio_entree_statut_colis" value="{{ doisser.inscription_visio_entree_statut_colis }}">
+                </div>
+                <!-- Add similar fields for other attributes -->
+
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
