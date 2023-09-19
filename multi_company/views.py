@@ -294,36 +294,41 @@ def select_company(request):
     return render(request, 'multi_company/company1.html', {'companies': companies})
 
 
-from django.shortcuts import render, redirect
 from .models import Doisser
+from django.shortcuts import render, redirect
+
+# Your parse_date function here
 
 def add_doisser_lead(request):
     if request.method == 'POST':
-        # Get form data
-        date_dinscription = request.POST.get('date_dinscription', None)
+        # Get form data with default value of None for empty fields
+        date_dinscription = parse_date(request.POST.get('date_dinscription', None))
         numero_edof = request.POST.get('numero_edof', None)
         nom = request.POST.get('nom', None)
         prenom = request.POST.get('prenom', None)
-        telephone = request.POST.get('telephone', None)
+        telephone = int(request.POST.get('telephone')) if request.POST.get('telephone').isdigit() else None
         mail = request.POST.get('mail', None)
         address_postal = request.POST.get('address_postal', None)
         statut_edof = request.POST.get('statut_edof', None)
         challenge = request.POST.get('challenge', None)
         colis_a_preparer = request.POST.get('colis_a_preparer', None)
         prix_net = request.POST.get('prix_net', None)
+        prix_net = float(prix_net) if prix_net and prix_net.strip() else None
         criteres_com = request.POST.get('criteres_com', None)
-        date_prevue_d_entree_en_formation = request.POST.get('date_prevue_d_entree_en_formation', None)
-        date_prevue_de_fin_de_formation = request.POST.get('date_prevue_de_fin_de_formation', None)
-        appel_effectue_le_date_time = request.POST.get('appel_effectue_le_date_time', None)
+        criteres_com = float(criteres_com) if criteres_com and criteres_com.strip() else None
+        date_prevue_d_entree_en_formation = parse_date(request.POST.get('date_prevue_d_entree_en_formation', None))
+        date_prevue_de_fin_de_formation = parse_date(request.POST.get('date_prevue_de_fin_de_formation', None))
+        appel_effectue_le_date_time = parse_date(request.POST.get('appel_effectue_le_date_time', None))
         appel_effectue_le_motifs = request.POST.get('appel_effectue_le_motifs', None)
-        rdv_confirme_dateandtime = request.POST.get('rdv_confirme_dateandtime', None)
+        rdv_confirme_dateandtime = parse_date(request.POST.get('rdv_confirme_dateandtime', None))
         rdv_confirme_confirmateur = request.POST.get('rdv_confirme_confirmateur', None)
         rdv_confirme_statut_service_confirmateur = request.POST.get('rdv_confirme_statut_service_confirmateur', None)
         inscription_visio_entree_audio = request.POST.get('inscription_visio_entree_audio', None)
         inscription_visio_entree_niveau_de_relance = request.POST.get('inscription_visio_entree_niveau_de_relance', None)
         inscription_visio_entree_somme_facturee = request.POST.get('inscription_visio_entree_somme_facturee', None)
-        inscription_visio_entree_date_de_facturation = request.POST.get('inscription_visio_entree_date_de_facturation', None)
-        inscription_visio_entree_date_d_encaissement = request.POST.get('inscription_visio_entree_date_d_encaissement', None)
+        inscription_visio_entree_somme_facturee = float(inscription_visio_entree_somme_facturee) if inscription_visio_entree_somme_facturee and inscription_visio_entree_somme_facturee.strip() else None
+        inscription_visio_entree_date_de_facturation = parse_date(request.POST.get('inscription_visio_entree_date_de_facturation', None))
+        inscription_visio_entree_date_d_encaissement = parse_date(request.POST.get('inscription_visio_entree_date_d_encaissement', None))
         inscription_visio_entree_facture = request.POST.get('inscription_visio_entree_facture', None)
         inscription_visio_entree_num_facture = request.POST.get('inscription_visio_entree_num_facture', None)
         inscription_visio_entree_numero_de_suivi_vers_point_relais = request.POST.get('inscription_visio_entree_numero_de_suivi_vers_point_relais', None)
@@ -332,7 +337,7 @@ def add_doisser_lead(request):
         # Handle JSONField separately (assuming it's sent as JSON in the POST request)
         custom_fields = request.POST.get('custom_fields', None)
 
-        # Create a new Doisser Lead record
+        # Create a new Doisser Lead record with empty fields
         doisser_lead = Doisser(
             date_dinscription=date_dinscription,
             numero_edof=numero_edof,
@@ -372,6 +377,7 @@ def add_doisser_lead(request):
 
     # If the request is not a POST request, simply render the page
     return render(request, 'multi_company/doisser.html')
+
 
 
 
