@@ -515,36 +515,37 @@
 
 <!-- Your JavaScript code -->
 <script>
-  $(document).ready(function() {
-    // Listen to the click event of the "Save Changes" button within the modals
-    $('.modal').on('click', 'button[name="edit_doisser_lead"]', function(event) {
-      // Find the form inside the modal
-      var form = $(this).closest('.modal-content').find('form');
+$(document).ready(function() {
+  // Listen to the click event of the "Save Changes" button within the modals
+  $('.modal').on('click', 'button[name="edit_doisser_lead"]', function(event) {
+    // Find the form inside the modal
+    var form = $(this).closest('.modal-content').find('form');
 
-      // Prevent the default form submission
-      event.preventDefault();
+    // Prevent the default form submission
+    event.preventDefault();
 
-      // Serialize the form data
-      var formData = form.serialize();
+    // Serialize the form data
+    var formData = form.serialize();
 
-      // Send a POST request to the server
-      $.ajax({
-        type: 'POST',
-        url: form.attr('action'),
-        data: formData,
-        success: function(response) {
-          if (response.success) {
-            $('#savingMessage').text('Data saved successfully').show();
-          } else {
-            $('#savingMessage').text('Error: ' + response.error_message).show();
-          }
-        },
-        error: function() {
-          $('#savingMessage').text('An error occurred. Please try again.').show();
+    // Send a POST request to the server
+    $.ajax({
+      type: 'POST',
+      url: form.attr('action'),
+      data: formData,
+      success: function(response) {
+        if (response.success) {
+          $('#savingMessage').text('Data saved successfully').show();
+        } else {
+          $('#savingMessage').text('Error: ' + response.error_message).show();
         }
-      });
+      },
+      error: function() {
+        $('#savingMessage').text('An error occurred. Please try again.').show();
+      }
     });
   });
+});
+
 </script>
 
 

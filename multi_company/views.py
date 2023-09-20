@@ -19,8 +19,6 @@ def doisser(request):
 
 
 # multi_company/views.py
-import json
-import math
 import pandas as pd
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -218,7 +216,7 @@ def import_doisser_leads(request):
 
 from .models import Doisser
 from django.http import JsonResponse
-  # Import the parse_date function from your module
+# Import the parse_date function from your modulepars
 
 def edit_doisser_lead(request, record_id):
     lead = get_object_or_404(Doisser, id=record_id)
@@ -268,8 +266,6 @@ def edit_doisser_lead(request, record_id):
 
 
 # views.py
-# views.py
-
 
 from django.shortcuts import render, redirect
 from .models import Company
