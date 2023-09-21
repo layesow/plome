@@ -60,7 +60,7 @@ class Lead(models.Model):
         ('rappel', 'Rappel'),
         ('faux_numero', 'Faux numéro'),
         ('pas_de_budget', 'Pas de budget'),
-        ('pas_interesse', 'Pas intéressé'),
+        ('pas_interesse', 'Pas intéressé'), 
         ('ne_pas_rappele', 'Ne pas rappeler'),
         ('signe_pole_emploi', 'Signé Pôle Emploi'),
         ('signe_cpf', 'Signé CPF'),

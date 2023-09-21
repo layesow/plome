@@ -51,7 +51,7 @@ class Doisser(models.Model):
     custom_fields = models.JSONField(null=True, blank=True)
 
     def _str_(self):
-        return self.mail
+        return self.prenom
 
 
 

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <!--  -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+                    
+                    <form action="{% url 'update_dossier_data' viewdata.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="row">                           
+                            <div class="col-md-6 mb-3">
+                                <input type="date" name="date_dinscription" id="date_dinscription" placeholder="date_dinscription" class="form-control" value="{{viewdata.date_dinscription|date:'Y-m-d'}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="numero_edof" id="numero_edof" placeholder="numero_edof" class="form-control" value="{{viewdata.numero_edof}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="nom" id="nom" placeholder="nom" class="form-control" value="{{viewdata.nom}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="prenom" id="prenom" placeholder="prenom" class="form-control" value="{{viewdata.prenom}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="tel" name="telephone" id="telephone" placeholder="telephone" class="form-control" value="{{viewdata.telephone}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="email" name="mail" id="mail" placeholder="mail" class="form-control" value="{{viewdata.mail}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="address_postal" id="address_postal" placeholder="address_postal" class="form-control" value="{{viewdata.address_postal}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="statut_edof" id="statut_edof" placeholder="statut_edof" class="form-control" value="{{viewdata.statut_edof}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="challenge" id="challenge" placeholder="challenge" class="form-control" value="{{viewdata.challenge}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="colis_a_preparer" id="colis_a_preparer" placeholder="colis_a_preparer" class="form-control" value="{{viewdata.colis_a_preparer}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="prix_net" id="prix_net" placeholder="prix_net" class="form-control" value="{{viewdata.prix_net}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="conseiller" id="conseiller" placeholder="conseiller" class="form-control" value="{{viewdata.conseiller}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="equipes" id="equipes" placeholder="equipes" class="form-control" value="{{viewdata.equipes}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="criteres_com" id="criteres_com" placeholder="criteres_com" class="form-control" value="{{viewdata.criteres_com}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="datetime-local" name="date_prevue_d_entree_en_formation" id="date_prevue_d_entree_en_formation" placeholder="date_prevue_d_entree_en_formation" class="form-control" value="{{viewdata.date_prevue_d_entree_en_formation|date:'Y-m-d\TH:i'}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="datetime-local" name="date_prevue_de_fin_de_formation" id="date_prevue_de_fin_de_formation" placeholder="date_prevue_de_fin_de_formation" class="form-control" value="{{viewdata.date_prevue_de_fin_de_formation|date:'Y-m-d\TH:i'}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="datetime-local" name="appel_effectue_le_date_time" id="appel_effectue_le_date_time" placeholder="appel_effectue_le_date_time" class="form-control" value="{{viewdata.appel_effectue_le_date_time|date:'Y-m-d\TH:i'}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="datetime-local" name="appel_effectue_le_motifs" id="appel_effectue_le_motifs" placeholder="appel_effectue_le_motifs" class="form-control" value="{{viewdata.appel_effectue_le_motifs|date:'Y-m-d\TH:i'}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="datetime-local" name="rdv_confirme_dateandtime" id="rdv_confirme_dateandtime" placeholder="rdv_confirme_dateandtime" class="form-control" value="{{viewdata.rdv_confirme_dateandtime|date:'Y-m-d\TH:i'}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="rdv_confirme_confirmateur" id="rdv_confirme_confirmateur" placeholder="rdv_confirme_confirmateur" class="form-control" value="{{viewdata.rdv_confirme_confirmateur}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="rdv_confirme_statut_service_confirmateur" id="rdv_confirme_statut_service_confirmateur" placeholder="rdv_confirme_statut_service_confirmateur" class="form-control" value="{{viewdata.rdv_confirme_statut_service_confirmateur}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="inscription_visio_entree_audio" id="inscription_visio_entree_audio" placeholder="inscription_visio_entree_audio" class="form-control" value="{{viewdata.inscription_visio_entree_audio}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="inscription_visio_entree_niveau_de_relance" id="inscription_visio_entree_niveau_de_relance" placeholder="inscription_visio_entree_niveau_de_relance" class="form-control" value="{{viewdata.inscription_visio_entree_niveau_de_relance}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="inscription_visio_entree_somme_facturee" id="inscription_visio_entree_somme_facturee" placeholder="inscription_visio_entree_somme_facturee" class="form-control" value="{{viewdata.inscription_visio_entree_somme_facturee}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="datetime-local" name="inscription_visio_entree_date_de_facturation" id="inscription_visio_entree_date_de_facturation" placeholder="inscription_visio_entree_date_de_facturation" class="form-control" value="{{viewdata.inscription_visio_entree_date_de_facturation|date:'Y-m-d\TH:i'}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="datetime-local" name="inscription_visio_entree_date_d_encaissement" id="inscription_visio_entree_date_d_encaissement" placeholder="inscription_visio_entree_date_d_encaissement" class="form-control" value="{{viewdata.inscription_visio_entree_date_d_encaissement|date:'Y-m-d\TH:i'}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="inscription_visio_entree_facture" id="inscription_visio_entree_facture" placeholder="inscription_visio_entree_facture" class="form-control" value="{{viewdata.inscription_visio_entree_facture}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="inscription_visio_entree_num_facture" id="inscription_visio_entree_num_facture" placeholder="inscription_visio_entree_num_facture" class="form-control" value="{{viewdata.inscription_visio_entree_num_facture}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="datetime-local" name="inscription_visio_entree_colis_a_envoyer_le" id="inscription_visio_entree_colis_a_envoyer_le" placeholder="inscription_visio_entree_colis_a_envoyer_le" class="form-control" value="{{viewdata.inscription_visio_entree_colis_a_envoyer_le|date:'Y-m-d\TH:i'}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="inscription_visio_entree_numero_de_suivi_vers_point_relais" id="inscription_visio_entree_numero_de_suivi_vers_point_relais" placeholder="inscription_visio_entree_numero_de_suivi_vers_point_relais" class="form-control" value="{{viewdata.inscription_visio_entree_numero_de_suivi_vers_point_relais}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="inscription_visio_entree_commentaires" id="inscription_visio_entree_commentaires" placeholder="inscription_visio_entree_commentaires" class="form-control" value="{{viewdata.inscription_visio_entree_commentaires}}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="inscription_visio_entree_statut_colis" id="inscription_visio_entree_statut_colis" placeholder="inscription_visio_entree_statut_colis" class="form-control" value="{{viewdata.inscription_visio_entree_statut_colis}}">
+                            </div>
+                            
+                        </div>
+                        <hr>
+                        <input type="submit" value="Submit" class="btn btn-success">
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+    </body>
+
+    <!-- bs -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
+</html>

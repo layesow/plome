@@ -3,7 +3,10 @@
 {% block content %}
 <style>
     /* Custom CSS for styling form elements */
-  
+  .modal-dialog.modal-xl {
+    max-width: 70%; /* Adjust the percentage as needed */
+}
+
 
     .custom-checkbox-label {
         background-color: black; /* Change the checkbox background color to black when checked */
@@ -289,222 +292,131 @@
         </tbody>
       </table>
 
-     {% for record in records %}
+    {% for record in records %}
+  <!-- Define the modal for each record -->
+  <div class="modal fade" id="editModal-{{ record.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editModalLabel">Edit Doisser</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
 
-<!-- Define the modal for each record -->
-<div class="modal fade" id="editModal-{{ record.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editModalLabel">Edit Doisser</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <form method="POST" action="{% url 'edit_doisser_lead' record.id %}?edit=true">
-        {% csrf_token %}
-      <div class="modal-body">
-         <div id="savingMessage" style="display: none;">Saving Doisser lead...</div>
-        <form id="editForm-{{ record.id }}">
-          <!-- Date d'Inscription -->
-          <div class="form-group">
-            <label for="date_dinscription">Date d'Inscription:</label>
-            <input type="date" class="form-control" id="date_dinscription" name="date_dinscription" value="{{ record.date_dinscription }}">
-          </div>
-
-          <!-- Numero EDof -->
-          <div class="form-group">
-            <label for="numero_edof">Numero EDof:</label>
-            <input type="text" class="form-control" id="numero_edof" name="numero_edof" value="{{ record.numero_edof }}">
-          </div>
-
-          <!-- Nom -->
-          <div class="form-group">
-            <label for="nom">Nom:</label>
-            <input type="text" class="form-control" id="nom" name="nom" value="{{ record.nom }}">
-          </div>
-
-          <!-- Prenom -->
-          <div class="form-group">
-            <label for="prenom">Prenom:</label>
-            <input type="text" class="form-control" id="prenom" name="prenom" value="{{ record.prenom }}">
-          </div>
-
-          <!-- Telephone -->
-          <div class="form-group">
-            <label for="telephone">Telephone:</label>
-            <input type="tel" class="form-control" id="telephone" name="telephone" value="{{ record.telephone }}">
-          </div>
-
-          <!-- Mail -->
-          <div class="form-group">
-            <label for="mail">Mail:</label>
-            <input type="email" class="form-control" id="mail" name="mail" value="{{ record.mail }}">
-          </div>
-
-          <!-- Address Postal -->
-          <div class="form-group">
-            <label for="address_postal">Address Postal:</label>
-            <input type="text" class="form-control" id="address_postal" name="address_postal" value="{{ record.address_postal }}">
-          </div>
-
-          <!-- Statut EDof -->
-          <div class="form-group">
-            <label for="statut_edof">Statut EDof:</label>
-            <input type="text" class="form-control" id="statut_edof" name="statut_edof" value="{{ record.statut_edof }}">
-          </div>
-
-          <!-- Challenge -->
-          <div class="form-group">
-            <label for="challenge">Challenge:</label>
-            <input type="text" class="form-control" id="challenge" name="challenge" value="{{ record.challenge }}">
-          </div>
-
-          <!-- Colis à Preparer -->
-          <div class="form-group">
-            <label for="colis_a_preparer">Colis à Preparer:</label>
-            <input type="text" class="form-control" id="colis_a_preparer" name="colis_a_preparer" value="{{ record.colis_a_preparer }}">
-          </div>
-
-          <!-- Prix Net -->
-          <div class="form-group">
-            <label for="prix_net">Prix Net:</label>
-            <input type="number" class="form-control" id="prix_net" name="prix_net" value="{{ record.prix_net }}">
-          </div>
-
-          <!-- Conseiller -->
-          <div class="form-group">
-            <label for="conseiller">Conseiller:</label>
-            <input type="text" class="form-control" id="conseiller" name="conseiller" value="{{ record.conseiller }}">
-          </div>
-
-          <!-- Équipes -->
-          <div class="form-group">
-            <label for="equipes">Équipes:</label>
-            <input type="text" class="form-control" id="equipes" name="equipes" value="{{ record.equipes }}">
-          </div>
-
-          <!-- Critères Com -->
-          <div class="form-group">
-            <label for="criteres_com">Critères Com:</label>
-            <input type="number" class="form-control" id="criteres_com" name="criteres_com" value="{{ record.criteres_com }}">
-          </div>
-
-          <!-- Date Prévue d'Entrée en Formation -->
-          <div class="form-group">
-            <label for="date_prevue_d_entree_en_formation">Date Prévue d'Entrée en Formation:</label>
-            <input type="datetime-local" class="form-control" id="date_prevue_d_entree_en_formation" name="date_prevue_d_entree_en_formation" value="{{ record.date_prevue_d_entree_en_formation|date:'Y-m-d\TH:i' }}">
-          </div>
-
-          <!-- Date Prévue de Fin de Formation -->
-          <div class="form-group">
-            <label for="date_prevue_de_fin_de_formation">Date Prévue de Fin de Formation:</label>
-            <input type="datetime-local" class="form-control" id="date_prevue_de_fin_de_formation" name="date_prevue_de_fin_de_formation" value="{{ record.date_prevue_de_fin_de_formation|date:'Y-m-d\TH:i' }}">
-          </div>
-
-          <!-- Appel Effectué le (Date et Heure) -->
-          <div class="form-group">
-            <label for="appel_effectue_le_date_time">Appel Effectué le (Date et Heure):</label>
-            <input type="datetime-local" class="form-control" id="appel_effectue_le_date_time" name="appel_effectue_le_date_time" value="{{ record.appel_effectue_le_date_time|date:'Y-m-d\TH:i' }}">
-          </div>
-
-          <!-- Appel Effectué le (Motifs) -->
-          <div class="form-group">
-            <label for="appel_effectue_le_motifs">Appel Effectué le (Motifs):</label>
-            <input type="text" class="form-control" id="appel_effectue_le_motifs" name="appel_effectue_le_motifs" value="{{ record.appel_effectue_le_motifs }}">
-          </div>
-
-          <!-- RDV Confirmé (Date et Heure) -->
-          <div class="form-group">
-            <label for="rdv_confirme_dateandtime">RDV Confirmé (Date et Heure):</label>
-            <input type="datetime-local" class="form-control" id="rdv_confirme_dateandtime" name="rdv_confirme_dateandtime" value="{{ record.rdv_confirme_dateandtime|date:'Y-m-d\TH:i' }}">
-          </div>
-
-          <!-- RDV Confirmé (Confirmateur) -->
-          <div class="form-group">
-            <label for="rdv_confirme_confirmateur">RDV Confirmé (Confirmateur):</label>
-            <input type="text" class="form-control" id="rdv_confirme_confirmateur" name="rdv_confirme_confirmateur" value="{{ record.rdv_confirme_confirmateur }}">
-          </div>
-
-          <!-- RDV Confirmé (Statut Service Confirmateur) -->
-          <div class="form-group">
-            <label for="rdv_confirme_statut_service_confirmateur">RDV Confirmé (Statut Service Confirmateur):</label>
-            <input type="text" class="form-control" id="rdv_confirme_statut_service_confirmateur" name="rdv_confirme_statut_service_confirmateur" value="{{ record.rdv_confirme_statut_service_confirmateur }}">
-          </div>
-
-          <!-- Inscription Visio Entrée Audio -->
-          <div class="form-group">
-            <label for="inscription_visio_entree_audio">Inscription Visio Entrée Audio:</label>
-            <input type="checkbox" class="form-control" id="inscription_visio_entree_audio" name="inscription_visio_entree_audio" {{ record.inscription_visio_entree_audio|yesno:"yes,no" }}>
-          </div>
-
-          <!-- Inscription Visio Entrée Niveau de Relance -->
-          <div class="form-group">
-            <label for="inscription_visio_entree_niveau_de_relance">Inscription Visio Entrée Niveau de Relance:</label>
-            <input type="text" class="form-control" id="inscription_visio_entree_niveau_de_relance" name="inscription_visio_entree_niveau_de_relance" value="{{ record.inscription_visio_entree_niveau_de_relance }}">
-          </div>
-
-          <!-- Inscription Visio Entrée Somme Facturée -->
-          <div class="form-group">
-            <label for="inscription_visio_entree_somme_facturee">Inscription Visio Entrée Somme Facturée:</label>
-            <input type="number" class="form-control" id="inscription_visio_entree_somme_facturee" name="inscription_visio_entree_somme_facturee" value="{{ record.inscription_visio_entree_somme_facturee }}">
-          </div>
-
-          <!-- Inscription Visio Entrée Date de Facturation -->
-          <div class="form-group">
-            <label for="inscription_visio_entree_date_de_facturation">Inscription Visio Entrée Date de Facturation:</label>
-            <input type="datetime-local" class="form-control" id="inscription_visio_entree_date_de_facturation" name="inscription_visio_entree_date_de_facturation" value="{{ record.inscription_visio_entree_date_de_facturation|date:'Y-m-d\TH:i' }}">
-          </div>
-
-          <!-- Inscription Visio Entrée Date d'Encaissement -->
-          <div class="form-group">
-            <label for="inscription_visio_entree_date_d_encaissement">Inscription Visio Entrée Date d'Encaissement:</label>
-            <input type="datetime-local" class="form-control" id="inscription_visio_entree_date_d_encaissement" name="inscription_visio_entree_date_d_encaissement" value="{{ record.inscription_visio_entree_date_d_encaissement|date:'Y-m-d\TH:i' }}">
-          </div>
-
-          <!-- Inscription Visio Entrée Facture -->
-          <div class="form-group">
-            <label for="inscription_visio_entree_facture">Inscription Visio Entrée Facture:</label>
-            <input type="checkbox" class="form-control" id="inscription_visio_entree_facture" name="inscription_visio_entree_facture" {{ record.inscription_visio_entree_facture|yesno:"yes,no" }}>
-          </div>
-
-          <!-- Inscription Visio Entrée Numéro de Facture -->
-          <div class="form-group">
-            <label for="inscription_visio_entree_num_facture">Inscription Visio Entrée Numéro de Facture:</label>
-            <input type="text" class="form-control" id="inscription_visio_entree_num_facture" name="inscription_visio_entree_num_facture" value="{{ record.inscription_visio_entree_num_facture }}">
-          </div>
-
-          <!-- Inscription Visio Entrée Numéro de Suivi vers Point Relais -->
-          <div class="form-group">
-            <label for="inscription_visio_entree_numero_de_suivi_vers_point_relais">Inscription Visio Entrée Numéro de Suivi vers Point Relais:</label>
-            <input type="text" class="form-control" id="inscription_visio_entree_numero_de_suivi_vers_point_relais" name="inscription_visio_entree_numero_de_suivi_vers_point_relais" value="{{ record.inscription_visio_entree_numero_de_suivi_vers_point_relais }}">
-          </div>
-
-          <!-- Inscription Visio Entrée Commentaires -->
-          <div class="form-group">
-            <label for="inscription_visio_entree_commentaires">Inscription Visio Entrée Commentaires:</label>
-            <input type="text" class="form-control" id="inscription_visio_entree_commentaires" name="inscription_visio_entree_commentaires" value="{{ record.inscription_visio_entree_commentaires }}">
-          </div>
-
-          <!-- Inscription Visio Entrée Statut Colis -->
-          <div class="form-group">
-            <label for="inscription_visio_entree_statut_colis">Inscription Visio Entrée Statut Colis:</label>
-            <input type="text" class="form-control" id="inscription_visio_entree_statut_colis" name="inscription_visio_entree_statut_colis" value="{{ record.inscription_visio_entree_statut_colis }}">
+        <form method="POST" action="{% url 'edit_doisser_lead' record.id %}?edit=true">
+          {% csrf_token %}
+          <div class="modal-body">
+            <div id="savingMessage-{{ record.id }}" style="display: none;">Saving Doisser lead...</div>
+            <!-- Date d'Inscription -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <input type="date" name="date_dinscription" id="date_dinscription-{{ record.id }}" placeholder="date_dinscription" class="form-control" value="{{record.date_dinscription|date:'Y-m-d'}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="text" name="numero_edof" id="numero_edof-{{ record.id }}" placeholder="numero_edof" class="form-control" value="{{record.numero_edof}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="text" name="nom" id="nom-{{ record.id }}" placeholder="nom" class="form-control" value="{{record.nom}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="text" name="prenom" id="prenom-{{ record.id }}" placeholder="prenom" class="form-control" value="{{record.prenom}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="tel" name="telephone" id="telephone-{{ record.id }}" placeholder="telephone" class="form-control" value="{{record.telephone}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="email" name="mail" id="mail-{{ record.id }}" placeholder="mail" class="form-control" value="{{record.mail}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="text" name="address_postal" id="address_postal-{{ record.id }}" placeholder="address_postal" class="form-control" value="{{record.address_postal}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="text" name="statut_edof" id="statut_edof-{{ record.id }}" placeholder="statut_edof" class="form-control" value="{{record.statut_edof}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="text" name="challenge" id="challenge-{{ record.id }}" placeholder="challenge" class="form-control" value="{{record.challenge}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="text" name="colis_a_preparer" id="colis_a_preparer-{{ record.id }}" placeholder="colis_a_preparer" class="form-control" value="{{record.colis_a_preparer}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="text" name="prix_net" id="prix_net-{{ record.id }}" placeholder="prix_net" class="form-control" value="{{record.prix_net}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="text" name="conseiller" id="conseiller-{{ record.id }}" placeholder="conseiller" class="form-control" value="{{record.conseiller}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="text" name="equipes" id="equipes-{{ record.id }}" placeholder="equipes" class="form-control" value="{{record.equipes}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="text" name="criteres_com" id="criteres_com-{{ record.id }}" placeholder="criteres_com" class="form-control" value="{{record.criteres_com}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="datetime-local" name="date_prevue_d_entree_en_formation" id="date_prevue_d_entree_en_formation-{{ record.id }}" placeholder="date_prevue_d_entree_en_formation" class="form-control" value="{{record.date_prevue_d_entree_en_formation|date:'Y-m-d\TH:i'}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="datetime-local" name="date_prevue_de_fin_de_formation" id="date_prevue_de_fin_de_formation-{{ record.id }}" placeholder="date_prevue_de_fin_de_formation" class="form-control" value="{{record.date_prevue_de_fin_de_formation|date:'Y-m-d\TH:i'}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="datetime-local" name="appel_effectue_le_date_time" id="appel_effectue_le_date_time-{{ record.id }}" placeholder="appel_effectue_le_date_time" class="form-control" value="{{record.appel_effectue_le_date_time|date:'Y-m-d\TH:i'}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="datetime-local" name="appel_effectue_le_motifs" id="appel_effectue_le_motifs-{{ record.id }}" placeholder="appel_effectue_le_motifs" class="form-control" value="{{record.appel_effectue_le_motifs|date:'Y-m-d\TH:i'}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="datetime-local" name="rdv_confirme_dateandtime" id="rdv_confirme_dateandtime-{{ record.id }}" placeholder="rdv_confirme_dateandtime" class="form-control" value="{{record.rdv_confirme_dateandtime|date:'Y-m-d\TH:i'}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="text" name="rdv_confirme_confirmateur" id="rdv_confirme_confirmateur-{{ record.id }}" placeholder="rdv_confirme_confirmateur" class="form-control" value="{{record.rdv_confirme_confirmateur}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="text" name="rdv_confirme_statut_service_confirmateur" id="rdv_confirme_statut_service_confirmateur-{{ record.id }}" placeholder="rdv_confirme_statut_service_confirmateur" class="form-control" value="{{record.rdv_confirme_statut_service_confirmateur}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="text" name="inscription_visio_entree_audio" id="inscription_visio_entree_audio-{{ record.id }}" placeholder="inscription_visio_entree_audio" class="form-control" value="{{record.inscription_visio_entree_audio}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="text" name="inscription_visio_entree_niveau_de_relance" id="inscription_visio_entree_niveau_de_relance-{{ record.id }}" placeholder="inscription_visio_entree_niveau_de_relance" class="form-control" value="{{record.inscription_visio_entree_niveau_de_relance}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="text" name="inscription_visio_entree_somme_facturee" id="inscription_visio_entree_somme_facturee-{{ record.id }}" placeholder="inscription_visio_entree_somme_facturee" class="form-control" value="{{record.inscription_visio_entree_somme_facturee}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="datetime-local" name="inscription_visio_entree_date_de_facturation" id="inscription_visio_entree_date_de_facturation-{{ record.id }}" placeholder="inscription_visio_entree_date_de_facturation" class="form-control" value="{{record.inscription_visio_entree_date_de_facturation|date:'Y-m-d\TH:i'}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="datetime-local" name="inscription_visio_entree_date_d_encaissement" id="inscription_visio_entree_date_d_encaissement-{{ record.id }}" placeholder="inscription_visio_entree_date_d_encaissement" class="form-control" value="{{record.inscription_visio_entree_date_d_encaissement|date:'Y-m-d\TH:i'}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="text" name="inscription_visio_entree_facture" id="inscription_visio_entree_facture-{{ record.id }}" placeholder="inscription_visio_entree_facture" class="form-control" value="{{record.inscription_visio_entree_facture}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="text" name="inscription_visio_entree_num_facture" id="inscription_visio_entree_num_facture-{{ record.id }}" placeholder="inscription_visio_entree_num_facture" class="form-control" value="{{record.inscription_visio_entree_num_facture}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="datetime-local" name="inscription_visio_entree_colis_a_envoyer_le" id="inscription_visio_entree_colis_a_envoyer_le-{{ record.id }}" placeholder="inscription_visio_entree_colis_a_envoyer_le" class="form-control" value="{{record.inscription_visio_entree_colis_a_envoyer_le|date:'Y-m-d\TH:i'}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="text" name="inscription_visio_entree_numero_de_suivi_vers_point_relais" id="inscription_visio_entree_numero_de_suivi_vers_point_relais-{{ record.id }}" placeholder="inscription_visio_entree_numero_de_suivi_vers_point_relais" class="form-control" value="{{record.inscription_visio_entree_numero_de_suivi_vers_point_relais}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="text" name="inscription_visio_entree_commentaires" id="inscription_visio_entree_commentaires-{{ record.id }}" placeholder="inscription_visio_entree_commentaires" class="form-control" value="{{record.inscription_visio_entree_commentaires}}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <input type="text" name="inscription_visio_entree_statut_colis" id="inscription_visio_entree_statut_colis-{{ record.id }}" placeholder="inscription_visio_entree_statut_colis" class="form-control" value="{{record.inscription_visio_entree_statut_colis}}">
+              </div>
+              <!-- Add more fields here -->
+            </div>
+            <hr>
+            <input type="submit" value="Submit" class="btn btn-success">
           </div>
         </form>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <!-- <button type="submit" name="save_facebook_form_ids">Save</button> -->
-        <button type="submit" name="edit_doisser_lead" class="btn btn-primary">Save Changes</button>
-      </div>
-      </form>
     </div>
   </div>
-</div>
-
-
 {% endfor %}
+
 
 
     </div>

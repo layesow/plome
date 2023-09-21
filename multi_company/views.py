@@ -13,76 +13,42 @@ def company_dropdown_view(request):
 
     
 
-def doisser(request):
-    return render(request,'multi_company/doisser.html')
-
-
-
-# multi_company/views.py
-import pandas as pd
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from .models import Doisser
-
-from datetime import datetime
-
-def parse_date(date_str):
-    # Define different date formats that may appear in the CSV
-    date_formats = ["%Y-%m-%d %H:%M:%S", "%m/%d/%Y %H:%M", "%d-%m-%Y %H:%M", "%d/%m/%Y"]
-
-    # Try parsing the date using each format until one succeeds or return None if all fail
-    for date_format in date_formats:
-        try:
-            parsed_date = datetime.strptime(str(date_str), date_format)
-            # Format the parsed date as '%Y-%m-%d %H:%M:%S'
-            formatted_date = parsed_date.strftime("%Y-%m-%d %H:%M:%S")
-            return formatted_date
-        except ValueError:
-            continue
-    return None
-
-
-
-import pandas as pd
-from .models import Doisser
-from django.contrib import messages
-from datetime import datetime
-
-from datetime import datetime
-
-
-from datetime import datetime
-
-def parse_date(date_str):
-    # Define different date formats that may appear in the CSV
-    date_formats = [
-        "%Y-%m-%d %H:%M:%S",   # Example: "2023-01-08 00:00:00"
-        "%m/%d/%Y %H:%M",      # Example: "1/8/2023 00:00"
-        "%d/%m/%Y",            # Example: "1/8/2023" or "08/01/2023"
-        "%d-%m-%Y %H:%M",      # Example: "08-01-2023 00:00"
-        "%Y-%m-%d",            # Example: "2023-01-08"
-        "%m/%d/%Y",            # Example: "1/8/2023" or "08/01/2023"
-        "%d/%m/%y",            # Example: "1/8/23" or "08/01/23"
-        "%d-%m-%y",            # Example: "08-01-23"
-        "%d.%m.%Y",            # Example: "08.01.2023"
-        "%d.%m.%y",            # Example: "08.01.23"
-        "%b %d, %Y",           # Example: "Jan 8, 2023"
-        "%b %d %Y",            # Example: "Jan 8 2023"
-    ]
-
-    # Try parsing the date using each format until one succeeds or return None if all fail
-    for date_format in date_formats:
-        try:
-            return datetime.strptime(str(date_str), date_format)
-        except ValueError:
-            continue
-    return None
-
+# def doisser(request):
+#     return render(request,'multi_company/doisser.html')
 
 
 def doisser(request):
     records = Doisser.objects.all()  # Fetch all Doisser records from the database
     return render(request, 'multi_company/doisser.html', {'records': records})
+
+
+import pandas as pd
+from .models import Doisser
+from django.contrib import messages
+import datetime
+
+def check_input_type(input_str):
+    input_str = input_str.strip()
+    
+    formats = [
+        ("%d-%m-%Y", "%Y-%m-%d"),
+        ("%d-%m-%Y %H:%M:%S", "%Y-%m-%d %H:%M:%S"),
+        ("%d-%m-%Y %H:%M", "%Y-%m-%d %H:%M:%S"),
+        ("%Y-%m-%d %H:%M:%S", None),
+        ("%Y-%m-%d", None),
+        ("%Y-%m-%d %H:%M", "%Y-%m-%d %H:%M:%S"),
+        ("%d/%m/%Y", "%Y-%m-%d")
+    ]
+    
+    for pattern, output_format in formats:
+        try:
+            date_obj = datetime.datetime.strptime(input_str, pattern)
+            return date_obj.strftime(output_format) if output_format else input_str
+        except ValueError:
+            pass
+    
+    return "1900-01-01 00:00:00" if not input_str else "Invalid"
+
 
 def import_doisser_leads(request):
     if request.method == 'POST':
@@ -119,58 +85,46 @@ def import_doisser_leads(request):
             "AF" : "inscription_visio_entree_date_d_encaissement",
             "AB" : "inscription_visio_entree_facture",
             "AC" : "inscription_visio_entree_num_facture",
-            # "AG :" : "inscription_visio_entree_colis_a_envoyer_le",
+            "AG" : "inscription_visio_entree_colis_a_envoyer_le",
             "AI" : "inscription_visio_entree_numero_de_suivi_vers_point_relais",
             "AJ" : "inscription_visio_entree_commentaires",
             "AH" : "inscription_visio_entree_statut_colis",
         }
-  
         df.rename(columns=column_mapping, inplace=True)
         df.fillna("", inplace=True)
         
         for _, row in df.iterrows():
-            # date_dinscription = datetime.strptime(str(row['date_dinscription']), "%d-%m-%Y %H:%M:%S").strftime("%Y-%m-%d %H:%M:%S")
-            # date_dinscription = datetime.strptime(str(row['date_dinscription']), "%Y-%m-%d").strftime("%Y-%m-%d %H:%M:%S")
+            date_dinscription = check_input_type(row['date_dinscription'])
+            numero_edof = int(row['numero_edof'].strip()) if row['numero_edof'].strip().isdigit() else None
 
-
-           # date_dinscription = datetime.strptime(row['date_dinscription'], "%d-%m-%Y").strftime("%Y-%m-%d")
-            date_dinscription = parse_date(row['date_dinscription'])
-            numero_edof=row['numero_edof'] if row['numero_edof'] else None
-            nom=row['nom'] 
+            # numero_edof=row['numero_edof']
+            nom=row['nom']
             prenom=row['prenom']
-            # telephone=row['telephone']
             telephone = int(row['telephone']) if row['telephone'].isdigit() else None if row['telephone'] else None
-
             mail=row['mail']
-            address_postal=row['address_postal'] if row['address_postal'] else None
-            statut_edof=row['statut_edof'] if row['address_postal'] else None
-            challenge=row['challenge'] if row['address_postal'] else None
-            colis_a_preparer=row['colis_a_preparer'] if row['colis_a_preparer'] else None
-            prix_net=row['prix_net'] if row['prix_net'] else None 
-            conseiller=row['conseiller'] if row['conseiller'] else None
-            equipes=row['equipes'] if row['equipes'] else None
+            address_postal=row['address_postal']
+            statut_edof=row['statut_edof']
+            challenge=row['challenge']
+            colis_a_preparer=row['colis_a_preparer']
+            prix_net=row['prix_net'] if row['prix_net'] else None
+            conseiller=row['conseiller']
+            equipes=row['equipes']
             criteres_com=row['criteres_com'] if row['criteres_com'] else None
-            date_prevue_d_entree_en_formation = parse_date(row['date_prevue_d_entree_en_formation'])
-          
-            date_prevue_de_fin_de_formation = parse_date(row['date_prevue_de_fin_de_formation'])
-            # appel_effectue_le_date_time=datetime.strptime(row['appel_effectue_le_date_time'], "%d-%m-%Y %H:%M:%S").strftime("%Y-%m-%d %H:%M:%S")
-            #appel_effectue_le_date_time = datetime.strptime(row['appel_effectue_le_date_time'], "%d-%m-%Y %H:%M:%S").strftime("%Y-%m-%d %H:%M:%S") if row['appel_effectue_le_date_time'] else None
-            appel_effectue_le_date_time = parse_date(row['appel_effectue_le_date_time'])
-            appel_effectue_le_motifs=datetime.strptime(row['appel_effectue_le_motifs'], "%d-%m-%Y %H:%M").strftime("%Y-%m-%d %H:%M:%S") if row['appel_effectue_le_motifs'] else None
-            #rdv_confirme_dateandtime=datetime.strptime(row['rdv_confirme_dateandtime'], "%d-%m-%Y %H:%M").strftime("%Y-%m-%d %H:%M:%S") if row['rdv_confirme_dateandtime'] else None
-            rdv_confirme_dateandtime = parse_date(row['rdv_confirme_dateandtime'])
-            rdv_confirme_confirmateur=row['rdv_confirme_confirmateur'] if row['rdv_confirme_confirmateur'] else None
-            rdv_confirme_statut_service_confirmateur=row['rdv_confirme_statut_service_confirmateur']  if row['rdv_confirme_statut_service_confirmateur'] else None
+            date_prevue_d_entree_en_formation=check_input_type(row['date_prevue_d_entree_en_formation'])
+            date_prevue_de_fin_de_formation=check_input_type(row['date_prevue_de_fin_de_formation'])
+            appel_effectue_le_date_time = check_input_type(row['appel_effectue_le_date_time'])
+            appel_effectue_le_motifs=check_input_type(row['appel_effectue_le_motifs'])
+            rdv_confirme_dateandtime=check_input_type(row['rdv_confirme_dateandtime'])
+            rdv_confirme_confirmateur=row['rdv_confirme_confirmateur']
+            rdv_confirme_statut_service_confirmateur=row['rdv_confirme_statut_service_confirmateur']
             inscription_visio_entree_audio=row['inscription_visio_entree_audio']
             inscription_visio_entree_niveau_de_relance=row['inscription_visio_entree_niveau_de_relance']
             inscription_visio_entree_somme_facturee=row['inscription_visio_entree_somme_facturee'] if row['inscription_visio_entree_somme_facturee'] else None 
-            inscription_visio_entree_date_de_facturation = parse_date(row['inscription_visio_entree_date_de_facturation'])
-           # inscription_visio_entree_date_de_facturation=datetime.strptime(row['inscription_visio_entree_date_de_facturation'], "%d-%m-%Y").strftime("%Y-%m-%d %H:%M:%S") if row['inscription_visio_entree_date_de_facturation'] else None
-            inscription_visio_entree_date_d_encaissement = parse_date(row['inscription_visio_entree_date_d_encaissement'])
-           # inscription_visio_entree_date_d_encaissement=datetime.strptime(row['inscription_visio_entree_date_d_encaissement'], "%d-%m-%Y").strftime("%Y-%m-%d %H:%M:%S") if row['inscription_visio_entree_date_d_encaissement'] else None
-            inscription_visio_entree_facture=row['inscription_visio_entree_facture']  if row['inscription_visio_entree_facture'] else None
-            inscription_visio_entree_num_facture=row['inscription_visio_entree_num_facture']  if row['inscription_visio_entree_num_facture'] else None
-            # inscription_visio_entree_colis_a_envoyer_le=datetime.strptime(row['inscription_visio_entree_colis_a_envoyer_le'], "%d-%m-%Y").strftime("%Y-%m-%d %H:%M:%S") if row['inscription_visio_entree_colis_a_envoyer_le'] else None
+            inscription_visio_entree_date_de_facturation=check_input_type(row['inscription_visio_entree_date_de_facturation'])
+            inscription_visio_entree_date_d_encaissement=check_input_type(row['inscription_visio_entree_date_d_encaissement'])
+            inscription_visio_entree_facture=row['inscription_visio_entree_facture']
+            inscription_visio_entree_num_facture=row['inscription_visio_entree_num_facture']
+            inscription_visio_entree_colis_a_envoyer_le=check_input_type(row['inscription_visio_entree_colis_a_envoyer_le'])
             inscription_visio_entree_numero_de_suivi_vers_point_relais=row['inscription_visio_entree_numero_de_suivi_vers_point_relais']
             inscription_visio_entree_commentaires=row['inscription_visio_entree_commentaires']
             inscription_visio_entree_statut_colis=row['inscription_visio_entree_statut_colis']
@@ -205,65 +159,93 @@ def import_doisser_leads(request):
                 inscription_visio_entree_date_d_encaissement = inscription_visio_entree_date_d_encaissement,
                 inscription_visio_entree_facture = inscription_visio_entree_facture,
                 inscription_visio_entree_num_facture = inscription_visio_entree_num_facture,
-                # inscription_visio_entree_colis_a_envoyer_le = inscription_visio_entree_colis_a_envoyer_le,
+                inscription_visio_entree_colis_a_envoyer_le = inscription_visio_entree_colis_a_envoyer_le,
                 inscription_visio_entree_numero_de_suivi_vers_point_relais = inscription_visio_entree_numero_de_suivi_vers_point_relais,
                 inscription_visio_entree_commentaires = inscription_visio_entree_commentaires,
                 inscription_visio_entree_statut_colis = inscription_visio_entree_statut_colis
             )
             Doisser_data.save()
-            
-    return redirect('doisser')
+        return redirect('doisser')
+    else:
+        Doisserdata = Doisser.objects.all()
+        return render(request, 'mutli_company/doisser.html', context={"Doisserdata" : Doisserdata})
 
-from .models import Doisser
-from django.http import JsonResponse
-# Import the parse_date function from your modulepars
 
-def edit_doisser_lead(request, record_id):
-    lead = get_object_or_404(Doisser, id=record_id)
-
+def edit_doisser_lead(request, pid=None):
     if request.method == 'POST':
-        try:
-            # Update the Doisser object with the data from the POST request
-            lead.date_dinscription = parse_date(request.POST.get('date_dinscription'))
-            lead.numero_edof = request.POST.get('numero_edof')
-            lead.nom = request.POST.get('nom')
-            lead.prenom = request.POST.get('prenom')
-            lead.telephone = int(request.POST.get('telephone')) if request.POST.get('telephone').isdigit() else None
-            lead.mail = request.POST.get('mail')
-            lead.address_postal = request.POST.get('address_postal')
-            lead.statut_edof = request.POST.get('statut_edof')
-            lead.challenge = request.POST.get('challenge')
-            lead.colis_a_preparer = request.POST.get('colis_a_preparer')
-            lead.prix_net = request.POST.get('prix_net')
-            lead.conseiller = request.POST.get('conseiller')
-            lead.equipes = request.POST.get('equipes')
-            lead.criteres_com = request.POST.get('criteres_com')
-            lead.date_prevue_d_entree_en_formation = parse_date(request.POST.get('date_prevue_d_entree_en_formation'))
-            lead.date_prevue_de_fin_de_formation = parse_date(request.POST.get('date_prevue_de_fin_de_formation'))
-            lead.appel_effectue_le_date_time = parse_date(request.POST.get('appel_effectue_le_date_time'))
-            lead.appel_effectue_le_motifs = parse_date(request.POST.get('appel_effectue_le_motifs'))
-            lead.rdv_confirme_dateandtime = parse_date(request.POST.get('rdv_confirme_dateandtime'))
-            lead.rdv_confirme_confirmateur = request.POST.get('rdv_confirme_confirmateur')
-            lead.rdv_confirme_statut_service_confirmateur = request.POST.get('rdv_confirme_statut_service_confirmateur')
-            lead.inscription_visio_entree_audio = request.POST.get('inscription_visio_entree_audio')
-            lead.inscription_visio_entree_niveau_de_relance = request.POST.get('inscription_visio_entree_niveau_de_relance')
-            lead.inscription_visio_entree_somme_facturee = request.POST.get('inscription_visio_entree_somme_facturee')
-            lead.inscription_visio_entree_date_de_facturation = parse_date(request.POST.get('inscription_visio_entree_date_de_facturation'))
-            lead.inscription_visio_entree_date_d_encaissement = parse_date(request.POST.get('inscription_visio_entree_date_d_encaissement'))
-            lead.inscription_visio_entree_facture = request.POST.get('inscription_visio_entree_facture')
-            lead.inscription_visio_entree_num_facture = request.POST.get('inscription_visio_entree_num_facture')
-            lead.inscription_visio_entree_numero_de_suivi_vers_point_relais = request.POST.get('inscription_visio_entree_numero_de_suivi_vers_point_relais')
-            lead.inscription_visio_entree_commentaires = request.POST.get('inscription_visio_entree_commentaires')
-            lead.inscription_visio_entree_statut_colis = request.POST.get('inscription_visio_entree_statut_colis')
+        edit_data = get_object_or_404(Doisser, pk=pid)
+        date_dinscription = request.POST.get('date_dinscription', None)
+        numero_edof = request.POST.get('numero_edof', None)
+        nom = request.POST.get('nom', None)
+        prenom = request.POST.get('prenom', None)
+        telephone = request.POST.get('telephone', None)
+        mail = request.POST.get('mail', None)
+        address_postal = request.POST.get('address_postal', None)
+        statut_edof = request.POST.get('statut_edof', None)
+        challenge = request.POST.get('challenge', None)
+        colis_a_preparer = request.POST.get('colis_a_preparer', None)
+        prix_net = request.POST.get('prix_net', None)
+        conseiller = request.POST.get('conseiller', None)
+        equipes = request.POST.get('equipes', None)
+        criteres_com = request.POST.get('criteres_com', None)
+        date_prevue_d_entree_en_formation = request.POST.get('date_prevue_d_entree_en_formation', None)
+        date_prevue_de_fin_de_formation = request.POST.get('date_prevue_de_fin_de_formation', None)
+        appel_effectue_le_date_time = request.POST.get('appel_effectue_le_date_time', None)
+        appel_effectue_le_motifs = request.POST.get('appel_effectue_le_motifs', None)
+        rdv_confirme_dateandtime = request.POST.get('rdv_confirme_dateandtime', None)
+        rdv_confirme_confirmateur = request.POST.get('rdv_confirme_confirmateur', None)
+        rdv_confirme_statut_service_confirmateur = request.POST.get('rdv_confirme_statut_service_confirmateur', None)
+        inscription_visio_entree_audio = request.POST.get('inscription_visio_entree_audio', None)
+        inscription_visio_entree_niveau_de_relance = request.POST.get('inscription_visio_entree_niveau_de_relance', None)
+        inscription_visio_entree_somme_facturee = request.POST.get('inscription_visio_entree_somme_facturee', None)
+        inscription_visio_entree_date_de_facturation = request.POST.get('inscription_visio_entree_date_de_facturation', None)
+        inscription_visio_entree_date_d_encaissement = request.POST.get('inscription_visio_entree_date_d_encaissement', None)
+        inscription_visio_entree_facture = request.POST.get('inscription_visio_entree_facture', None)
+        inscription_visio_entree_num_facture = request.POST.get('inscription_visio_entree_num_facture', None)
+        inscription_visio_entree_colis_a_envoyer_le = request.POST.get('inscription_visio_entree_colis_a_envoyer_le', None)
+        inscription_visio_entree_numero_de_suivi_vers_point_relais = request.POST.get('inscription_visio_entree_numero_de_suivi_vers_point_relais', None)
+        inscription_visio_entree_commentaires = request.POST.get('inscription_visio_entree_commentaires', None)
+        inscription_visio_entree_statut_colis = request.POST.get('inscription_visio_entree_statut_colis', None)
 
-            lead.save()  # Save the changes to the Doisser object
-            return JsonResponse({'success': True})
-        except Exception as e:
-            return JsonResponse({'success': False, 'error_message': str(e)})
+        # 
+        edit_data.date_dinscription=date_dinscription
+        edit_data.numero_edof=numero_edof
+        edit_data.nom=nom
+        edit_data.prenom=prenom
+        edit_data.telephone=telephone
+        edit_data.mail=mail
+        edit_data.address_postal=address_postal
+        edit_data.statut_edof=statut_edof
+        edit_data.challenge=challenge
+        edit_data.colis_a_preparer=colis_a_preparer
+        edit_data.prix_net=prix_net
+        edit_data.conseiller=conseiller
+        edit_data.equipes=equipes
+        edit_data.criteres_com=criteres_com
+        edit_data.date_prevue_d_entree_en_formation=date_prevue_d_entree_en_formation
+        edit_data.date_prevue_de_fin_de_formation=date_prevue_de_fin_de_formation
+        edit_data.appel_effectue_le_date_time=appel_effectue_le_date_time
+        edit_data.appel_effectue_le_motifs=appel_effectue_le_motifs
+        edit_data.rdv_confirme_dateandtime=rdv_confirme_dateandtime
+        edit_data.rdv_confirme_confirmateur=rdv_confirme_confirmateur
+        edit_data.rdv_confirme_statut_service_confirmateur=rdv_confirme_statut_service_confirmateur
+        edit_data.inscription_visio_entree_audio=inscription_visio_entree_audio
+        edit_data.inscription_visio_entree_niveau_de_relance=inscription_visio_entree_niveau_de_relance
+        edit_data.inscription_visio_entree_somme_facturee=inscription_visio_entree_somme_facturee
+        edit_data.inscription_visio_entree_date_de_facturation=inscription_visio_entree_date_de_facturation
+        edit_data.inscription_visio_entree_date_d_encaissement=inscription_visio_entree_date_d_encaissement
+        edit_data.inscription_visio_entree_facture=inscription_visio_entree_facture
+        edit_data.inscription_visio_entree_num_facture=inscription_visio_entree_num_facture
+        edit_data.inscription_visio_entree_colis_a_envoyer_le=inscription_visio_entree_colis_a_envoyer_le
+        edit_data.inscription_visio_entree_numero_de_suivi_vers_point_relais=inscription_visio_entree_numero_de_suivi_vers_point_relais
+        edit_data.inscription_visio_entree_commentaires=inscription_visio_entree_commentaires
+        edit_data.inscription_visio_entree_statut_colis=inscription_visio_entree_statut_colis
 
-    return render(request, 'multi_company/doisser.html', {'doisser': lead})
-
-
+        edit_data.save()
+        return redirect('doisser')
+    else:
+        viewdata = get_object_or_404(Doisser, pk=pid)
+        return render(request, 'mutli_company/edit_dossier_data.html', {"viewdata" : viewdata})
 
 # views.py
 
@@ -279,7 +261,9 @@ def select_company(request):
 
                 # Determine the HTML page to redirect based on the selected company
                 if selected_company.name == 'AA':
-                    return redirect('admin_dashboard')  # Replace 'admin_dashboard' with the URL name of your admin dashboard view
+                    return redirect('admin_dashboard')
+                if selected_company.name == 'S&CO formation':
+                    return render(request,'base/sco_dashboard.html')   # Replace 'admin_dashboard' with the URL name of your admin dashboard view
                 # Add more conditions for other companies as needed
                 else:
                     return render(request, 'error.html', {'message': 'Invalid Company'})
