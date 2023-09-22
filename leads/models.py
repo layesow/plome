@@ -8,10 +8,12 @@ from django.utils.text import slugify
 from django.db.models.signals import pre_save
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from multi_company.models import Doisser
 
 
 
 class LeadHistory(models.Model):
+    doisser = models.ForeignKey(Doisser, on_delete=models.SET_NULL, null=True, blank=True, related_name='lead_history_entries')
     lead = models.ForeignKey('Lead', on_delete=models.CASCADE, related_name='lead_history')
     timestamp = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)

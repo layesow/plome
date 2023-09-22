@@ -492,10 +492,11 @@ reminder_thread.start()
 #     return JsonResponse({'success': False})
 
 
-from decimal import Decimal  # Import the Decimal type to handle price conversion
+from decimal import Decimal
 from multi_company.models import Doisser
+from leads.models import LeadHistory  # Import the LeadHistory model from the "leads" app
 
-def transfer_lead_to_doisser(lead):
+def transfer_lead_to_doisser(request, lead):
     # Define the mapping between Lead and Doisser fields
     field_mapping = {
         'date_de_soumission': 'date_dinscription',
@@ -503,7 +504,7 @@ def transfer_lead_to_doisser(lead):
         'nom_prenom': 'nom',
         'telephone': 'telephone',
         'email': 'mail',
-         'price': 'prix_net',
+        'price': 'prix_net',
         'qualification': 'qualification',
         'comments': 'comments',
         'assigned_to': 'conseiller',
@@ -514,30 +515,118 @@ def transfer_lead_to_doisser(lead):
 
     # Populate the Doisser instance with mapped and additional fields
     for lead_field, doisser_field in field_mapping.items():
-        # Special handling for the 'price' field to convert it to Decimal
         if lead_field == 'price':
             setattr(doisser_data, 'prix_net', Decimal(str(getattr(lead, lead_field, 0))))
         else:
-            setattr(doisser_data, doisser_field, getattr(lead, lead_field, None))
+            setattr(doisser_data, doisser_field, getattr(lead, lead_field, ''))
+
+    # Set default datetime value for date and time fields
+    default_datetime = '1900-01-01 00:00:00'
+
+    # Loop through datetime fields in the Doisser model and set default value if empty
+    datetime_fields = [field.name for field in Doisser._meta.get_fields() if isinstance(field, models.DateTimeField)]
+    for datetime_field in datetime_fields:
+        if not getattr(doisser_data, datetime_field):
+            setattr(doisser_data, datetime_field, default_datetime)
 
     # Save the Doisser instance
     doisser_data.save()
+
+    # Retrieve all LeadHistory entries related to the lead
+    lead_history_entries = LeadHistory.objects.filter(lead=lead)
+
+    # Update the 'doisser' field in each LeadHistory entry
+    for history_entry in lead_history_entries:
+        history_entry.doisser = doisser_data
+        history_entry.save()
+
+    # Create a LeadHistory entry for the lead transfer
+    history_entry = LeadHistory(
+        user=request.user,  # User making the transfer
+        previous_assigned_to=lead.assigned_to,  # Previous assigned user
+        #current_assigned_to=doisser_data.conseiller,  # New assigned user in Doisser
+        changes="Lead transferred to Doisser",
+        doisser=doisser_data,  # Link to the Doisser instance
+        lead=lead,  # Link to the lead being transferred
+    )
+
+    # Save the LeadHistory entry
+    history_entry.save()
 
     # Update the Lead instance to indicate it has been transferred
     lead.is_transferred = True
     lead.save()
 
     print(f"Copying data from Lead {lead.id} to Doisser...")  # Debugging print statement
+
     # Notify superusers about the new lead in Doisser
     superusers = CustomUserTypes.objects.filter(is_superuser=True)
     notification_message = f'New lead transferred to Doisser: {lead.nom_de_la_campagne}. Please check.'
-    
+
     for user in superusers:
         # Create a Notification instance with lead_id set to the transferred lead
         notification = Notification(user=user, lead=lead, message=notification_message)
         notification.save()
 
-    return doisser_data
+    # Retrieve the updated lead history for the transferred lead
+    lead_history = LeadHistory.objects.filter(lead=lead).order_by('-timestamp')
+
+    # Include lead history in the context
+    context = {
+        'doisser_data': doisser_data,
+        'lead_history': lead_history,
+    }
+
+    return context
+
+
+
+# from decimal import Decimal  # Import the Decimal type to handle price conversion
+# from multi_company.models import Doisser
+
+# def transfer_lead_to_doisser(lead):
+#     # Define the mapping between Lead and Doisser fields
+#     field_mapping = {
+#         'date_de_soumission': 'date_dinscription',
+#         'avez_vous_travaille': 'avez_vous_travaille',
+#         'nom_prenom': 'nom',
+#         'telephone': 'telephone',
+#         'email': 'mail',
+#          'price': 'prix_net',
+#         'qualification': 'qualification',
+#         'comments': 'comments',
+#         'assigned_to': 'conseiller',
+#     }
+
+#     # Create a new Doisser instance
+#     doisser_data = Doisser()
+
+#     # Populate the Doisser instance with mapped and additional fields
+#     for lead_field, doisser_field in field_mapping.items():
+#         # Special handling for the 'price' field to convert it to Decimal
+#         if lead_field == 'price':
+#             setattr(doisser_data, 'prix_net', Decimal(str(getattr(lead, lead_field, 0))))
+#         else:
+#             setattr(doisser_data, doisser_field, getattr(lead, lead_field, None))
+
+#     # Save the Doisser instance
+#     doisser_data.save()
+
+#     # Update the Lead instance to indicate it has been transferred
+#     lead.is_transferred = True
+#     lead.save()
+
+#     print(f"Copying data from Lead {lead.id} to Doisser...")  # Debugging print statement
+#     # Notify superusers about the new lead in Doisser
+#     superusers = CustomUserTypes.objects.filter(is_superuser=True)
+#     notification_message = f'New lead transferred to Doisser: {lead.nom_de_la_campagne}. Please check.'
+    
+#     for user in superusers:
+#         # Create a Notification instance with lead_id set to the transferred lead
+#         notification = Notification(user=user, lead=lead, message=notification_message)
+#         notification.save()
+
+#     return doisser_data
 
 
 # Import the function we created earlier
@@ -555,7 +644,7 @@ def save_signe_cpf(request):
             lead.save()
 
             PriceEntry.objects.create(user=request.user, price=price, lead=lead)
-            LeadHistory.objects.create(
+            LeadHistory.objects.create( 
                 user=request.user,
                 lead=lead,
                 changes=f'{request.user.username} has added the Price of {price}',
@@ -869,7 +958,7 @@ def lead_edit(request, lead_id):
         # Set the last_modified_by field to the current user
         lead.last_modified_by = request.user
         if lead.qualification == 'signe_cpf':
-            transfer_lead_to_doisser(lead)
+            transfer_lead_to_doisser(request, lead)
 
         lead.save()
 

@@ -360,6 +360,37 @@ def add_doisser_lead(request):
 
 
 
+from django.shortcuts import render, get_object_or_404
+from leads.models import Lead
+from leads.models import LeadHistory  # Import the LeadHistory model
+
+def doisser_detail(request, doisser_id):
+    # Retrieve the Doisser object
+    doisser = get_object_or_404(Doisser, id=doisser_id)
+
+    # Retrieve the lead history for this Doisser
+    lead_history = LeadHistory.objects.filter(doisser=doisser).order_by('-timestamp')
+
+    context = {
+        'doisser': doisser,
+        'lead_history': lead_history,
+    }
+
+    return render(request, 'multi_company/doisser.html', context)
+
+# @login_required
+# def lead_history_view(request, lead_id):
+#     lead = get_object_or_404(Doisser, id=lead_id)
+#     lead_history = LeadHistory.objects.filter(lead=lead, category='mention').order_by('-timestamp')[:10]
+#     return render(request, 'lead/lead_history.html', {'lead': lead, 'history_entries': lead_history})
+
+
+
+
+
+
+
+
 
 # def import_doisser_leads(request):
 #     field_map = {

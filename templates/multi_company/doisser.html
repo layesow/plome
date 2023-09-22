@@ -27,6 +27,28 @@
 
     <button class="btn btn-success" data-toggle="modal" data-target="#addDoisserLeadModal">Add Doisser Lead</button>
 
+    <div class="modal fade" id='showhsitory'>
+          <div class="modal-dialog modal-xl">
+
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">History Entries</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div id="loadhistory"></div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="closeHistoryModel"
+                  data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
 <!-- Add Doisser Lead Modal -->
 <div class="modal fade" id="addDoisserLeadModal" tabindex="-1" role="dialog" aria-labelledby="addDoisserLeadModalLabel" aria-hidden="true">
    <div class="modal-dialog modal-xl" role="document">
@@ -289,6 +311,7 @@
             </td> -->
           </tr>
           {% endfor %}
+          
         </tbody>
       </table>
 
@@ -408,9 +431,63 @@
               </div>
               <!-- Add more fields here -->
             </div>
+
+
             <hr>
             <input type="submit" value="Submit" class="btn btn-success">
+            <button type="button" class="close" value = "Close" data-dismiss="modal" aria-label="Close">
           </div>
+         
+<!-- Lead History Tab -->
+<!-- Lead History Tab -->
+<ul class="nav nav-tabs" id="leadHistoryTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="leadHistory-tab-{{ record.id }}" data-toggle="tab" href="#lead-history-{{ record.id }}" role="tab" aria-controls="lead-history" aria-selected="true">Lead History</a>
+    </li>
+    <!-- Add more tabs here if needed -->
+</ul>
+
+<!-- Tab content -->
+<div class="tab-content" id="myTabContent">
+    <!-- Lead History Tab Content -->
+    <div class="tab-pane fade show active" id="lead-history-{{ record.id }}" role="tabpanel" aria-labelledby="leadHistory-tab-{{ record.id }}">
+        <div class="container"> <!-- Add container class here -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>User</th>
+                            <th>Previous Assigned To</th>
+                            <th>Current Assigned To</th>
+                            <th>Changes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in record.lead_history_entries.all %}
+                        <tr>
+                            <td>{{ entry.timestamp }}</td>
+                            <td>{{ entry.user.username }}</td>
+                            <td>{{ entry.previous_assigned_to.username }}</td>
+                            <td>{{ entry.current_assigned_to.username }}</td>
+                            <td>{{ entry.changes }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5">No lead history available.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- End of Lead History Tab Content -->
+    <!-- Add more tab content here if needed -->
+</div>
+
+
+
         </form>
       </div>
     </div>

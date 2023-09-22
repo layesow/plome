@@ -1,5 +1,7 @@
 # multi_company/models.py
+
 from django.db import models
+
 
 class Company(models.Model):
     name = models.CharField(max_length=100)
@@ -7,7 +9,7 @@ class Company(models.Model):
     def __str__(self):
         return self.name
     
-class Doisser(models.Model):
+class Doisser(models.Model):   
     date_dinscription = models.DateField(null=True, blank=True)
     numero_edof = models.CharField(max_length=100,null=True, blank=True)
     nom = models.CharField(max_length=100, null=True, blank=True)
@@ -25,8 +27,14 @@ class Doisser(models.Model):
     
     date_prevue_d_entree_en_formation = models.DateTimeField(null=True, blank=True)
     date_prevue_de_fin_de_formation = models.DateTimeField(null=True, blank=True)
-    
-  
+     
+    history = models.ForeignKey(
+        'leads.LeadHistory',  # Use the string format to avoid circular import
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='doissers'
+    )
     appel_effectue_le_date_time = models.DateTimeField(null=True, blank=True)
     appel_effectue_le_motifs = models.DateTimeField(null=True, blank=True)
     
