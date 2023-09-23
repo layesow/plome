@@ -8,7 +8,7 @@ from django.utils.text import slugify
 from django.db.models.signals import pre_save
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from multi_company.models import Doisser
+from multi_company.models import Doisser , Company
 
 
 
@@ -84,6 +84,8 @@ class Lead(models.Model):
     reminder_sent = models.BooleanField(default=False)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     read_mail = models.BooleanField(default=False)
+    company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True, blank=True, related_name='leads')
+   
     LEAD_SOURCE_CHOICES = (
         ('facebook', 'Facebook'),
         ('imported', 'Imported'),

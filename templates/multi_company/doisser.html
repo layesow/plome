@@ -437,54 +437,72 @@
             <input type="submit" value="Submit" class="btn btn-success">
             <button type="button" class="close" value = "Close" data-dismiss="modal" aria-label="Close">
           </div>
-         
-<!-- Lead History Tab -->
-<!-- Lead History Tab -->
-<ul class="nav nav-tabs" id="leadHistoryTab" role="tablist">
-    <li class="nav-item">
-        <a class="nav-link active" id="leadHistory-tab-{{ record.id }}" data-toggle="tab" href="#lead-history-{{ record.id }}" role="tab" aria-controls="lead-history" aria-selected="true">Lead History</a>
-    </li>
-    <!-- Add more tabs here if needed -->
-</ul>
+      <!-- Lead History Tab -->
+      <div class="modal-footer">
+        <div class="container mt-1">
+          <div class="card card-primary card-outline card-tabs">
+            <div class="card-header card-header-regular p-0 pt-1">
+              <ul class="nav nav-tabs mx-3" id="myTabs">
+                <li class="nav-item">
+                  <a class="nav-link active" id="history-tab-{{ record.id }}" data-toggle="tab"
+                    href="#history-{{ record.id }}" role="tab" aria-controls="history" aria-selected="true">History</a>
+                </li>
+                <ul class="nav nav-tabs mx-3" id="myTabs">
+                  <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#doccument{{ lead.id }}">Documents</a>
+                  </li>
+                </ul>
+              </ul>
+             
 
-<!-- Tab content -->
-<div class="tab-content" id="myTabContent">
-    <!-- Lead History Tab Content -->
-    <div class="tab-pane fade show active" id="lead-history-{{ record.id }}" role="tabpanel" aria-labelledby="leadHistory-tab-{{ record.id }}">
-        <div class="container"> <!-- Add container class here -->
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th>Timestamp</th>
-                            <th>User</th>
-                            <th>Previous Assigned To</th>
-                            <th>Current Assigned To</th>
-                            <th>Changes</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for entry in record.lead_history_entries.all %}
-                        <tr>
-                            <td>{{ entry.timestamp }}</td>
-                            <td>{{ entry.user.username }}</td>
-                            <td>{{ entry.previous_assigned_to.username }}</td>
-                            <td>{{ entry.current_assigned_to.username }}</td>
-                            <td>{{ entry.changes }}</td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="5">No lead history available.</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
             </div>
+          </div>
+      
+          <div class="tab-content" id="myTabContent">
+            <!-- History Tab Content -->
+            <div class="tab-pane fade show active" id="history-{{ record.id }}" role="tabpanel"
+              aria-labelledby="history-tab-{{ record.id }}">
+      
+              <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th>Timestamp</th>
+                      <th>User</th>
+                      <th>Previous Assigned To</th>
+                      <th>Current Assigned To</th>
+                      <th>Changes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for entry in record.lead_history_entries.all %}
+                    <tr>
+                      <td>{{ entry.timestamp }}</td>
+                      <td>{{ entry.user.username }}</td>
+                      <td>{{ entry.previous_assigned_to.username }}</td>
+                      <td>{{ entry.current_assigned_to.username }}</td>
+                      <td>{{ entry.changes }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                      <td colspan="5">No history available.</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <!-- End of History Tab Content -->
+            <!-- Add more tab content here if needed -->
+          </div>
         </div>
-    </div>
-    <!-- End of Lead History Tab Content -->
-    <!-- Add more tab content here if needed -->
-</div>
+      </div>
+
+
+
+
+        
+        
 
 
 

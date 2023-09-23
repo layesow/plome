@@ -722,8 +722,26 @@
                                         <label for="price">Price</label>
                                           <input type="text" name="price" id="priceStat{{ lead.id }}" class="form-control"
                                             placeholder="Price" value="{{ lead.price }}" required autocomplete="off">
+                                          <!-- Add a dropdown for selecting the company -->
+                                         
+                                        <div class="form-group col-md-6">
+                                          <label for="company_name">Select Company</label>
+                                          <select name="company_name" id="company_name" class="form-control">
+                                            <option value="" disabled selected>Select a company</option>
+                                            {% for company in companies %}
+                                            <option value="{{ company.id }}">{{ company.name }}</option>
+                                            {% endfor %}
+                                          </select>
+                                          <button type="button" class="btn btn-primary" id="saveCompanyButton">Save Company</button>
+                                        </div>
+
+                                         
+
                                       </div>
                                       <div id="loadBasedQualification{{ lead.id }}"></div>
+                                 
+
+
                                 
                                       <!-- <div class="col-md-12 mb-3">
                             <button type="button" class="btn btn-secondary" onclick="addCustomField('custom-fields-container')">Add Custom
@@ -737,6 +755,7 @@
                           <div class="col-md-12 mb-3">
        
     </div>
+    
                                   </form>
 
                                 </div>

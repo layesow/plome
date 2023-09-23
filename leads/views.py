@@ -627,10 +627,55 @@ def transfer_lead_to_doisser(request, lead):
 #         notification.save()
 
 #     return doisser_data
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse
+from .models import Lead, Company, LeadHistory
+
+def select_company(request, lead_id):
+    lead = get_object_or_404(Lead, id=lead_id)
+    companies = Company.objects.all()
+
+    if request.method == 'POST':
+        selected_company_name = request.POST.get('company_name')
+
+        if selected_company_name:
+            try:
+                company = Company.objects.get(name=selected_company_name)
+                lead.company = company
+                lead.save()
+
+                # Create a lead history entry for adding the company
+                LeadHistory.objects.create( 
+                    user=request.user,
+                    lead=lead,
+                    changes=f'{request.user.username} has added the company: {selected_company_name}',
+                    category='other'
+                )
+
+                # Determine the HTML page to render based on the selected company
+                if selected_company_name == 'AA':
+                    return redirect('admin_dashboard')  # Redirect to the admin dashboard
+                elif selected_company_name == 'S&CO formation':
+                    return render(request, 'base/sco_dashboard.html')  # Render S&CO Formation dashboard
+                # Add more conditions for other companies as needed
+                else:
+                    return render(request, 'error.html', {'message': 'Invalid Company'})
+
+            except Company.DoesNotExist:
+                return JsonResponse({'success': False, 'error': 'Company not found'})
+
+    context = {
+        'lead': lead,
+        'companies': companies,
+    }
+    return render(request, 'lead/lead_dashboard.html', context)
+
+
+
+
 
 
 # Import the function we created earlier
-
 
 def save_signe_cpf(request):
     if request.method == 'POST':
