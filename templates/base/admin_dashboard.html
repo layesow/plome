@@ -192,7 +192,46 @@
 </div>
 
         </div> <!-- end section -->
-        <div class="row">
+
+<!-- Inside your HTML template -->
+<div class="container mt-5">
+  <h2>Company Lead Summary</h2>
+  <table id="company-lead-summary-table" class="display" style="width:100%">
+    <thead>
+      <tr>
+        <th>Company</th>
+        <th>Lead Count</th>
+        <th>Total Price</th>
+      </tr>
+    </thead>
+  </table>
+</div>
+
+<br>
+<br>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+<script>
+  $(document).ready(function () {
+    // Fetch JSON data from your Django view
+    $.getJSON("{% url 'company_lead_summary' %}", function (data) {
+      // Initialize the DataTable
+      $('#company-lead-summary-table').DataTable({
+        data: data.company_summaries,
+        columns: [
+          { data: 'company_name' },
+          { data: 'lead_count' },
+          { data: 'total_price' },
+        ]
+      });
+    });
+  });
+</script>
+        
+  <div class="row">
   <!-- Price Table Section -->
   <div class="col-md-12">
     <div class="card shadow price-table-card">
@@ -238,6 +277,11 @@
     </div>
   </div> <!-- .col-md-12 -->
 </div>
+
+
+
+
+
 
 </main> <!-- main -->
 </div> <!-- .wrapper -->

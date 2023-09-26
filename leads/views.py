@@ -607,6 +607,35 @@ def transfer_lead_to_doisser(request, lead, company_id=None):
     print(f"Transfer completed for Lead {lead.id}")
     return context
 
+from django.http import JsonResponse
+
+def company_lead_summary(request):
+    # Get all companies
+    companies = Company.objects.all()
+
+    # Create a list to store company summaries
+    company_summaries = []
+
+    for company in companies:
+        # Count the number of leads associated with this company
+        lead_count = Lead.objects.filter(company=company).count()
+
+        # Calculate the total price of leads associated with this company
+        total_price = Lead.objects.filter(company=company).aggregate(total_price=models.Sum('price'))['total_price']
+
+        # Create a dictionary for the company summary
+        company_summary = {
+            'company_name': company.name,
+            'lead_count': lead_count,
+            'total_price': total_price or 0,  # Set total_price to 0 if it's None
+        }
+
+        # Add the company summary to the list
+        company_summaries.append(company_summary)
+
+    # Return a JSON response
+    return JsonResponse({'company_summaries': company_summaries})
+
 
 
 
@@ -700,49 +729,49 @@ def transfer_lead_to_doisser(request, lead, company_id=None):
 
 
 
-from django.shortcuts import render
-from .models import Company
+# from django.shortcuts import render
+# from .models import Company
 
-def list_companies(request):
-    companies = Company.objects.all()
+# def list_companies(request):
+#     companies = Company.objects.all()
 
-    context = {
-        'companies': companies,
-    }
+#     context = {
+#         'companies': companies,
+#     }
 
-    return render(request, 'lead/lead_dashboard.html', context)
+#     return render(request, 'lead/lead_dashboard.html', context)
 
 
-from django.http import JsonResponse
-from .models import Company
+# from django.http import JsonResponse
+# from .models import Company
 
-def get_companies(request):
-    companies = Company.objects.all().values('id', 'name')
-    return JsonResponse({'companies': list(companies)})
+# def get_companies(request):
+#     companies = Company.objects.all().values('id', 'name')
+#     return JsonResponse({'companies': list(companies)})
 
-from django.http import JsonResponse
-from .models import Lead, Company
+# from django.http import JsonResponse
+# from .models import Lead, Company
 
-def select_company(request, lead_id):
-    lead = get_object_or_404(Lead, id=lead_id)
-    companies = Company.objects.all()
+# def select_company(request, lead_id):
+#     lead = get_object_or_404(Lead, id=lead_id)
+#     companies = Company.objects.all()
 
-    if request.method == 'POST':
-        company_id = request.POST.get('company_id')
+#     if request.method == 'POST':
+#         company_id = request.POST.get('company_id')
 
-        if company_id:
-            try:
-                company = Company.objects.get(id=company_id)
-                lead.company = company
-                lead.save()
+#         if company_id:
+#             try:
+#                 company = Company.objects.get(id=company_id)
+#                 lead.company = company
+#                 lead.save()
 
-                # Return a JSON response to indicate success
-                return JsonResponse({'success': True, 'message': 'Company has been associated with the lead.'})
+#                 # Return a JSON response to indicate success
+#                 return JsonResponse({'success': True, 'message': 'Company has been associated with the lead.'})
 
-            except Company.DoesNotExist:
-                return JsonResponse({'success': False, 'error': 'Company not found'})
+#             except Company.DoesNotExist:
+#                 return JsonResponse({'success': False, 'error': 'Company not found'})
 
-    return JsonResponse({'success': False, 'error': 'Invalid request'})
+#     return JsonResponse({'success': False, 'error': 'Invalid request'})
 
 
 

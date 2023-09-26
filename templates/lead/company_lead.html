@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Company Lead Summary</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Company</th>
+                <th>Lead Count</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for company_summary in company_summaries %}
+            <tr>
+                <td>{{ company_summary.company_name }}</td>
+                <td>{{ company_summary.lead_count }}</td>
+                <td>{{ company_summary.total_price }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
