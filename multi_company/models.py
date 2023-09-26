@@ -4,6 +4,8 @@ from django.db import models
 
 
 
+
+
     
 class Doisser(models.Model):   
     date_dinscription = models.DateField(null=True, blank=True)
@@ -51,7 +53,7 @@ class Doisser(models.Model):
     inscription_visio_entree_numero_de_suivi_vers_point_relais = models.CharField(max_length=100, null=True, blank=True)
     inscription_visio_entree_commentaires = models.CharField(max_length=300, null=True, blank=True)
     inscription_visio_entree_statut_colis = models.CharField(max_length=100, null=True, blank=True)
-    
+    company = models.ForeignKey('leads.Company', on_delete=models.SET_NULL, null=True, blank=True)
     custom_fields = models.JSONField(null=True, blank=True)
 
     def _str_(self):

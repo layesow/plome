@@ -493,12 +493,17 @@ reminder_thread.start()
         
 #     return JsonResponse({'success': False})
 
-
 from decimal import Decimal
 from multi_company.models import Doisser
-from leads.models import LeadHistory  # Import the LeadHistory model from the "leads" app
+from leads.models import LeadHistory, Company, CustomUserTypes, Notification
+from django.db import models  # Import models module
 
-def transfer_lead_to_doisser(request, lead):
+def transfer_lead_to_doisser(request, lead, company_id=None):
+    print(f"Starting transfer for Lead {lead.id}")
+
+    # Check the company_id input
+    print(f"company_id: {company_id}")
+
     # Define the mapping between Lead and Doisser fields
     field_mapping = {
         'date_de_soumission': 'date_dinscription',
@@ -510,7 +515,16 @@ def transfer_lead_to_doisser(request, lead):
         'qualification': 'qualification',
         'comments': 'comments',
         'assigned_to': 'conseiller',
+        'company': 'company',
     }
+
+    if company_id is not None:
+        try:
+            company = Company.objects.get(id=company_id)
+        except Company.DoesNotExist:
+            company = None  # Handle the case when the company doesn't exist
+    else:
+        company = None
 
     # Create a new Doisser instance
     doisser_data = Doisser()
@@ -521,6 +535,11 @@ def transfer_lead_to_doisser(request, lead):
             setattr(doisser_data, 'prix_net', Decimal(str(getattr(lead, lead_field, 0))))
         else:
             setattr(doisser_data, doisser_field, getattr(lead, lead_field, ''))
+
+    # Set the company for the Doisser instance if it exists
+    if company:
+        doisser_data.company = company
+        print(f"Assigned company to Doisser: {company.name}")
 
     # Set default datetime value for date and time fields
     default_datetime = '1900-01-01 00:00:00'
@@ -533,6 +552,13 @@ def transfer_lead_to_doisser(request, lead):
 
     # Save the Doisser instance
     doisser_data.save()
+    print(f"Saved Doisser instance: {doisser_data}")
+
+    # Update the company of the lead (if provided) after saving to Doisser
+    if company:
+        lead.company = company
+        lead.save()
+        print(f"Updated Lead with company: {lead.company.name}")
 
     # Retrieve all LeadHistory entries related to the lead
     lead_history_entries = LeadHistory.objects.filter(lead=lead)
@@ -546,7 +572,6 @@ def transfer_lead_to_doisser(request, lead):
     history_entry = LeadHistory(
         user=request.user,  # User making the transfer
         previous_assigned_to=lead.assigned_to,  # Previous assigned user
-        #current_assigned_to=doisser_data.conseiller,  # New assigned user in Doisser
         changes="Lead transferred to Doisser",
         doisser=doisser_data,  # Link to the Doisser instance
         lead=lead,  # Link to the lead being transferred
@@ -559,8 +584,6 @@ def transfer_lead_to_doisser(request, lead):
     lead.is_transferred = True
     lead.save()
 
-    print(f"Copying data from Lead {lead.id} to Doisser...")  # Debugging print statement
-
     # Notify superusers about the new lead in Doisser
     superusers = CustomUserTypes.objects.filter(is_superuser=True)
     notification_message = f'New lead transferred to Doisser: {lead.nom_de_la_campagne}. Please check.'
@@ -570,23 +593,28 @@ def transfer_lead_to_doisser(request, lead):
         notification = Notification(user=user, lead=lead, message=notification_message)
         notification.save()
 
-    # Retrieve the updated lead history for the transferred lead
+    
+# Retrieve the updated lead history for the transferred lead
     lead_history = LeadHistory.objects.filter(lead=lead).order_by('-timestamp')
 
-    # Include lead history in the context
+    # Include lead history and company in the context
     context = {
         'doisser_data': doisser_data,
         'lead_history': lead_history,
+        'company': company,
     }
 
+    print(f"Transfer completed for Lead {lead.id}")
     return context
 
 
 
-# from decimal import Decimal  # Import the Decimal type to handle price conversion
-# from multi_company.models import Doisser
 
-# def transfer_lead_to_doisser(lead):
+# from decimal import Decimal
+# from multi_company.models import Doisser
+# from leads.models import LeadHistory  # Import the LeadHistory model from the "leads" app
+
+# def transfer_lead_to_doisser(request, lead):
 #     # Define the mapping between Lead and Doisser fields
 #     field_mapping = {
 #         'date_de_soumission': 'date_dinscription',
@@ -594,7 +622,7 @@ def transfer_lead_to_doisser(request, lead):
 #         'nom_prenom': 'nom',
 #         'telephone': 'telephone',
 #         'email': 'mail',
-#          'price': 'prix_net',
+#         'price': 'prix_net',
 #         'qualification': 'qualification',
 #         'comments': 'comments',
 #         'assigned_to': 'conseiller',
@@ -605,30 +633,72 @@ def transfer_lead_to_doisser(request, lead):
 
 #     # Populate the Doisser instance with mapped and additional fields
 #     for lead_field, doisser_field in field_mapping.items():
-#         # Special handling for the 'price' field to convert it to Decimal
 #         if lead_field == 'price':
 #             setattr(doisser_data, 'prix_net', Decimal(str(getattr(lead, lead_field, 0))))
 #         else:
-#             setattr(doisser_data, doisser_field, getattr(lead, lead_field, None))
+#             setattr(doisser_data, doisser_field, getattr(lead, lead_field, ''))
+
+#     # Set default datetime value for date and time fields
+#     default_datetime = '1900-01-01 00:00:00'
+
+#     # Loop through datetime fields in the Doisser model and set default value if empty
+#     datetime_fields = [field.name for field in Doisser._meta.get_fields() if isinstance(field, models.DateTimeField)]
+#     for datetime_field in datetime_fields:
+#         if not getattr(doisser_data, datetime_field):
+#             setattr(doisser_data, datetime_field, default_datetime)
 
 #     # Save the Doisser instance
 #     doisser_data.save()
+
+#     # Retrieve all LeadHistory entries related to the lead
+#     lead_history_entries = LeadHistory.objects.filter(lead=lead)
+
+#     # Update the 'doisser' field in each LeadHistory entry
+#     for history_entry in lead_history_entries:
+#         history_entry.doisser = doisser_data
+#         history_entry.save()
+
+#     # Create a LeadHistory entry for the lead transfer
+#     history_entry = LeadHistory(
+#         user=request.user,  # User making the transfer
+#         previous_assigned_to=lead.assigned_to,  # Previous assigned user
+#         #current_assigned_to=doisser_data.conseiller,  # New assigned user in Doisser
+#         changes="Lead transferred to Doisser",
+#         doisser=doisser_data,  # Link to the Doisser instance
+#         lead=lead,  # Link to the lead being transferred
+#     )
+
+#     # Save the LeadHistory entry
+#     history_entry.save()
 
 #     # Update the Lead instance to indicate it has been transferred
 #     lead.is_transferred = True
 #     lead.save()
 
 #     print(f"Copying data from Lead {lead.id} to Doisser...")  # Debugging print statement
+
 #     # Notify superusers about the new lead in Doisser
 #     superusers = CustomUserTypes.objects.filter(is_superuser=True)
 #     notification_message = f'New lead transferred to Doisser: {lead.nom_de_la_campagne}. Please check.'
-    
+
 #     for user in superusers:
 #         # Create a Notification instance with lead_id set to the transferred lead
 #         notification = Notification(user=user, lead=lead, message=notification_message)
 #         notification.save()
 
-#     return doisser_data
+#     # Retrieve the updated lead history for the transferred lead
+#     lead_history = LeadHistory.objects.filter(lead=lead).order_by('-timestamp')
+
+#     # Include lead history in the context
+#     context = {
+#         'doisser_data': doisser_data,
+#         'lead_history': lead_history,
+#     }
+
+#     return context
+
+
+
 
 from django.shortcuts import render
 from .models import Company
@@ -1006,7 +1076,30 @@ def lead_edit(request, lead_id):
         # Set the last_modified_by field to the current user
         lead.last_modified_by = request.user
         if lead.qualification == 'signe_cpf':
+             company_id = form_data.get('company_id')
+        if company_id:
+            try:
+                company = Company.objects.get(id=company_id)
+                lead.company = company
+                lead.save()
+                messages.success(request, 'Company has been associated with the lead.')
+                 # Create a LeadHistory entry for adding the company
+                change_message = f'{request.user.username} added the company: {company.name}'
+                LeadHistory.objects.create(
+                    user=request.user,
+                    lead=lead,
+                    changes=change_message,
+                    category='company'
+                )
+                #transfer_lead_to_doisser(request, lead)
+            except Company.DoesNotExist:
+                messages.error(request, 'Company not found')
             transfer_lead_to_doisser(request, lead)
+         # Associate a company with the lead if selected
+       
+                
+        
+        #lead.save()
 
         lead.save()
 
@@ -1020,18 +1113,7 @@ def lead_edit(request, lead_id):
         messages.success(request, 'Lead edited successfully.')
 
         
-        # Associate a company with the lead if selected
-        company_id = form_data.get('company_id')
-        if company_id:
-            try:
-                company = Company.objects.get(id=company_id)
-                lead.company = company
-                lead.save()
-                messages.success(request, 'Company has been associated with the lead.')
-            except Company.DoesNotExist:
-                messages.error(request, 'Company not found')
-        
-        lead.save()
+       
 
 
         # Create a LogEntry to track the change made by the user
@@ -1101,43 +1183,6 @@ from .models import Notification
 def notification_count(request):
     unread_notification_count = Notification.objects.filter(user=request.user, is_read=False).count()
     return  {'unread_notification_count': unread_notification_count}
-
-
-#can be used in future 
-
-# def lead_edit(request, lead_id):
-#     lead = get_object_or_404(Lead, id=lead_id)
-
-#     if request.method == 'POST':
-#         form_data = request.POST.copy()  # Make a copy of the POST data to modify it
-#         assigned_user_id = form_data.get('assigned_to')  # Get the assigned user ID from the form data
-
-#         if assigned_user_id:
-#             try:
-#                 assigned_user = CustomUserTypes.objects.get(id=assigned_user_id)
-#                 lead.assigned_to = assigned_user  # Set the assigned user for the lead
-#             except CustomUserTypes.DoesNotExist:
-#                 # Handle the case when the selected user does not exist (optional)
-#                 messages.error(request, 'Invalid user ID selected for assignment.')
-
-#         # Update the lead instance with the form data
-#         lead.date_de_soumission = form_data['date_de_soumission']
-#         lead.nom_de_la_campagne = form_data['nom_de_la_campagne']
-#         lead.avez_vous_travaille = form_data['avez_vous_travaille']
-#         lead.nom_prenom = form_data['nom_prenom']
-#         lead.telephone = form_data['telephone']
-#         lead.email = form_data['email']
-#         lead.qualification = form_data['qualification']
-#         lead.comments = form_data['comments']
-
-#         # Save the lead instance to the database
-#         lead.save()
-#         messages.success(request, 'Lead edited successfully.')
-
-#         return JsonResponse({'success': True})
-
-#     return render(request, 'lead/lead_edit.html', {'lead': lead})
-
 
 
 def toggle_lead_status(request, lead_id):

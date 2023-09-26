@@ -1,31 +1,17 @@
-# # multi_company/views.py
-# from django.contrib.auth.decorators import login_required
-# from django.shortcuts import render
-# from accounts.models import CustomUserTypes
 from django.shortcuts import render, redirect, get_object_or_404
-# from .models import User
-
 from django.shortcuts import render
- # Import the Company model
-# def company_dropdown_view(request):
-#     companies = Company.objects.all()
-#     return {'companies': companies}
-
-    
-
-# def doisser(request):
-#     return render(request,'multi_company/doisser.html')
-
-
-def doisser(request):
-    records = Doisser.objects.all()  # Fetch all Doisser records from the database
-    return render(request, 'multi_company/doisser.html', {'records': records})
-
-
 import pandas as pd
 from .models import Doisser
 from django.contrib import messages
 import datetime
+from leads.models import Company 
+
+# View for displaying Doisser records
+def doisser(request):
+    records = Doisser.objects.all()
+    companies = Company.objects.all()
+    return render(request, 'multi_company/doisser.html', {'records': records, 'companies': companies})
+
 
 def check_input_type(input_str):
     input_str = input_str.strip()
@@ -171,9 +157,17 @@ def import_doisser_leads(request):
         return render(request, 'mutli_company/doisser.html', context={"Doisserdata" : Doisserdata})
 
 
+
 def edit_doisser_lead(request, pid=None):
     if request.method == 'POST':
         edit_data = get_object_or_404(Doisser, pk=pid)
+        # Fetch the company instance based on the provided company_id from the form
+        company_id = request.POST.get('company_id', None)
+        try:
+            company = Company.objects.get(id=company_id) if company_id else None
+        except Company.DoesNotExist:
+            company = None  # Handle the case when the company doesn't exist
+
         date_dinscription = request.POST.get('date_dinscription', None)
         numero_edof = request.POST.get('numero_edof', None)
         nom = request.POST.get('nom', None)
@@ -209,6 +203,7 @@ def edit_doisser_lead(request, pid=None):
 
         # 
         edit_data.date_dinscription=date_dinscription
+        edit_data.company = company
         edit_data.numero_edof=numero_edof
         edit_data.nom=nom
         edit_data.prenom=prenom
@@ -245,33 +240,9 @@ def edit_doisser_lead(request, pid=None):
         return redirect('doisser')
     else:
         viewdata = get_object_or_404(Doisser, pk=pid)
-        return render(request, 'mutli_company/edit_dossier_data.html', {"viewdata" : viewdata})
+        companies = Company.objects.all()
+        return render(request, 'mutli_company/edit_dossier_data.html', {"viewdata" : viewdata, "companies": companies})
 
-# views.py
-
-# from django.shortcuts import render, redirect
-# from .models import Company
-
-# def select_company(request):
-#     if request.method == 'POST':
-#         selected_company_id = request.POST.get('company')
-#         if selected_company_id:
-#             try:
-#                 selected_company = Company.objects.get(pk=selected_company_id)
-
-#                 # Determine the HTML page to redirect based on the selected company
-#                 if selected_company.name == 'AA':
-#                     return redirect('admin_dashboard')
-#                 if selected_company.name == 'S&CO formation':
-#                     return render(request,'base/sco_dashboard.html')   # Replace 'admin_dashboard' with the URL name of your admin dashboard view
-#                 # Add more conditions for other companies as needed
-#                 else:
-#                     return render(request, 'error.html', {'message': 'Invalid Company'})
-#             except Company.DoesNotExist:
-#                 return render(request, 'error.html', {'message': 'Company not found'})
-    
-#     companies = Company.objects.all()
-#     return render(request, 'multi_company/company1.html', {'companies': companies})
 
 
 from .models import Doisser
