@@ -282,6 +282,7 @@ def lead_dashboard(request, lead_id=None):
         # Check if the user selected a specific user filter
         selected_user_id = request.GET.get('user_id')
         selected_qualification = request.GET.get('qualification')
+        selected_company_id = request.GET.get('company_id')
 
 
         page_names = FacebookPage.objects.values_list('page_name', flat=True).distinct()
@@ -312,11 +313,20 @@ def lead_dashboard(request, lead_id=None):
 
         # Fetch all companies
         companies = Company.objects.all()
+        
 
         # Check if the user applied the page name filter
         selected_page_name = request.GET.get('page_name')
         if selected_page_name:
             filtered_leads = filtered_leads.filter(facebook_page__page_name=selected_page_name)
+
+         # Apply the company filter
+        if selected_company_id:
+            try:
+                selected_company = Company.objects.get(id=selected_company_id)
+                filtered_leads = filtered_leads.filter(company=selected_company)
+            except Company.DoesNotExist:
+                pass
 
         return render(request, 'lead/leads_dashboard.html', {'leads': filtered_leads, 'users': users, 'sections': nav_data,'page_names': page_names,'companies': companies})
 
@@ -635,9 +645,6 @@ def company_lead_summary(request):
 
     # Return a JSON response
     return JsonResponse({'company_summaries': company_summaries})
-
-
-
 
 # from decimal import Decimal
 # from multi_company.models import Doisser

@@ -51,10 +51,7 @@ urlpatterns = [
     path('map_facebook_pages/', views.map_facebook_pages_to_users, name='map_facebook_pages'),
     path('fetch_sales_leads/', views.fetch_sales_leads, name='fetch_sales_leads'),
     path('company_lead_summary/',views.company_lead_summary, name="company_lead_summary"),
-    #path('list_companies/', views.list_companies, name='list_companies'),
-   # path('select_company/<int:lead_id>/', views.select_company, name='select_company'),
-   # path('get_companies/', views.get_companies, name='get_companies'),
-   # path('update_user_permissions/', views.update_user_permissions, name='update_user_permissions'),
+    # path('update_user_permissions/', views.update_user_permissions, name='update_user_permissions'),
    
     
   
