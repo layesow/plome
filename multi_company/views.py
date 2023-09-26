@@ -6,10 +6,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 # from .models import User
 
 from django.shortcuts import render
-from .models import Company  # Import the Company model
-def company_dropdown_view(request):
-    companies = Company.objects.all()
-    return {'companies': companies}
+ # Import the Company model
+# def company_dropdown_view(request):
+#     companies = Company.objects.all()
+#     return {'companies': companies}
 
     
 
@@ -249,29 +249,29 @@ def edit_doisser_lead(request, pid=None):
 
 # views.py
 
-from django.shortcuts import render, redirect
-from .models import Company
+# from django.shortcuts import render, redirect
+# from .models import Company
 
-def select_company(request):
-    if request.method == 'POST':
-        selected_company_id = request.POST.get('company')
-        if selected_company_id:
-            try:
-                selected_company = Company.objects.get(pk=selected_company_id)
+# def select_company(request):
+#     if request.method == 'POST':
+#         selected_company_id = request.POST.get('company')
+#         if selected_company_id:
+#             try:
+#                 selected_company = Company.objects.get(pk=selected_company_id)
 
-                # Determine the HTML page to redirect based on the selected company
-                if selected_company.name == 'AA':
-                    return redirect('admin_dashboard')
-                if selected_company.name == 'S&CO formation':
-                    return render(request,'base/sco_dashboard.html')   # Replace 'admin_dashboard' with the URL name of your admin dashboard view
-                # Add more conditions for other companies as needed
-                else:
-                    return render(request, 'error.html', {'message': 'Invalid Company'})
-            except Company.DoesNotExist:
-                return render(request, 'error.html', {'message': 'Company not found'})
+#                 # Determine the HTML page to redirect based on the selected company
+#                 if selected_company.name == 'AA':
+#                     return redirect('admin_dashboard')
+#                 if selected_company.name == 'S&CO formation':
+#                     return render(request,'base/sco_dashboard.html')   # Replace 'admin_dashboard' with the URL name of your admin dashboard view
+#                 # Add more conditions for other companies as needed
+#                 else:
+#                     return render(request, 'error.html', {'message': 'Invalid Company'})
+#             except Company.DoesNotExist:
+#                 return render(request, 'error.html', {'message': 'Company not found'})
     
-    companies = Company.objects.all()
-    return render(request, 'multi_company/company1.html', {'companies': companies})
+#     companies = Company.objects.all()
+#     return render(request, 'multi_company/company1.html', {'companies': companies})
 
 
 from .models import Doisser

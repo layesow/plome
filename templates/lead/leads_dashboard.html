@@ -451,7 +451,7 @@
                           </div>
 
                           <div class="col-md-12 mb-3">
-                          
+                            
                         
                           <div class="col-md-6 mb-3">
                             <button class="btn btn-primary" type="submit">Submit</button>
@@ -709,6 +709,7 @@
                                         </select>
                                         
                                       </div>
+                                      
                                       <div class="form-group col-md-6" id="rappelappointment{{ lead.id }}" {% if lead.qualification == 'rappel' %} style="display:block;" {% else %} style="display:none;" {% endif %}>
                                         <label for="appointment">Appointment Date & Time</label>
                                         <div class="input-group mb-3">
@@ -723,21 +724,29 @@
                                           <input type="text" name="price" id="priceStat{{ lead.id }}" class="form-control"
                                             placeholder="Price" value="{{ lead.price }}" required autocomplete="off">
                                           <!-- Add a dropdown for selecting the company -->
-                                         
-                                        <div class="form-group col-md-6">
-                                          <label for="company_name">Select Company</label>
-                                          <select name="company_name" id="company_name" class="form-control">
-                                            <option value="" disabled selected>Select a company</option>
-                                            {% for company in companies %}
-                                            <option value="{{ company.id }}">{{ company.name }}</option>
-                                            {% endfor %}
-                                          </select>
-                                          <button type="button" class="btn btn-primary" id="saveCompanyButton">Save Company</button>
-                                        </div>
-
-                                         
+                                      <div class="form-group col-md-6">
+                                        <form method="post" action="{% url 'lead_edit' lead.id %}">
+                                          {% csrf_token %}
+                                          <div class="form-group">
+                                            <label for="company_id">Select Company:</label>
+                                            <select name="company_id" id="company_id" class="form-control">
+                                              <option value="" disabled>Select a company</option>
+                                              {% for company in companies %}
+                                              {% if company.id == lead.company.id %}
+                                              <option value="{{ company.id }}" selected>{{ company.name }}</option>
+                                              {% else %}
+                                              <option value="{{ company.id }}">{{ company.name }}</option>
+                                              {% endif %}
+                                              {% endfor %}
+                                            </select>
+                                          </div>
+                                          
+                                            </form>
+                                          </div>
 
                                       </div>
+                                            </div>
+                                            
                                       <div id="loadBasedQualification{{ lead.id }}"></div>
                                  
 
@@ -960,7 +969,6 @@
   }
 </script>
 
-
                                         </div>
                                       </div>
                                     </div>
@@ -973,6 +981,7 @@
                                   <!-- end of new changes -->
 
                                   <!-- Your form fields -->
+                                  
                                   <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     <button type="button" class="btn btn-primary"

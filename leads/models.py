@@ -8,9 +8,14 @@ from django.utils.text import slugify
 from django.db.models.signals import pre_save
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from multi_company.models import Doisser , Company
+from multi_company.models import Doisser
 
 
+class Company(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
 
 class LeadHistory(models.Model):
     doisser = models.ForeignKey(Doisser, on_delete=models.SET_NULL, null=True, blank=True, related_name='lead_history_entries')
@@ -166,7 +171,6 @@ class Notification(models.Model):
         return self.message
     
 # models.py
-
 class FacebookLead(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date_de_soumission = models.DateField()

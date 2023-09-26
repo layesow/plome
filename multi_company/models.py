@@ -3,11 +3,7 @@
 from django.db import models
 
 
-class Company(models.Model):
-    name = models.CharField(max_length=100)
 
-    def __str__(self):
-        return self.name
     
 class Doisser(models.Model):   
     date_dinscription = models.DateField(null=True, blank=True)

@@ -310,13 +310,15 @@ def lead_dashboard(request, lead_id=None):
             pass
 
 
+        # Fetch all companies
+        companies = Company.objects.all()
 
         # Check if the user applied the page name filter
         selected_page_name = request.GET.get('page_name')
         if selected_page_name:
             filtered_leads = filtered_leads.filter(facebook_page__page_name=selected_page_name)
 
-        return render(request, 'lead/leads_dashboard.html', {'leads': filtered_leads, 'users': users, 'sections': nav_data,'page_names': page_names})
+        return render(request, 'lead/leads_dashboard.html', {'leads': filtered_leads, 'users': users, 'sections': nav_data,'page_names': page_names,'companies': companies})
 
 
 
@@ -627,50 +629,50 @@ def transfer_lead_to_doisser(request, lead):
 #         notification.save()
 
 #     return doisser_data
-from django.shortcuts import render, get_object_or_404, redirect
+
+from django.shortcuts import render
+from .models import Company
+
+def list_companies(request):
+    companies = Company.objects.all()
+
+    context = {
+        'companies': companies,
+    }
+
+    return render(request, 'lead/lead_dashboard.html', context)
+
+
 from django.http import JsonResponse
-from .models import Lead, Company, LeadHistory
+from .models import Company
+
+def get_companies(request):
+    companies = Company.objects.all().values('id', 'name')
+    return JsonResponse({'companies': list(companies)})
+
+from django.http import JsonResponse
+from .models import Lead, Company
 
 def select_company(request, lead_id):
     lead = get_object_or_404(Lead, id=lead_id)
     companies = Company.objects.all()
 
     if request.method == 'POST':
-        selected_company_name = request.POST.get('company_name')
+        company_id = request.POST.get('company_id')
 
-        if selected_company_name:
+        if company_id:
             try:
-                company = Company.objects.get(name=selected_company_name)
+                company = Company.objects.get(id=company_id)
                 lead.company = company
                 lead.save()
 
-                # Create a lead history entry for adding the company
-                LeadHistory.objects.create( 
-                    user=request.user,
-                    lead=lead,
-                    changes=f'{request.user.username} has added the company: {selected_company_name}',
-                    category='other'
-                )
-
-                # Determine the HTML page to render based on the selected company
-                if selected_company_name == 'AA':
-                    return redirect('admin_dashboard')  # Redirect to the admin dashboard
-                elif selected_company_name == 'S&CO formation':
-                    return render(request, 'base/sco_dashboard.html')  # Render S&CO Formation dashboard
-                # Add more conditions for other companies as needed
-                else:
-                    return render(request, 'error.html', {'message': 'Invalid Company'})
+                # Return a JSON response to indicate success
+                return JsonResponse({'success': True, 'message': 'Company has been associated with the lead.'})
 
             except Company.DoesNotExist:
                 return JsonResponse({'success': False, 'error': 'Company not found'})
 
-    context = {
-        'lead': lead,
-        'companies': companies,
-    }
-    return render(request, 'lead/lead_dashboard.html', context)
-
-
+    return JsonResponse({'success': False, 'error': 'Invalid request'})
 
 
 
@@ -887,6 +889,7 @@ def lead_edit(request, lead_id):
                 messages.error(request, 'Invalid user ID selected for assignment.')
 
         changes = {}
+        
 
         # Check if each field has been changed and update the changes dictionary
         if str(lead.date_de_soumission) != form_data['date_de_soumission']:
@@ -1015,6 +1018,21 @@ def lead_edit(request, lead_id):
             notification = Notification(user=user, lead=lead, message=notification_message)
             notification.save()
         messages.success(request, 'Lead edited successfully.')
+
+        
+        # Associate a company with the lead if selected
+        company_id = form_data.get('company_id')
+        if company_id:
+            try:
+                company = Company.objects.get(id=company_id)
+                lead.company = company
+                lead.save()
+                messages.success(request, 'Company has been associated with the lead.')
+            except Company.DoesNotExist:
+                messages.error(request, 'Company not found')
+        
+        lead.save()
+
 
         # Create a LogEntry to track the change made by the user
         content_type = ContentType.objects.get_for_model(Lead)

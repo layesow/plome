@@ -10,7 +10,7 @@ admin.site.register(LogEntry)
 admin.site.register(FacebookLead)
 admin.site.register(LeadHistory)
 admin.site.register(PriceEntry)
-
+admin.site.register(Company)
 admin.site.register(Attachment)
 admin.site.register(FacebookPage)
 admin.site.register(token)
