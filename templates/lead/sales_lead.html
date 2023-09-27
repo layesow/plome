@@ -710,11 +710,34 @@ $(document).ready(function() {
                                           </div>
                                         </div>
                                       </div>
-                                      <div class="form-group col-md-6" id="signecpfprice{{ lead.id }}" {% if lead.qualification == 'signe_cpf' %} style="display:block;" {% else %} style="display:none;" {% endif %}>
-                                        <label for="price">Price</label>
-                                          <input type="text" name="price" id="priceStat{{ lead.id }}" class="form-control"
-                                            placeholder="Price" value="{{ lead.price }}" required autocomplete="off">
-                                      </div>
+                                        <div class="form-group col-md-6" id="signecpfprice{{ lead.id }}" {% if lead.qualification == 'signe_cpf' %}
+                                          style="display:block;" {% else %} style="display:none;" {% endif %}>
+                                          <label for="price">Price</label>
+                                          <input type="text" name="price" id="priceStat{{ lead.id }}" class="form-control" placeholder="Price"
+                                            value="{{ lead.price }}" required autocomplete="off">
+                                          <!-- Add a dropdown for selecting the company -->
+                                          <div class="form-group col-md-6">
+                                            <form method="post" action="{% url 'lead_edit' lead.id %}">
+                                              {% csrf_token %}
+                                              <div class="form-group">
+                                                <label for="company_id">Select Company:</label>
+                                                <select name="company_id" id="company_id" class="form-control">
+                                                  <option value="" disabled>Select a company</option>
+                                                  {% for company in companies %}
+                                                  {% if company.id == lead.company.id %}
+                                                  <option value="{{ company.id }}" selected>{{ company.name }}</option>
+                                                  {% else %}
+                                                  <option value="{{ company.id }}">{{ company.name }}</option>
+                                                  {% endif %}
+                                                  {% endfor %}
+                                                </select>
+                                              </div>
+                                        
+                                            </form>
+                                          </div>
+                                        
+                                        </div>
+                            
                                       <div id="loadBasedQualification{{ lead.id }}"></div>
                                       <!-- {% if lead.custom_fields %}
 

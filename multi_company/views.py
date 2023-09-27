@@ -6,10 +6,24 @@ from django.contrib import messages
 import datetime
 from leads.models import Company 
 
-# View for displaying Doisser records
+
+
+
+
+
 def doisser(request):
     records = Doisser.objects.all()
     companies = Company.objects.all()
+    selected_company_id = request.GET.get('company_id')
+    
+    # Apply the company filter
+    if selected_company_id:
+        try:
+            selected_company = Company.objects.get(id=selected_company_id)
+            records = records.filter(company=selected_company)
+        except Company.DoesNotExist:
+            pass
+
     return render(request, 'multi_company/doisser.html', {'records': records, 'companies': companies})
 
 
