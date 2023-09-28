@@ -38,11 +38,8 @@ class LeadHistory(models.Model):
 class FacebookPage(models.Model):
     form_id = models.CharField(max_length=100)
     page_name = models.CharField(max_length=100)
-    user = models.ForeignKey(User, on_delete=models.CASCADE) 
-    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.page_name
 
 class token(models.Model):
     access_token = models.CharField(max_length=500, null=True, blank=True)
