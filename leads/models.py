@@ -41,6 +41,8 @@ class FacebookPage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
+
+
 class token(models.Model):
     access_token = models.CharField(max_length=500, null=True, blank=True)
 

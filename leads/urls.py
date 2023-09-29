@@ -5,7 +5,6 @@ from . import views
 urlpatterns = [
     # Other URL patterns
     path('lead_dashboard/', views.lead_dashboard, name='lead_dashboard'),
-    # path('gsheet/', views.gsheet, name="gsheet"),
     path('lead/toggle/<int:lead_id>/', views.toggle_lead_status, name='toggle_lead_status'),
     path('deactivated_leads/', views.deactivated_leads, name='deactivated_leads'),
     path('lead/sales_toggle/<int:lead_id>/', views.toggle_saleslead_status, name='toggle_saleslead_status'),    
@@ -36,6 +35,7 @@ urlpatterns = [
     path('delete_attachment/<int:attachment_id>/', views.delete_attachment, name='delete_attachment'),
     path('sales_dashboard/', views.sales_dashboard, name='sales_dashboard'),
     path('admin_dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('advisor_dashboard/',views.advisor_dashboard, name='advisor_dashboard'),
 
     path('save_appointment/', views.save_appointment, name='save_appointment'),
     path('save_signe_cpf/', views.save_signe_cpf, name='save_signe_cpf'),

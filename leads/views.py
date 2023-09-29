@@ -46,6 +46,9 @@ from . import models
 def is_superuser(user):
     return user.is_superuser
 
+def is_advisor(user):
+    return user.is_advisor
+
 # Decorator to restrict access to the view for non-superusers
 @login_required
 @user_passes_test(is_superuser, login_url='sales_dashboard')
@@ -63,6 +66,25 @@ def admin_dashboard(request):
         'conversion_rate': conversion_rate, # Add the count for "Signé CPF" leads
     }
     return render(request, 'base/admin_dashboard.html', context)
+
+
+@login_required
+@user_passes_test(is_advisor, login_url='sales_dashboard')
+def advisor_dashboard(request):
+    # Count all leads
+    all_leads_count = Lead.objects.count()
+
+    # Count the leads with the "Signé CPF" qualification
+    signe_cpf_leads_count = Lead.objects.filter(qualification='signe_cpf').count()
+    conversion_rate = (signe_cpf_leads_count / all_leads_count) * 100 if all_leads_count != 0 else 0
+
+    context = {
+        'all_leads_count': all_leads_count,
+        'signe_cpf_leads_count': signe_cpf_leads_count, 
+        'conversion_rate': conversion_rate, # Add the count for "Signé CPF" leads
+    }
+    return render(request, 'base/advisor_dashboard.html', context)
+
 
 @login_required
 def sales_dashboard(request):
@@ -228,6 +250,14 @@ from django.core.mail import send_mail
 
 @login_required
 def lead_dashboard(request, lead_id=None):
+    if request.user.is_advisor or request.user.is_superuser:
+            user_template = 'adv_base.html'
+    else:
+        user_template = 'base.html'
+
+    context = {
+        'user_template': user_template,
+        }
     if request.method == 'POST':
         # Retrieve form data and create a new lead instance
         lead = Lead(
@@ -608,7 +638,7 @@ def transfer_lead_to_doisser(request, lead):
     history_entry = LeadHistory(
         user=request.user,  # User making the transfer
         previous_assigned_to=lead.assigned_to,  # Previous assigned user
-        #current_assigned_to=doisser_data.conseiller,  # New assigned user in Doisser
+        #current_assigned_to=doisser_data.conseiller,  # New assigned user in Doissertransfer
         changes="Lead transferred to Doisser",
         doisser=doisser_data,  # Link to the Doisser instance
         lead=lead,  # Link to the lead being transferred
@@ -640,6 +670,10 @@ def transfer_lead_to_doisser(request, lead):
         'doisser_data': doisser_data,
         'lead_history': lead_history,
     }
+
+    lead.is_active = False
+    lead.save()
+    print(f"Deactivated Lead {lead.id}")
 
     return context
 
@@ -842,6 +876,7 @@ def view_notifications(request):
     user = request.user
     is_sales = user.groups.filter(name='Sales').exists()  # Assuming Sales group exists for sales users
     is_superuser = user.is_superuser
+    is_advisor = user.is_advisor
 
     # Fetch notifications for the current user
     notifications = Notification.objects.filter(user=user).order_by('-timestamp')
@@ -851,6 +886,8 @@ def view_notifications(request):
         base_template = 'sales_base.html'
     elif is_superuser:
         base_template = 'base.html'
+    elif is_advisor:
+        base_template = 'adv_base.html'
     else:
         base_template = 'sales_base.html'
 
@@ -2129,103 +2166,6 @@ def sales_lead(request):
 #     return JsonResponse(response_data)
 
 
-
-
-
-
-
-
-
-
-
-
-
-# views.py
-# from django.http import HttpResponse, HttpResponseRedirect
-# from django.urls import reverse
-# from .models import FacebookPage, Lead
-
-# from django.shortcuts import render, HttpResponse, redirect
-# from django.urls import reverse
-# from .models import FacebookPage, Lead
-# import facebook
-
-# def fetch_facebook_leads(request):
-#     if request.method == 'POST' and 'fetch_facebook_leads' in request.POST:
-#         # Get the selected page name from the form
-#         selected_page_name = request.POST.get('page_name')
-
-#         # Use the selected page name to fetch the associated form ID
-#         try:
-#             facebook_page = FacebookPage.objects.get(page_name=selected_page_name)
-#             form_id = facebook_page.form_id
-#         except FacebookPage.DoesNotExist:
-#             return HttpResponse("Selected Facebook page not found.")
-
-#         # Fetch data from Facebook using the retrieved form ID
-#         access_token = 'EAAKFt0cZC5JMBO2IqboZAxN01Qx7XbRUwfTA68E4I8kPg4VZA0tQKCaKNyXXq2q9iiZAeeUbhnNEVhnN7NruzZAvZAHx0ttyqrSRnqpQh9HAHLzGvB29N9zt3U65Xg9HE6vM8GfPCDE8hP3Fwt6Asd0Lj7UFokt3yeQBTARpDR4ZClJWF0ZClzJc4muRoiZAHvrh6PZACabUNBDwr8PKZCt0JnKrvvt'  # Replace with your access token
-#         try:
-#             graph = facebook.GraphAPI(access_token=access_token, version="3.0")
-#         except facebook.GraphAPIError as e:
-#             return HttpResponse(f"Error connecting to Facebook Graph API: {e}")
-
-#         leads = []
-#         cursor = None
-
-#         while True:
-#             try:
-#                 params = {'fields': 'field_data,ad_id', 'limit': 100}  # Adjust the limit as needed
-#                 if cursor:
-#                     params['after'] = cursor
-#                 response = graph.get_object(f"/{form_id}/leads", **params)
-#                 leads.extend(response['data'])
-#                 if 'paging' in response and 'cursors' in response['paging']:
-#                     cursor = response['paging']['cursors']['after']
-#                 else:
-#                     break
-#             except facebook.GraphAPIError as e:
-#                 return HttpResponse(f"Error retrieving leads: {e}")
-
-# # Create a mapping dictionary for field names
-#             field_mapping = {
-#                 'nom_de_la_campagne': 'nom_de_la_campagne',
-#                 'vous_avez_déjà_travaillé_?': 'avez_vous_travaille',
-#                 'full_name': 'nom_prenom',
-#                 'phone_number': 'telephone',
-#                 'email': 'email',
-#             }
-
-# # Process and save the fetched leads to the Lead model
-#         for lead_data in leads:
-#                 try:
-#                     lead = Lead(
-#                         nom_de_la_campagne=lead_data.get(field_mapping['nom_de_la_campagne'], ''),
-#                         avez_vous_travaille=lead_data.get(field_mapping['vous_avez_déjà_travaillé_?'], ''),
-#                         nom_prenom=lead_data.get(field_mapping['full_name'], ''),
-#                         telephone=lead_data.get(field_mapping['phone_number'], ''),
-#                         email=lead_data.get(field_mapping['email'], ''),
-#                         qualification=None,  # Set qualification if available
-#                         comments=None,  # Set comments if available
-#                         assigned_to=None,  # Set the assigned user if available
-#                     )
-#                     lead.facebook_page = facebook_page  # Associate the lead with the Facebook page
-#                     lead.save()
-#                     print(f"Processing after saving Lead Data: {lead_data}")
-#                 except Exception as e:
-#                     print(f"Error saving lead: {e}")
-
-
-#         # Fetch all leads after saving the Facebook leads
-#         filtered_leads = Lead.objects.all()
-#         print('************',filtered_leads)
-
-#         # Render a template to display the leads
-#         return render(request, 'lead/leads_dashboard.html', {'fetched_leads': filtered_leads})
-
-#     return HttpResponse("No action taken.")
-
-
-
 # views.py
 from django.shortcuts import render
 from .models import Lead
@@ -2261,12 +2201,15 @@ def facebook_leads(request):
     user = request.user
     is_sales = user.groups.filter(name='sales').exists()
     is_super_admin = user.is_superuser
+    is_advisor = user.is_advisor
 
     # Determine the base template based on user role
     if is_sales:
         base_template = 'sales_base.html'
     elif is_super_admin:
         base_template = 'base.html'
+    elif is_advisor:
+        base_template = 'adv_base.html'
     else:
         base_template = 'sales_base.html'
 
@@ -2277,52 +2220,7 @@ def facebook_leads(request):
     return render(request, 'lead/facebook_under.html', context)
 
 
-import os
-import pandas as pd
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-from django.shortcuts import render
-# from .forms import GoogleSheetForm
-from .models import FacebookLead
 
-def gsheet(request):
-    if request.method == 'POST':
-        form = GoogleSheetForm(request.POST)
-        if form.is_valid():
-            sheet_link = form.cleaned_data['sheet_link']
-
-            # Set up Google Sheets API credentials
-            scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-            creds_path = os.path.join(os.path.dirname(__file__), 'credentials', 'your_credentials.json')  # Replace 'your_credentials.json' with the actual JSON file name
-            creds = ServiceAccountCredentials.from_json_keyfile_name(creds_path, scope)
-            client = gspread.authorize(creds)
-
-            # Open the Google Sheets document based on the provided link
-            try:
-                sheet = client.open_by_url(sheet_link).sheet1
-                data = sheet.get_all_values()
-
-                # Convert the data to a DataFrame using pandas
-                df = pd.DataFrame(data[1:], columns=data[0])
-
-                # Optionally, you can process the data as needed before saving it to the database
-
-                # Save the data to the database (assuming YourModel has the same column names as the Google Sheets)
-                for index, row in df.iterrows():
-                    your_model_instance = FacebookLead(
-                        column1=row['Column1'],  # Replace 'Column1', 'Column2', etc. with the actual column names in your Google Sheets
-                        column2=row['Column2'],
-                        # Add more columns as needed
-                    )
-                    your_model_instance.save()
-
-                return render(request, 'lead/g-sheet.html', {'form': form, 'success': True})
-            except gspread.exceptions.SpreadsheetNotFound:
-                return render(request, 'lead/g-sheet.html', {'form': form, 'error': 'Invalid Google Sheets link.'})
-    else:
-        form = GoogleSheetForm()
-
-    return render(request, 'lead/g-sheet.html', {'form': form})
 
 
 from django.http import JsonResponse

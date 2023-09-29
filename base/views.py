@@ -65,6 +65,8 @@ def all_notifications(request):
     if user.is_superuser:
         # Redirect admin to lead_dashboard
         return redirect('lead_dashboard')
+    elif user.is_advisor:
+        return redirect('lead_dashboard')
     else:
         # Redirect sales user to sales_lead
         return redirect('sales_lead')
@@ -128,7 +130,21 @@ def add_new_user(request):
         return render(request, 'base/add_new_user.html', locals())
     else:
         return render(request, 'base/add_new_user.html')
+    
 
+
+@login_required
+def advisor_dashboard(request):
+    if request.user.is_authenticated:
+        filtered_user = CustomUserTypes.objects.filter(username=request.user)
+        user = request.user
+        context = {
+        'user': user
+        # ... other context variables ...
+        }
+        return render(request, 'lead/advisor_dashboard.html')
+    else:
+        return render(request, '/login')
 
 @login_required
 def log_entry_list(request):
@@ -207,9 +223,7 @@ def save_user(request):
             return redirect('add_new_user')
     return redirect('add_new_user')
 
-@login_required
-def advisor_dashboard(request):
-    return render(request, 'base/advisor_dashboard.html')
+
 
 @login_required
 def sales_dashboard(request):
@@ -368,6 +382,7 @@ def profile_settings(request):
     user = request.user
     is_sales = user.groups.filter(name='Sales').exists()  # Assuming Sales group exists for sales users
     is_super_admin = user.is_superuser
+    is_advisor = user.is_advisor
 
     if request.method == 'POST':
         # Update the user fields
@@ -390,6 +405,8 @@ def profile_settings(request):
         base_template = 'sales_base.html'
     elif is_super_admin:
         base_template = 'base.html'
+    elif is_advisor:
+        base_template ='adv_base.html'
     else:
         base_template = 'sales_base.html'
 

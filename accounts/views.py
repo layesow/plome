@@ -22,7 +22,7 @@ def redirect_user_dashboard(user):
     elif user.is_sales:
         return redirect('/lead/sales_dashboard')
     elif user.is_advisor:
-        return redirect('/base/advisor_dashboard')
+        return redirect('/lead/advisor_dashboard')
     elif user.is_admin:
         return redirect('/base/sadmin_dashboard')
     
@@ -33,7 +33,7 @@ def redirect_link_dashboard(user):
     elif user.is_sales:
         return 'lead/sales_dashboard'
     elif user.is_advisor:
-        return 'base/advisor_dashboard'
+        return 'lead/advisor_dashboard'
     elif user.is_admin:
         return 'base/sadmin_dashboard'
 
