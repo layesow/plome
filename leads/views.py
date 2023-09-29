@@ -46,9 +46,6 @@ from . import models
 def is_superuser(user):
     return user.is_superuser
 
-def is_advisor(user):
-    return user.is_advisor
-
 # Decorator to restrict access to the view for non-superusers
 @login_required
 @user_passes_test(is_superuser, login_url='sales_dashboard')
@@ -66,25 +63,6 @@ def admin_dashboard(request):
         'conversion_rate': conversion_rate, # Add the count for "Signé CPF" leads
     }
     return render(request, 'base/admin_dashboard.html', context)
-
-
-@login_required
-@user_passes_test(is_advisor, login_url='sales_dashboard')
-def advisor_dashboard(request):
-    # Count all leads
-    all_leads_count = Lead.objects.count()
-
-    # Count the leads with the "Signé CPF" qualification
-    signe_cpf_leads_count = Lead.objects.filter(qualification='signe_cpf').count()
-    conversion_rate = (signe_cpf_leads_count / all_leads_count) * 100 if all_leads_count != 0 else 0
-
-    context = {
-        'all_leads_count': all_leads_count,
-        'signe_cpf_leads_count': signe_cpf_leads_count, 
-        'conversion_rate': conversion_rate, # Add the count for "Signé CPF" leads
-    }
-    return render(request, 'base/advisor_dashboard.html', context)
-
 
 @login_required
 def sales_dashboard(request):
@@ -250,14 +228,6 @@ from django.core.mail import send_mail
 
 @login_required
 def lead_dashboard(request, lead_id=None):
-    if request.user.is_advisor or request.user.is_superuser:
-            user_template = 'adv_base.html'
-    else:
-        user_template = 'base.html'
-
-    context = {
-        'user_template': user_template,
-        }
     if request.method == 'POST':
         # Retrieve form data and create a new lead instance
         lead = Lead(
@@ -498,40 +468,7 @@ import threading
 reminder_thread = threading.Thread(target=send_reminder_emails)
 reminder_thread.daemon = True
 reminder_thread.start()
-# def save_appointment(request):
-#     if request.method == 'POST':
-#         lead_id = request.POST.get('lead_id')
-#         appointment_date = request.POST.get('appointment_date')
-#         appointment_time = request.POST.get('appointment_time')
 
-#         lead = Lead.objects.get(pk=lead_id)
-#         lead.appointment_date_time = datetime.combine(
-#             datetime.strptime(appointment_date, '%Y-%m-%d').date(),
-#             datetime.strptime(appointment_time, '%H:%M').time()
-#         )
-#         lead.price = None 
-#         lead.save()
-
-#         LeadHistory.objects.create(
-#             user=request.user,
-#             lead=lead,
-#             changes=f'{request.user.username} has made an appointment on {appointment_date} @ {appointment_time}',
-#             category='other'
-#         )
-        
-#         send_mail(
-#             'Appointment Scheduled',
-#             f'Your appointment is scheduled on {lead.appointment_date_time}. ', #need to add the user name 
-#             'sender@example.com',
-#             [lead.email],
-#             fail_silently=False,
-#         )
-        
-        
-        
-#         return JsonResponse({'success': True})
-        
-#     return JsonResponse({'success': False})
 
 from django.http import JsonResponse
 
@@ -876,7 +813,6 @@ def view_notifications(request):
     user = request.user
     is_sales = user.groups.filter(name='Sales').exists()  # Assuming Sales group exists for sales users
     is_superuser = user.is_superuser
-    is_advisor = user.is_advisor
 
     # Fetch notifications for the current user
     notifications = Notification.objects.filter(user=user).order_by('-timestamp')
@@ -886,8 +822,6 @@ def view_notifications(request):
         base_template = 'sales_base.html'
     elif is_superuser:
         base_template = 'base.html'
-    elif is_advisor:
-        base_template = 'adv_base.html'
     else:
         base_template = 'sales_base.html'
 
@@ -1706,11 +1640,6 @@ def save_facebook_form_ids(request):
 
 import facebook
 from django.http import HttpResponse
-
-# views.py
-
-
-
 from django.shortcuts import render, redirect
 from .models import FacebookPage, token  # Import the Token model
 
@@ -1739,19 +1668,12 @@ def update_access_token(request):
 
 
 from .models import Lead, FacebookPage  # Import your Lead and FacebookPage models
-
-
-
-
 import csv
 import facebook
 from django.http import JsonResponse  # Import JsonResponse
 from .models import FacebookPage, Lead, token
 from django.http import JsonResponse
 import facebook
- # Import the Token model
-
-
 
 def fetch_facebook_leads(request):
     response_data = {}  # Create a dictionary to store response data
@@ -2166,6 +2088,20 @@ def sales_lead(request):
 #     return JsonResponse(response_data)
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # views.py
 from django.shortcuts import render
 from .models import Lead
@@ -2201,15 +2137,12 @@ def facebook_leads(request):
     user = request.user
     is_sales = user.groups.filter(name='sales').exists()
     is_super_admin = user.is_superuser
-    is_advisor = user.is_advisor
 
     # Determine the base template based on user role
     if is_sales:
         base_template = 'sales_base.html'
     elif is_super_admin:
         base_template = 'base.html'
-    elif is_advisor:
-        base_template = 'adv_base.html'
     else:
         base_template = 'sales_base.html'
 
@@ -2218,9 +2151,6 @@ def facebook_leads(request):
     }
     
     return render(request, 'lead/facebook_under.html', context)
-
-
-
 
 
 from django.http import JsonResponse
