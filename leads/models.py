@@ -39,6 +39,25 @@ class FacebookPage(models.Model):
     form_id = models.CharField(max_length=100)
     page_name = models.CharField(max_length=100)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+
+   
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+@receiver(post_save, sender=FacebookPage)
+def create_facebook_page_instances(sender, instance, created, **kwargs):
+    if created:
+        # Retrieve all existing users
+        users = CustomUserTypes.objects.all()
+
+        for user in users:
+            # Check if a FacebookPage instance already exists for this user and page
+            existing_page = FacebookPage.objects.filter(user=user, page_name=instance.page_name).first()
+
+            # If no instance exists, create one
+            if not existing_page:
+                new_page = FacebookPage(form_id=instance.form_id, page_name=instance.page_name, user=user)
+                new_page.save()
 
 
 

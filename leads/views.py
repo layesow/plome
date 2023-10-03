@@ -1782,52 +1782,115 @@ from .models import FacebookPage, CustomUserTypes
 
 def map_facebook_pages_to_users(request):
     if request.method == 'POST':
-        # Get the selected Facebook page from the form submission
+        # Get the selected Facebook page and user who can fetch from the form submission
         selected_page_id = request.POST.get('selected_page')
+        selected_user_id = request.POST.get('selected_user')
+        print("PageID",selected_page_id)
+        print("Page User",selected_user_id)
+
+        # Check if selected_page_id and selected_user_id are empty or None
+        if not selected_page_id:
+            error_message = "Selected Facebook Page is required."
+            return render(request, 'error_template.html', {'error_message': error_message})
+
+        if not selected_user_id:
+            error_message = "Selected User is required."
+            return render(request, 'error_template.html', {'error_message': error_message})
 
         try:
             # Retrieve the selected Facebook Page
             selected_page = FacebookPage.objects.get(pk=selected_page_id)
 
+            # Retrieve the user who can fetch
+            selected_user = CustomUserTypes.objects.get(pk=selected_user_id)
+
             # Iterate through users to update permissions
             for user in CustomUserTypes.objects.all():
-                # Construct the names for the checkbox and hidden input for each user
-                can_fetch_checkbox_name = f'can_fetch_{user.id}'
-                selected_user_input_name = f'selected_user_{user.id}'
-
-                # Check if the "can_fetch" checkbox is checked for the user
-                can_fetch = request.POST.get(can_fetch_checkbox_name) == 'on'
-
                 # Update the user field for the Facebook Page
                 selected_page.user = user
                 selected_page.save()
 
                 # Update the "can fetch" permission for the user
-                user.can_fetch = can_fetch
+                user.can_fetch = user == selected_user
                 user.save()
+
+            # Ensure that the selected page is connected to all users
+            connect_page_to_all_users(selected_page)
 
             # Redirect to a success page or display a success message
             return redirect('map_facebook_pages')  # Replace with the actual URL name
-        except FacebookPage.DoesNotExist:
-            # Handle cases where the selected Facebook Page doesn't exist
-            error_message = "Selected Facebook Page not found."
+        except (FacebookPage.DoesNotExist, CustomUserTypes.DoesNotExist):
+            # Handle cases where the selected Facebook Page or user doesn't exist
+            error_message = "Selected Facebook Page or user not found."
             return render(request, 'error_template.html', {'error_message': error_message})
+
+    # ... rest of your view code ...
+
+    
 
     # Retrieve a list of all Facebook Pages and Users for the template
     facebook_pages = FacebookPage.objects.all()
     users = CustomUserTypes.objects.all()
 
-    # Filter and display only the Facebook page connected to all users
-    connected_page = None
-    for page in facebook_pages:
-        if FacebookPage.objects.filter(page_name=page.page_name).count() == users.count():
-            connected_page = page
-            break
+    # Filter and display only the unique Facebook pages
+    unique_pages = FacebookPage.objects.values('page_name').distinct()
 
-    return render(request, 'lead/mapping_template.html', {'facebook_pages': [connected_page], 'users': users})
+    return render(request, 'lead/mapping_template.html', {'facebook_pages': unique_pages, 'users': users})
+
+def connect_page_to_all_users(selected_page):
+    # Retrieve all existing users
+    users = CustomUserTypes.objects.all()
+
+    # Check if a FacebookPage instance already exists for this page and all users
+    existing_page = FacebookPage.objects.filter(page_name=selected_page.page_name, user__in=users)
+
+    if existing_page.exists():
+        # Delete all existing duplicate pages
+        existing_page.delete()
+
+    for user in users:
+        # Create a new FacebookPage instance for each user
+        new_page = FacebookPage(form_id=selected_page.form_id, page_name=selected_page.page_name, user=user)
+        new_page.save()
+
+def connect_all_new_pages_to_users():
+    # Retrieve all existing pages
+    existing_pages = FacebookPage.objects.all()
+
+    # Retrieve all existing users
+    users = CustomUserTypes.objects.all()
+
+    for page in existing_pages:
+        for user in users:
+            # Check if a FacebookPage instance already exists for this user and page
+            existing_page = FacebookPage.objects.filter(user=user, page_name=page.page_name).first()
+
+            # If no instance exists, create one
+            if not existing_page:
+                new_page = FacebookPage(form_id=page.form_id, page_name=page.page_name, user=user)
+                new_page.save()
 
 
+from django.shortcuts import render, redirect
+from .models import FacebookPage
+from django.contrib.auth.decorators import login_required
 
+@login_required
+def create_facebook_page(request):
+    if request.method == 'POST':
+        form_id = request.POST['form_id']
+        page_name = request.POST['page_name']
+
+        # Create a new FacebookPage instance and save it to the database
+        facebook_page = FacebookPage(form_id=form_id, page_name=page_name, user=request.user)
+        messages.success(request, 'New Facebook page has been added and linked with all users.')
+        facebook_page.save()
+        #messages.success(request, 'New Facebook page has been added and linked with all users.')
+
+        # Redirect to a success page or wherever you want
+        return redirect('create_facebook_page')  # Replace with the actual URL name
+
+    return render(request, 'lead/add_page_template.html')
 
 # def map_facebook_pages_to_users(request):
 #     if request.method == 'POST':
@@ -1857,10 +1920,6 @@ def map_facebook_pages_to_users(request):
 #     users = CustomUserTypes.objects.all()
 #     return render(request, 'lead/mapping_template.html', {'facebook_pages': facebook_pages, 'users': users})
 
-
-from django.http import JsonResponse
-from .models import FacebookPage, CustomUserTypes, FetchedLead  # Import your models
-import facebook  # Import the Facebook SDK
 
 
 @login_required
