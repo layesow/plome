@@ -140,7 +140,7 @@ STATIC_URL = 'static/'
 if DEBUG :
     STATICFILES_DIRS = [ 'static/' ]
 else:
-    STATIC_ROOT = 'static/'
+    STATIC_ROOT = '/home/plome/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
