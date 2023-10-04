@@ -136,13 +136,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-
+# Define the directory where your static files are located
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATIC_URL = 'static/'
 
-if DEBUG :
-    STATICFILES_DIRS = [ 'static/' ]
+# In production, you don't need this block since it's meant for development only
+if DEBUG:
+    STATIC_URL = '/static/'
 else:
-    STATIC_ROOT = 'static/'
+    STATIC_URL = '/static/'  # Adjust as needed for your production server configuration
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -151,6 +154,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 AUTH_USER_MODEL = 'accounts.CustomUserTypes'
+
 
 
 MAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
