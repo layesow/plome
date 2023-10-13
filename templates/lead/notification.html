@@ -17,7 +17,7 @@
                 <!-- table -->
                 <div class="table-responsive">
                   <table class="table table-hover table-bordered datatables" id="exampleDT">
-                    <thead class="fw-bold">
+                    <thead class="thead-dark">
                       <tr>
                         <th>
                           <div class="custom-control custom-checkbox">
@@ -25,10 +25,10 @@
                             <label class="custom-control-label" for="all2"></label>
                           </div>
                         </th>
-                        <th>Sender</th>
-                        <th>Date and Time</th>
+                        <th>Expéditeur</th>
+                        <th>Date et Heure</th>
                         <th>Message</th>
-                        <th>Is Read</th>
+                        <th>Lu</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -43,7 +43,7 @@
                         <td>{{ notification.lead.assigned_to }}</td>
                         <td>{{ notification.timestamp }}</td>
                         <td>{{ notification.message }}</td>
-                        <td>{% if notification.is_read %}Yes{% else %}No{% endif %}</td>
+                        <td>{% if notification.is_read %}Oui{% else %}Non{% endif %}</td>
                       </tr>
                       {% endfor %}
                     </tbody>
