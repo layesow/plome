@@ -1,0 +1,284 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+<main role="main" class="main-content">
+    <div class="container-fluid">
+        <div class="card shadow">
+            <div class="card-body">
+
+                <h1>Formation</h1>
+                <form method="post" action="{% url 'create_form_settings' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="company">Select a Company:</label>
+                        <select id="company" name="company" class="form-control">
+                            {% for company in companies %}
+                            <option value="{{ company.id }}">{{ company.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="form_name">Form Name:</label>
+                        <input type="text" id="form_name" name="form_name" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Form</button>
+                </form>
+
+                <!-- Bouton d'importation -->
+                  <div class="col-md-12">
+        <button class="btn btn-success mt-1 text-white" data-toggle="modal" data-target="#FormationModal">Ajouter un
+            Dossier</button>
+    </div>
+    </div>
+
+  
+    <div class="modal fade" id="FormationModal" tabindex="-1" role="dialog" aria-labelledby="FormationModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="FormationModalLabel">Dossier Lead</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <form method="post" action="{% url 'add_formation' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="date_de_soumission">Date
+                                de Soumission:</label>
+                            <input type="date" id="date_de_soumission" name="date_de_soumission" class="form-control"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nom_de_la_campagne">Nom
+                                de la Campagne:</label>
+                            <input type="text" id="nom_de_la_campagne" name="nom_de_la_campagne" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="nom_prenom">Nom et
+                                Prénom:</label>
+                            <input type="text" id="nom_prenom" name="nom_prenom" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="telephone">Téléphone:</label>
+                            <input type="text" id="telephone" name="telephone" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="comments">Comments:</label>
+                            <textarea id="comments" name="comments" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="price">Price:</label>
+                            <input type="text" id="price" name="price" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="conseiller">Conseiller:</label>
+                            <input type="text" id="conseiller" name="conseiller" class="form-control">
+                        </div>
+                        <hr>
+                        <!-- Custom Fields -->
+                        <div class="custom-fields" id="custom-fields-container">
+                            <!-- Custom fields will be added dynamically here -->
+                        </div>
+                        <button type="button" class="btn btn-secondary"
+                            onclick="addCustomField('custom-fields-container')">Add
+                            Custom
+                            Field</button>
+                        <button type="button" class="btn btn-primary" onclick="saveCustomFields()">Save
+                            Custom Fields</button>
+                </div>
+
+                <div class="col-md-12 mb-3" id="custom-fields-container">
+                    <!-- Custom Fields will be dynamically added here -->
+                </div>
+                <!-- Custom Fields End -->
+                <button type="submit" class="btn btn-primary btn-block mt-3">Add
+                    Formation</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div><!-- Display List of Formations -->
+<div class="col-md-12">
+    <h2>List of Formations</h2>
+    <table id="formationTable" class="table table-bordered table-striped">
+        <thead class="bg-dark text-white">
+            <tr>
+                <th>Date de Soumission</th>
+                <th>Nom de la Campagne</th>
+                <th>Nom et Prénom</th>
+                <th>Téléphone</th>
+                <th>Email</th>
+                <th>Comments</th>
+                <th>Price</th>
+                <th>Conseiller</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Loop through the formations and render them in the table rows -->
+            {% for formation in formations %}
+            <tr>
+                <td>{{ formation.date_de_soumission }}</td>
+                <td>{{ formation.nom_de_la_campagne }}</td>
+                <td>{{ formation.nom_prenom }}</td>
+                <td>{{ formation.telephone }}</td>
+                <td>{{ formation.email }}</td>
+                <td>{{ formation.comments }}</td>
+                <td>{{ formation.price }}</td>
+                <td>{{ formation.conseiller }}</td>
+                <td>
+                    <a href="{% url 'edit_formation' formation.id %}" class="btn btn-primary">Edit Formation</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+
+<!-- Add Bootstrap and jQuery script tags here if not already included -->
+<!-- Include jQuery and Bootstrap libraries before your custom script -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
+<!-- Add this script tag to include Bootstrap JavaScript -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+
+    </div>
+</main>
+
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    var customFieldCounter = 0;
+
+    function addCustomField() {
+        var container = document.getElementById('custom-fields-container');
+        var customFieldDiv = document.createElement('div');
+        customFieldDiv.className = 'form-row';
+
+        var fieldNameDiv = document.createElement('div');
+        fieldNameDiv.className = 'col-md-5 mb-3';
+        var fieldNameInput = document.createElement('input');
+        fieldNameInput.type = 'text';
+        fieldNameInput.name = 'custom_field_name_' + customFieldCounter;
+        fieldNameInput.className = 'form-control';
+        fieldNameInput.placeholder = 'Custom Field Name';
+
+        var fieldValueDiv = document.createElement('div');
+        fieldValueDiv.className = 'col-md-5 mb-3';
+        var fieldValueInput = document.createElement('input');
+        fieldValueInput.type = 'text';
+        fieldValueInput.name = 'custom_field_data_' + customFieldCounter;
+        fieldValueInput.className = 'form-control';
+        fieldValueInput.placeholder = 'Custom Field Data';
+
+        var deleteButtonDiv = document.createElement('div');
+        deleteButtonDiv.className = 'col-md-2 text-right mb-3';
+        var deleteButton = document.createElement('button');
+        deleteButton.type = 'button';
+        deleteButton.className = 'btn btn-danger';
+        deleteButton.textContent = 'Delete';
+        deleteButton.onclick = function () {
+            container.removeChild(customFieldDiv);
+        };
+
+        fieldNameDiv.appendChild(fieldNameInput);
+        fieldValueDiv.appendChild(fieldValueInput);
+        deleteButtonDiv.appendChild(deleteButton);
+
+        customFieldDiv.appendChild(fieldNameDiv);
+        customFieldDiv.appendChild(fieldValueDiv);
+        customFieldDiv.appendChild(deleteButtonDiv);
+
+        container.appendChild(customFieldDiv);
+        customFieldCounter++;
+    }
+
+    function saveCustomFields() {
+        var customFieldNames = document.getElementsByName('custom_field_name[]');
+        var customFieldValues = document.getElementsByName('custom_field_value[]');
+
+        for (var i = 0; i < customFieldNames.length; i++) {
+            var name = customFieldNames[i].value;
+            var value = customFieldValues[i].value;
+
+            if (name && value) {
+                localStorage.setItem('custom_field_name_' + i, name);
+                localStorage.setItem('custom_field_value_' + i, value);
+            }
+        }
+    }
+
+    // Populate saved custom fields on page load
+    window.onload = function () {
+        var container = document.getElementById('custom-fields-container');
+        for (var i = 0; i < customFieldCounter; i++) {
+            var nameInput = document.getElementsByName('custom_field_name_' + i)[0];
+            var dataInput = document.getElementsByName('custom_field_data_' + i)[0];
+
+            if (nameInput && dataInput) {
+                // Create custom field and populate saved values
+                var customFieldDiv = document.createElement('div');
+                customFieldDiv.className = 'form-row';
+
+                var fieldNameDiv = document.createElement('div');
+                fieldNameDiv.className = 'col-md-5 mb-3';
+                var fieldNameInput = document.createElement('input');
+                fieldNameInput.type = 'text';
+                fieldNameInput.name = 'custom_field_name_' + i;
+                fieldNameInput.className = 'form-control';
+                fieldNameInput.value = nameInput.value;
+
+                var fieldValueDiv = document.createElement('div');
+                fieldValueDiv.className = 'col-md-5 mb-3';
+                var fieldValueInput = document.createElement('input');
+                fieldValueInput.type = 'text';
+                fieldValueInput.name = 'custom_field_data_' + i;
+                fieldValueInput.className = 'form-control';
+                fieldValueInput.value = dataInput.value;
+
+                var deleteButtonDiv = document.createElement('div');
+                deleteButtonDiv.className = 'col-md-2 text-right mb-3';
+                var deleteButton = document.createElement('button');
+                deleteButton.type = 'button';
+                deleteButton.className = 'btn btn-danger';
+                deleteButton.textContent = 'Delete';
+                deleteButton.onclick = function () {
+                    container.removeChild(customFieldDiv);
+                };
+
+                fieldNameDiv.appendChild(fieldNameInput);
+                fieldValueDiv.appendChild(fieldValueInput);
+                deleteButtonDiv.appendChild(deleteButton);
+
+                customFieldDiv.appendChild(fieldNameDiv);
+                customFieldDiv.appendChild(fieldValueDiv);
+                customFieldDiv.appendChild(deleteButtonDiv);
+
+                container.appendChild(customFieldDiv);
+            }
+        }
+    }
+</script>
+{% endblock %}

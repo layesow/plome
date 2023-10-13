@@ -317,7 +317,7 @@
 
   <div class="filter custom-dropdown">
     <label for="assignToUser">Assign to:</label>
-    <select id="assignToUser">
+    <select name="assign" id="assignToUser" >
       <option value="">Select User</option>
       {% for user in users %}
       <option value="{{ user.id }}">{{ user.username }}</option>
@@ -362,21 +362,11 @@
     <br>
     <input type="submit" name="update_access_token" value="Update Access Token">
 </form>
-
-
-
-
-
 </div>
 
 
 
 
-          <!-- Use button tags for the export buttons -->
-          {% comment %} <button type="button" class="btn btn-danger mb-2" id="deleteLeadsBtn" data-toggle="modal"
-            data-target="#deleteModal">
-            Delete Leads
-          </button> {% endcomment %}
 
           <!-- Modal -->
           <div class="modal fade" id="defaultModal" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel"

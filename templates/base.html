@@ -116,118 +116,75 @@
             </svg>
           </a>
         </div>
+      <ul class="navbar-nav flex-fill w-100 mb-2">
+        <li class="nav-item">
+          <a href="{% url 'admin_dashboard' %}" class="nav-link">
+            <i class="fe fe-home fe-16"></i>
+            <span class="ml-3 item-text">Dashboard</span><span class="sr-only">(current)</span>
+          </a>
+        </li>
+      </ul>
+      <ul class="navbar-nav flex-fill w-100 mb-2">
+        <li class="nav-item">
+          <a href="{% url 'add_new_user' %}" class="nav-link">
+            <i class="fe fe-user fe-16"></i>
+            <span class="ml-3 item-text">Users</span><span class="sr-only">(current)</span>
+          </a>
+        </li>
+      </ul>
         <ul class="navbar-nav flex-fill w-100 mb-2">
           <li class="nav-item dropdown">
-            <a href="#dashboard" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
-              <i class="fe fe-home fe-16"></i>
-              <span class="ml-3 item-text">Dashboard</span><span class="sr-only">(current)</span>
+            <a href="#leads" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
+              <i class="fe fe-heart fe-16"></i>
+              <span class="ml-3 item-text">Leads</span><span class="sr-only">(current)</span>
             </a>
-            <ul class="collapse list-unstyled pl-4 w-100" id="dashboard">
+            <ul class="collapse list-unstyled pl-4 w-100" id="leads">
               <li class="nav-item">
-                <a class="nav-link pl-3" href="{% url 'admin_dashboard' %}"><span class="ml-1">Home</span></a>
-                <!-- select_company.html -->
-
-
+                <a class="nav-link pl-3" href="{% url 'lead_dashboard' %}"><span class="ml-1">Formation</span></a>
+                <a class="nav-link pl-3" href="{% url 'mon_aide_btp' %}"><span class="ml-1">Mon aide BTP</span></a>       
               </li>
               <!-- Add more dropdown items here if needed -->
-            </ul>
-          </li>
-        </ul>
-        
-        <ul class="navbar-nav flex-fill w-100 mb-2">
-          <li class="nav-item dropdown">
-            <a href="#user" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
-              <i class="fe fe-user fe-16"></i>
-              <span class="ml-3 item-text">Users</span>
-            </a>
-            <ul class="collapse list-unstyled pl-4 w-100" id="user">
-              <a class="nav-link pl-3" href="{% url 'add_new_user' %}"><span class="ml-1">Add new users</span></a>
-              <!-- <a class="nav-link pl-3" href="{% url 'deactivate-users' %}"><span class="ml-1">Deactivate users</span></a> -->
-
-            </ul>
-          </li>
-
-          <li class="nav-item dropdown">
-            <a href="#forms" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
-              <i class="fe fe-credit-card fe-16"></i>
-              <span class="ml-3 item-text">Leads</span>
-            </a>
-            <ul class="collapse list-unstyled pl-4 w-100" id="forms">
-              <li class="nav-item">
-                <a class="nav-link pl-3" href="{% url 'lead_dashboard' %}"><span class="ml-1 item-text">Add
-                    leads</span></a>
-              </li>
-<li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle pl-3" href="#" id="facebookLeadsDropdown" role="button" data-toggle="dropdown"
-    aria-haspopup="true" aria-expanded="false">
-    <span class="ml-1 item-text">Facebook leads</span>
-  </a>
-  <div class="dropdown-menu no-box" aria-labelledby="facebookLeadsDropdown">
-    <a class="dropdown-item" href="{% url 'create_facebook_page' %}">Create FB pages</a>
-    <a class="dropdown-item" href="{% url 'map_facebook_pages' %}">Mapping</a>
-  </div>
-</li>
-
-
-
-              <li class="nav-item">
-                <a class="nav-link pl-3" href="{% url 'deactivated_leads' %}"><span class="ml-1 item-text">Deactivate
-                    Leads</span></a>
-              </li>
+          </ul>
+      <ul class="navbar-nav flex-fill w-100 mb-2">
+        <li class="nav-item">
+          <a href="{% url 'doisser' %}" class="nav-link">
+            <i class="fe fe-cpu fe-16"></i>
+            <span class="ml-3 item-text">Dossier</span><span class="sr-only">(current)</span>
+          </a>
+        </li>
+      </ul>
+      <ul class="navbar-nav flex-fill w-100 mb-2">
+        <li class="nav-item">
+          <a href="{% url 'view_notifications' %}" class="nav-link">
+            <i class="fe fe-inbox fe-16"></i>
+            <span class="ml-3 item-text">Notification</span><span class="sr-only">(current)</span>
+          </a>
+        </li>
+      </ul>
+    <ul class="navbar-nav flex-fill w-100 mb-2">
+      <li class="nav-item dropdown">
+        <a href="#admin" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
+          <i class="fe fe-activity fe-16"></i>
+          <span class="ml-3 item-text">Adminstration</span><span class="sr-only">(current)</span>
+        </a>
+        <ul class="collapse list-unstyled pl-4 w-100" id="admin">
+          <li class="nav-item">
+            <a class="nav-link pl-3" href="{% url 'create_facebook_page' %}"><span class="ml-1">Add pages</span></a>
+            <a class="nav-link pl-3" href="{% url 'add_company' %}"><span class="ml-1">Add company</span></a>
+            <a class="nav-link pl-3" href="{% url 'map_facebook_pages' %}"><span class="ml-1">Mapping</span></a>
+            <a class="nav-link pl-3" href="{% url 'deactivated_leads' %}"><span class="ml-1">Deactivate leads</span></a>
+            <a class="nav-link pl-3" href="{% url 'add_formation' %}"><span class="ml-1">Formation</span></a>
             
-
-
-
-            </ul>
+    
+    
           </li>
-          <li class="nav-item dropdown">
-            <a href="#profile" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
-              <i class="fe fe-user fe-16"></i>
-              <span class="ml-3 item-text">Profile</span>
-            </a>
-            <ul class="collapse list-unstyled pl-4 w-100" id="profile">
-             
-                <a class="nav-link pl-3" href="{% url 'profile_settings' %}"><span class="ml-1">Settings</span></a>
-              </li>
-
-            </ul>
-          </li>
-
-          
+          <!-- Add more dropdown items here if needed -->
+        </ul>
+      </li>
+    </ul>
 
 
-            <li class="nav-item dropdown">
-            <a href="#doisser" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
-              <i class="fe  fe-activity fe-16"></i>
-              <span class="ml-3 item-text">Doisser</span>
-            </a>
-            <ul class="collapse list-unstyled pl-4 w-100" id="doisser">
-             
-                <a class="nav-link pl-3" href="{% url 'doisser' %}"><span class="ml-1">Data</span></a>
-              </li>
 
-            </ul>
-          </li>
-
-            <li class="nav-item dropdown">
-            <a href="#notification" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
-              <i class="fe fe-info fe-16"></i>
-              <span class="ml-3 item-text">Notifications</span>
-            </a>
-            <ul class="collapse list-unstyled pl-4 w-100" id="notification">
-             
-                <a class="nav-link pl-3" href="{% url 'view_notifications' %}"><span class="ml-1">Notification</span></a>
-              </li>
-
-            </ul>
-          </li>
-
-         
-<div class="btn-box w-100 mt-4 mb-1">
-    <a href="{% url 'logout' %}" class="btn mb-2 btn-primary btn-lg btn-block">
-        <i class="fe fe-log-out fe-12 mx-2"></i><span class="small">Logout</span>
-    </a>
-</div>
 
       </nav>
     </aside>
@@ -256,6 +213,8 @@
   <!-- and datatable script -->
 </body>
 
+<div id="notification-container" class="notification-container"></div>
+
 <!-- Add this in your base.html template -->
 <div class="modal fade modal-notif modal-slide" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
   <!-- Your modal content here, but replace the notifications list with the following -->
@@ -282,12 +241,14 @@
   <!-- Rest of your modal content -->
 </div>
 
+
   <style>
     .read {
       text-decoration: line-through;
     }
 
   </style>
+  
   <!-- Add the following script at the end of your base.html template -->
   <script>
     function fetchNotifications() {
@@ -297,8 +258,11 @@
         success: function(data) {
           var unreadNotificationCount = $('#unreadNotificationCount'); // Reference to the badge
           var notificationList = $('#notificationList');
+          var notificationSound = $('#notificationSound')[0];
           notificationList.empty(); // Clear existing notifications
           unreadNotificationCount.text(0);
+
+          var hasNewNotifications = false;
     
           if (data.length === 0) {
             notificationList.append('<div class="list-group-item">No new notifications</div>');

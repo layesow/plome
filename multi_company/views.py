@@ -6,6 +6,25 @@ from django.contrib import messages
 import datetime
 from leads.models import Company 
 
+from django.shortcuts import render, redirect
+from .models import FormSettings
+from leads.models import Company
+
+def create_form_settings(request):
+    if request.method == 'POST':
+        company_id = request.POST.get('company')
+        form_name = request.POST.get('form_name')
+
+        if company_id and form_name:
+            company = Company.objects.get(id=company_id)
+            form_settings = FormSettings(company=company, form_name=form_name)
+            form_settings.save()
+            return redirect('')  # Redirect to a success page or your desired URL
+
+    companies = Company.objects.all()
+    return render(request, 'multi_company/create_form_settings.html', {'companies': companies})
+
+
 def doisser(request):
     records = Doisser.objects.all()
     companies = Company.objects.all()
@@ -164,6 +183,41 @@ def import_doisser_leads(request):
     else:
         Doisserdata = Doisser.objects.all()
         return render(request, 'mutli_company/doisser.html', context={"Doisserdata" : Doisserdata})
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Formation
+from django.http import JsonResponse
+
+def edit_formation(request, formation_id):
+    formation = get_object_or_404(Formation, pk=formation_id)
+
+    if request.method == "POST":
+        # Update formation fields
+        formation.date_de_soumission = request.POST.get('editDate')
+        formation.nom_de_la_campagne = request.POST.get('editCampagne')
+        formation.nom_prenom = request.POST.get('editNomPrenom')
+        formation.telephone = request.POST.get('editTelephone')
+        formation.email = request.POST.get('editEmail')
+        formation.comments = request.POST.get('editComments')
+        formation.price = request.POST.get('editPrice')
+        formation.conseiller = request.POST.get('editConseiller')
+
+        # Handle custom fields
+        custom_fields = {}
+        for key, value in request.POST.items():
+            if key.startswith('editCustomField_'):
+                field_number = key.split('_')[-1]
+                custom_field_name = value
+                custom_field_data = request.POST.get(f'editCustomFieldData_{field_number}')
+                custom_fields[custom_field_name] = custom_field_data
+
+        formation.custom_fields = custom_fields
+        formation.save()
+
+        return redirect('edit_formation')  # Redirect to the list of formations after editing
+
+    return render(request, 'multi_company/edit_formation.html', {'formation': formation})
 
 
 
@@ -355,6 +409,269 @@ def doisser_detail(request, doisser_id):
     }
 
     return render(request, 'multi_company/doisser.html', context)
+
+from django.shortcuts import render, redirect
+from .models import Formation
+
+def add_formation(request):
+    if request.method == "POST":
+        # Extract data from standard fields
+        date_de_soumission = request.POST.get('date_de_soumission')
+        nom_de_la_campagne = request.POST.get('nom_de_la_campagne')
+        nom_prenom = request.POST.get('nom_prenom')
+        telephone = request.POST.get('telephone')
+        email = request.POST.get('email')
+        comments = request.POST.get('comments')
+        price = request.POST.get('price')
+        conseiller = request.POST.get('conseiller')
+
+        # Create a dictionary for custom fields
+        custom_fields = {}
+
+        # Iterate over posted custom field names and data
+        for key, value in request.POST.items():
+            if key.startswith('custom_field_name_'):
+                field_number = key.split('_')[-1]
+                custom_field_name = value
+                custom_field_data = request.POST.get(f'custom_field_data_{field_number}')
+                custom_fields[custom_field_name] = custom_field_data
+
+        # Create a Formation instance and save it
+        formation = Formation(
+            date_de_soumission=date_de_soumission,
+            nom_de_la_campagne=nom_de_la_campagne,
+            nom_prenom=nom_prenom,
+            telephone=telephone,
+            email=email,
+            comments=comments,
+            price=price,
+            conseiller=conseiller,
+            custom_fields=custom_fields
+        )
+        formation.save()
+        
+        
+
+        return redirect('add_formation') 
+    
+   
+
+    return render(request, 'multi_company/formation.html')
+
+import requests
+import re
+import datetime
+from django.shortcuts import render
+from .models import JotFormSubmission
+from django.shortcuts import render
+from .models import JotFormSubmission
+
+def show_jotform_data(request):
+    # Retrieve all data from the JotFormSubmission model
+    jotform_submissions = JotFormSubmission.objects.all()
+    
+    # Pass the data to a template for rendering
+    return render(request, 'multi_company/jotform_reselform.html', {'jotform_submissions': jotform_submissions})
+
+
+# views.py
+import requests
+import re
+import datetime
+from django.shortcuts import render
+from .models import JotFormSubmission
+from django.core.exceptions import ValidationError
+
+def import_jotform_data(request):
+    if request.method == 'POST':
+        api_key = '210c836a9974c7a935312b1ea8943c90'  # Replace with your actual JotForm API key
+        formId = '222203090268952'  # Replace with the actual form ID you want to retrieve
+        max_records_per_request = 500
+
+        all_records = []
+        offset = 0
+        while True:
+            url = f'https://reselform.jotform.com/API/form/{formId}/submissions?apiKey={api_key}&limit={max_records_per_request}&offset={offset}'
+            response = requests.get(url)
+
+            if response.status_code != 200:
+                print(f"Request failed with status code: {response.status_code}")
+                print(response.text)
+                break
+
+            try:
+                table_data = response.json()
+                content = table_data['content']
+
+                if not content:
+                    break
+
+                for entry in content:
+                    first_name = entry['answers']['4']['answer'].get('first', '')
+                    last_name = entry['answers']['4']['answer'].get('last', '')
+                    email = entry['answers']['7']['answer']
+                    signature = entry['answers']['5'].get('answer', '')
+                    numero_telephone = entry['answers'].get('6', {}).get('answer', '')
+
+                    address = entry['answers'].get('8', {})
+                    numero_et_rue = address.get('Numéro et rue', '')
+                    complement_adresse = address.get('Complément d\'adresse', '')
+                    ville = address.get('Ville', '')
+                    etat_region = address.get('État/Région', '')
+                    code_postal = address.get('Code Postal', '')
+
+                    choix_formation = entry['answers']['11']['answer'][0]
+                    start_date = entry['answers']['14'].get('answer', '')
+                    end_date = entry['answers']['15'].get('answer', '')
+
+                    nombre_heure = entry['answers'].get('24', '')
+                    prix_formation = entry['answers'].get('20', '')
+                    passage_au = entry['answers'].get('21', {}).get('answer', '')
+                    votre_conseiller = entry['answers'].get('18', 'Vide')
+                    formation = entry['answers'].get('19', [])
+                    audio_appel_qualite = entry['answers'].get('27', [])
+                    audio_suivi_formation = entry['answers'].get('28', [])
+
+                    submission = JotFormSubmission(
+                        submission_date=entry['created_at'],
+                        first_name=first_name,
+                        last_name=last_name,
+                        email=email,
+                        signature=signature,
+                        numero_telephone=numero_telephone,
+                        numero_et_rue=numero_et_rue,
+                        complement_adresse=complement_adresse,
+                        ville=ville,
+                        etat_region=etat_region,
+                        code_postal=code_postal,
+                        choix_formation=choix_formation,
+                        date_debut=start_date,
+                        date_fin=end_date,
+                        nombre_heure=nombre_heure,
+                        prix_formation=prix_formation,
+                        passage_au=passage_au,
+                        votre_conseiller=votre_conseiller,
+                        formation=', '.join(formation),
+                        audio_appel_qualite=', '.join(audio_appel_qualite),
+                        audio_suivi_formation=', '.join(audio_suivi_formation),
+                    )
+
+                    try:
+                        submission.full_clean()
+                        submission.save()
+                        all_records.append(submission)
+                    except ValidationError:
+                        print(f"*******************************************************Validation Error for Entry: {entry}")
+
+                    offset += max_records_per_request
+
+            except ValueError as e:
+                print("Error decoding JSON response:", e)
+                break
+
+        print("Data imported and saved to the database.")
+
+    jotform_submissions = JotFormSubmission.objects.all()
+
+    return render(request, 'multi_company/jotform_reselform.html', {'jotform_submissions': jotform_submissions})
+
+
+
+
+# def import_jotform_data(request):
+#     if request.method == 'POST':
+#         # Replace 'your_api_key_here' with your actual JotForm API key
+#         api_key = '210c836a9974c7a935312b1ea8943c90'
+
+#         # Replace 'your_table_id_here' with the actual table ID you want to retrieve
+#         formId = '230664959653974'
+        
+#         max_records_per_request = 200
+        
+#           # Initialize a list to store all records
+#         all_records = []
+#         offset = 0
+    
+#         while True:
+
+#             # Define the API endpoint URL
+#             url = f'https://reselform.jotform.com/API/form/{formId}/submissions?apiKey={api_key}'
+
+#             # Make a GET request to the JotForm API
+#             response = requests.get(url)
+
+#             if response.status_code == 200:
+#                 try:
+#                     table_data = response.json()
+#                     content = table_data['content']
+#                     # If there are no more records, exit the loop
+#                     if not content:
+#                         break
+
+#                     for entry in content:
+#                         submission_date = check_input_type(entry['created_at'])
+#                         first_name = entry['answers']['4']['answer']['first']
+#                         last_name = entry['answers']['4']['answer']['last']
+#                         email = entry['answers']['7']['answer']
+#                         signature = entry['answers']['5'].get('answer', '')
+#                         numero_telephone = None  # You can change this to the actual field
+#                         if '6' in entry['answers'] and entry['answers']['6']['answer']:
+#                             numero_telephone = entry['answers']['6']['answer']
+
+#                         address_details = entry['answers']['8']['prettyFormat']
+#                         address_match = re.search(
+#                             r'Numéro et rue:(.*?)<br>Ville:(.*?)<br>État/Région:(.*?)<br>Code Postal:(\d+)', address_details)
+
+#                         if address_match:
+#                             numero_et_rue = address_match.group(1).strip()
+#                             ville = address_match.group(2).strip()
+#                             etat_region = address_match.group(3).strip()
+#                             code_postal = address_match.group(4).strip()
+#                         else:
+#                             numero_et_rue = ''
+#                             ville = ''
+#                             etat_region = ''
+#                             code_postal = ''
+
+#                         formation = entry['answers']['11']['answer'][0]
+#                         start_date = check_input_type(entry['answers']['14']['prettyFormat'])
+#                         end_date = check_input_type(entry['answers']['15']['prettyFormat'])
+
+#                         # Create and save a JotFormSubmission instance
+#                         submission = JotFormSubmission(
+#                             submission_date=submission_date,
+#                             first_name=first_name,
+#                             last_name=last_name,
+#                             email=email,
+#                             signature=signature,
+#                             telephone=numero_telephone,
+#                             numero_et_rue=numero_et_rue,
+#                             ville=ville,
+#                             etat_region=etat_region,
+#                             code_postal=code_postal,
+#                             choix_formation=formation,
+#                             date_debut=start_date,
+#                             date_fin=end_date,
+#                         )
+#                         submission.save()
+#                         all_records.append(submission)
+#                     offset += max_records_per_request
+
+#                     print("Data imported and saved to the database.")
+#                 except ValueError as e:
+#                     print("Error decoding JSON response:", e)
+#                     break
+#             else:
+#                 print(f"Request failed with status code: {response.status_code}")
+#                 print(response.text)  # Print the response content for debugging
+
+#         jotform_submissions = JotFormSubmission.objects.all()  # Assuming you have a model named JotFormSubmission
+#         print(jotform_submissions)  # Debug print statement
+
+
+#     # Render the template
+#     return render(request, 'multi_company/jotform_reselform.html',{'jotform_submissions': jotform_submissions})
+
 
 # @login_required
 # def lead_history_view(request, lead_id):
