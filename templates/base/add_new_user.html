@@ -3,39 +3,43 @@
 
 {% block content %}
 <style>
+    /* Add this to your CSS file */
+    .user-deactivated {
+        background-color: #fa6262;
+        /* Red background color */
+    }
 
-/* Add this to your CSS file */
-.user-deactivated {
-    background-color: #fa6262; /* Red background color */
-}
+    .mention-textarea {
+        font-family: 'Arial';
+        color: rgb(20, 95, 245);
+        font-weight: bold;
+    }
 
-  .mention-textarea {
-    font-family: 'Arial';
-    color: rgb(20, 95, 245);
-    font-weight: bold;
-  }
-  @keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+        }
 
-.greeting {
-  animation: fadeIn 1s ease-in-out;
-}
+        100% {
+            opacity: 1;
+        }
+    }
 
-.main-content {
-  animation: fadeIn 1s ease-in-out;
-}
+    .greeting {
+        animation: fadeIn 1s ease-in-out;
+    }
 
-.table-header {
-    font-weight: bold;
-    background-color: #f8f9fa; /* Light gray background */
-    color: #333; /* Dark gray text color */
-}
+    .main-content {
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    .table-header {
+        font-weight: bold;
+        background-color: #f8f9fa;
+        /* Light gray background */
+        color: #333;
+        /* Dark gray text color */
+    }
 </style>
     <div class="wrapper">
         
@@ -192,16 +196,21 @@
             <div class="card-body">
                 <!-- Table -->
                 <table class="table datatables" id="dataTable-1">
-                    <thead>
+                    <thead class="thead-dark">
                         <tr>
-                            <th></th>
-                            <th class="table-header">Sl No.</th>
-                            <th class="table-header">First Name</th>
-                            <th class="table-header">Last Name</th>
-                            <th class="table-header">User Name</th>
+                            <th>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" />
+                                    <label class="custom-control-label"></label>
+                                </div>
+                            </th>
+                            <th class="table-header">N°Sl.</th>
+                            <th class="table-header">Prénom</th>
+                            <th class="table-header">Nom de famille</th>
+                            <th class="table-header">Nom de l'utilisateur</th>
                             <th class="table-header">Email</th>
-                            <th class="table-header">Address</th>
-                            <th class="table-header">Date Joined</th>
+                            <th class="table-header">Adresse</th>
+                            <th class="table-header">Date d'adhésion</th>
                             <th class="table-header">Action</th>
                         </tr>
                     </thead>

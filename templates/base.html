@@ -4,24 +4,24 @@
 
 <head>
 
-  <title>Tiny Dashboard - A Bootstrap Dashboard Template</title>
+  <title>CRM | ADMIN</title>
 
-<style>
+  <style>
     .btn-primary {
-        position: relative;
-        overflow: hidden;
-        transition: transform 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease;
     }
 
     .btn-primary:hover {
-        transform: scale(1.1);
+      transform: scale(1.1);
     }
 
-      .dropdown-menu.no-box {
-        box-shadow: none;
-        border: none;
+    .dropdown-menu.no-box {
+      box-shadow: none;
+      border: none;
     }
-</style>
+  </style>
   <link rel="stylesheet" href="{%static 'css/feather.css' %}">
   <!-- Date Range Picker CSS -->
   <link rel="stylesheet" href="{%static 'css/daterangepicker.css' %}">
@@ -48,11 +48,12 @@
   <link rel="stylesheet" href="{%static 'css/app-light.css'%}" id="lightTheme">
   <link rel="stylesheet" href="{%static 'css/app-dark.css'%}" id="darkTheme" disabled>
 
-<!-- data table new -->
+  <!-- data table new -->
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">  
-<!--and data table new -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
+  <!--and data table new -->
 </head>
+
 
 
 <body class="vertical  light  ">
@@ -91,9 +92,9 @@
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
         
-            <a class="dropdown-item" href="{% url 'admin_dashboard' %}">Dashboard</a>
-            <a class="dropdown-item" href="{% url 'profile_settings' %}">Settings</a>
-            <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+            <a class="dropdown-item" href="{% url 'admin_dashboard' %}">Tableau de bord</a>
+            <a class="dropdown-item" href="{% url 'profile_settings' %}">Réglages</a>
+            <a class="dropdown-item" href="{% url 'logout' %}">Se déconnecter</a>
           </div>
         </li>
       </ul>
@@ -120,7 +121,7 @@
         <li class="nav-item">
           <a href="{% url 'admin_dashboard' %}" class="nav-link">
             <i class="fe fe-home fe-16"></i>
-            <span class="ml-3 item-text">Dashboard</span><span class="sr-only">(current)</span>
+            <span class="ml-3 item-text">Tableau de bord</span><span class="sr-only">(current)</span>
           </a>
         </li>
       </ul>
@@ -128,7 +129,7 @@
         <li class="nav-item">
           <a href="{% url 'add_new_user' %}" class="nav-link">
             <i class="fe fe-user fe-16"></i>
-            <span class="ml-3 item-text">Users</span><span class="sr-only">(current)</span>
+            <span class="ml-3 item-text">Utilisateurs</span><span class="sr-only">(current)</span>
           </a>
         </li>
       </ul>
@@ -169,10 +170,10 @@
         </a>
         <ul class="collapse list-unstyled pl-4 w-100" id="admin">
           <li class="nav-item">
-            <a class="nav-link pl-3" href="{% url 'create_facebook_page' %}"><span class="ml-1">Add pages</span></a>
-            <a class="nav-link pl-3" href="{% url 'add_company' %}"><span class="ml-1">Add company</span></a>
+            <a class="nav-link pl-3" href="{% url 'create_facebook_page' %}"><span class="ml-1">Ajouter des pages</span></a>
+            <a class="nav-link pl-3" href="{% url 'add_company' %}"><span class="ml-1">Ajouter une société</span></a>
             <a class="nav-link pl-3" href="{% url 'map_facebook_pages' %}"><span class="ml-1">Mapping</span></a>
-            <a class="nav-link pl-3" href="{% url 'deactivated_leads' %}"><span class="ml-1">Deactivate leads</span></a>
+            <a class="nav-link pl-3" href="{% url 'deactivated_leads' %}"><span class="ml-1">Désactiver les leads</span></a>
             <a class="nav-link pl-3" href="{% url 'add_formation' %}"><span class="ml-1">Formation</span></a>
             
     

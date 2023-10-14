@@ -7,145 +7,153 @@
     color: rgb(20, 95, 245);
     font-weight: bold;
   }
+
   /* Add some background color to the form */
-.animated-form {
-  background-color: #f5f5f5;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Add a subtle animation to the form */
-.animated-form {
-  animation: fadeInUp 0.5s ease-in-out;
-}
-
-@keyframes fadeInUp {
-  0% {
-    transform: translateY(10px);
-    opacity: 0;
+  .animated-form {
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
+
+  /* Add a subtle animation to the form */
+  .animated-form {
+    animation: fadeInUp 0.5s ease-in-out;
   }
-}
 
-/* Add some background color to the form */
-.animated-form {
-  background-color: #f5f5f5;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
+  @keyframes fadeInUp {
+    0% {
+      transform: translateY(10px);
+      opacity: 0;
+    }
 
-/* Add a subtle animation to the form */
-.animated-form {
-  animation: fadeInUp 0.5s ease-in-out;
-}
-
-@keyframes fadeInUp {
-  0% {
-    transform: translateY(10px);
-    opacity: 0;
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
   }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
 
-/* Style the animated icon */
-/* .animated-icon {
+  /* Add some background color to the form */
+  .animated-form {
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Add a subtle animation to the form */
+  .animated-form {
+    animation: fadeInUp 0.5s ease-in-out;
+  }
+
+  @keyframes fadeInUp {
+    0% {
+      transform: translateY(10px);
+      opacity: 0;
+    }
+
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  /* Style the animated icon */
+  /* .animated-icon {
   color: #3498db;
   animation: rotate 1.5s linear infinite;
 } */
 
- @keyframes heartbeat {
-      0%, 100% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.2);
-      }
-    }
-    
-    .animated-icon {
-      animation: heartbeat 1s ease-in-out infinite;
-      color: #3498db;
+  @keyframes heartbeat {
+
+    0%,
+    100% {
+      transform: scale(1);
     }
 
+    50% {
+      transform: scale(1.2);
+    }
+  }
 
+  .animated-icon {
+    animation: heartbeat 1s ease-in-out infinite;
+    color: #3498db;
+  }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <main role="main" class="main-content">
   <div class="container-fluid">
     <div class="row justify-content-center">
-      <div class="col-12 col-lg-10 col-xl-8">
-        <h2 class="h3 mb-4 page-title">Settings</h2>
+      <div class="col-12 col-lg-10 col-xl-12">
+        <h2 class="h3 mb-4 page-title">Réglages</h2>
         <div class="my-4">
           <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
-            <li class="nav-item">
+            <li class="nav-item" style="color: rgba(54,188,175,1);">
               <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-                aria-selected="true">Profile</a>
+                aria-selected="true" style="color:rgba(54,188,175,1);">Informations du Profil</a>
             </li>
-            
+
           </ul>
-           <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
           <form method="post" class="animated-form">
-  {% csrf_token %}
-  <div class="row mt-5 align-items-center">
-    <div class="col-md-3 text-center mb-5">
-       <i class="fas fa-user fa-4x animated-icon"></i>
-      <!-- You can add an animated icon or background here -->
-    </div>
-    <div class="col">
-      <div class="row align-items-center">
-        <div class="col-md-7">
-          <h4 class="mb-1">{{ user.first_name }}, {{ user.last_name }}</h4>
-        </div>
-      </div>
-                
+            {% csrf_token %}
+            <div class="row mt-5 align-items-center">
+              <div class="col-md-3 text-center mb-5">
+                <i class="fas fa-user fa-4x animated-icon"></i>
+                <!-- You can add an animated icon or background here -->
+              </div>
+              <div class="col">
+                <div class="row align-items-center">
+                  <div class="col-md-7">
+                    <h4 class="mb-1">{{ user.first_name }}, {{ user.last_name }}</h4>
+                  </div>
+                </div>
+
               </div>
             </div>
             <hr class="my-4">
             <div class="form-row">
               <div class="form-group col-md-6">
-                <label for="firstname">Firstname</label>
-                <input type="text" id="firstname" name="firstname" class="form-control" placeholder="Brown"
+                <label for="firstname">Prénom</label>
+                <input type="text" id="firstname" name="firstname" class="form-control" placeholder="Prénom"
                   value="{{ user.first_name }}">
               </div>
               <div class="form-group col-md-6">
-                <label for="lastname">Lastname</label>
-                <input type="text" id="lastname" name="lastname" class="form-control" placeholder="Asher"
+                <label for="lastname">Nom de famille</label>
+                <input type="text" id="lastname" name="lastname" class="form-control" placeholder="Nom de famille"
                   value="{{ user.last_name }}">
               </div>
             </div>
-            <div class="form-group">
-              <label for="inputEmail4">Email</label>
-              <input type="email" name="inputEmail4" class="form-control" placeholder="brown@asher.me"
-                value="{{ user.email }}">
-            </div>
-            <!-- Add other form fields as needed -->
-            <hr class="my-4">
-            <div class="row mb-4">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="inputPassword4">Old Password</label>
-                  <input type="password" name="inputPassword4" class="form-control">
-                </div>
-                <div class="form-group">
-                  <label for="inputPassword5">New Password</label>
-                  <input type="password" name="inputPassword5" class="form-control">
-                </div>
-                <div class="form-group">
-                  <label for="inputPassword6">Confirm Password</label>
-                  <input type="password" name="inputPassword6" class="form-control">
-                </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="inputEmail4">Email</label>
+                <input type="email" name="inputEmail4" class="form-control" placeholder="brown@asher.me"
+                  value="{{ user.email }}">
               </div>
-        
+              <div class="form-group col-md-6">
+                <label for="inputPassword4">Ancien mot de passe</label>
+                <input type="password" name="inputPassword4" class="form-control">
+              </div>
             </div>
-            <button type="submit" class="btn btn-primary">Save Change</button>
+
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="inputPassword5">Nouveau mot de passe</label>
+                <input type="password" name="inputPassword5" class="form-control">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="inputPassword6">Confirmer le mot de passe</label>
+                <input type="password" name="inputPassword6" class="form-control">
+              </div>
+
+
+              <!-- Add other form fields as needed -->
+              <hr class="my-4">
+              <button type="submit" class="btn" style="background-color: rgba(54,188,175,1);"><span
+                  class="text-white">Sauvegarder la modification</span></button>
           </form>
 
         </div> <!-- /.card-body -->

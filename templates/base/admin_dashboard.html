@@ -8,11 +8,12 @@
     font-weight: bold;
   }
 
-   #priceTable_wrapper {
+  #priceTable_wrapper {
     border: 1px solid #d1d1d1;
     overflow-x: auto;
     margin-top: 20px;
-    width: 100%; /* Adjust as needed */
+    width: 100%;
+    /* Adjust as needed */
   }
 
   #priceTable th,
@@ -22,103 +23,108 @@
   }
 
   .table-container {
-  max-height: 400px; /* Set the maximum height of the container */
-  overflow-y: auto; /* Enable vertical scroll if content overflows */
-  border: 1px solid #dee2e6;
-  border-radius: 10px;
-  padding: 10px;
-  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  overflow-x: auto;
-  height: inherit;
-  width: 100%; /* Take up full width */
-  padding: 0; /* Remove any padding */
-  margin: 0;
-  
-  
-}
-
-.elegant-table {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-.elegant-table th,
-.elegant-table td {
-  border: 1px solid #dee2e6;
-  padding: 8px;
-  text-align: center;
-}
-
-.elegant-table th {
-  background-color: #343a40;
-  color: white;
-}
-
-.week-navigation {
-  display: flex;
-  gap: 10px;
-}
-
-.week-button {
-  font-size: 14px;
-  padding: 6px 12px;
-}
-
-.price-table-card {
-  border: none;
-  border-radius: 15px;
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
-}
-
-#priceTable {
-  width: 100%; /* Set the table to auto width to allow it to stretch */
-}
+    max-height: 400px;
+    /* Set the maximum height of the container */
+    overflow-y: auto;
+    /* Enable vertical scroll if content overflows */
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: auto;
+    height: inherit;
+    width: 100%;
+    /* Take up full width */
+    padding: 0;
+    /* Remove any padding */
+    margin: 0;
 
 
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
   }
-  100% {
-    opacity: 1;
+
+  .elegant-table {
+    border-collapse: collapse;
+    width: 100%;
   }
-}
 
-.greeting {
-  animation: fadeIn 1s ease-in-out;
-}
+  .elegant-table th,
+  .elegant-table td {
+    border: 1px solid #dee2e6;
+    padding: 8px;
+    text-align: center;
+  }
 
-.main-content {
-  animation: fadeIn 1s ease-in-out;
-}
+  .elegant-table th {
+    background-color: #343a40;
+    color: white;
+  }
 
+  .week-navigation {
+    display: flex;
+    gap: 10px;
+  }
+
+  .week-button {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+
+  .price-table-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  #priceTable {
+    width: 100%;
+    /* Set the table to auto width to allow it to stretch */
+  }
+
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .greeting {
+    animation: fadeIn 1s ease-in-out;
+  }
+
+  .main-content {
+    animation: fadeIn 1s ease-in-out;
+  }
 </style>
-   <div id="ticker">
-    <marquee behavior="scroll" direction="left" scrollamount="5">
-      <span id="ticker-content">Welcome to plome {{user.first_name}}</span>
-    </marquee>
-  </div>
+<div id="ticker">
+  <marquee behavior="scroll" direction="left" scrollamount="5">
+    <span id="ticker-content">Bienvenue sur Plome {{user.first_name}}</span>
+  </marquee>
+</div>
 <main role="main" class="main-content">
   <div class="container-fluid">
     <div class="row justify-content-center">
       <div class="col-12">
-        <h1 class="greeting">Hello ✌ {{ user.first_name }} {{ user.last_name }}</h1>
+        <h1 class="greeting">Bonjour ✌ {{ user.first_name }} {{ user.last_name }}</h1>
         <div class="row">
-          
+
           <div class="col-md-6 col-xl-3 mb-4">
-            <div class="card shadow bg-primary text-white border-0">
+            <div class="card shadow text-white border-0" style="background-color: rgba(54,188,175,1);">
               <div class="card-body">
                 <div class="row align-items-center">
                   <div class="col-3 text-center">
-                    <span class="circle circle-sm bg-primary-light">
+                    <span class="circle circle-sm" style="background-color: rgb(2, 130, 124);">
                       <i class="fe fe-16 fe-shopping-bag text-white mb-0"></i>
                     </span>
                   </div>
                   <div class="col pr-0">
-                    <p class="small text-muted mb-0">All Leads</p>
+                    <p class="small text-white mb-0">Tous les Leads</p>
                     <span class="h3 mb-0 text-white">{{ all_leads_count }}</span>
                     <!-- Add other relevant styling and content -->
                   </div>
@@ -132,16 +138,14 @@
               <div class="card-body">
                 <div class="row align-items-center">
                   <div class="col-3 text-center">
-                    <span class="circle circle-sm bg-primary">
-                      <i class="fe fe-16 fe-shopping-cart text-white mb-0"></i>
-                    </span>
+                    <span class="circle circle-sm" style="background-color: rgba(54,188,175,1);">
+                      <i class="fe fe-16 fe-shopping-cart text-white mb-0"></i> </span>
                   </div>
                   <div class="col pr-0">
-                    <p class="small text-muted mb-0">Number of Signé CPF</p>
-                   
+                    <p class="small text-black mb-0">Nombre de CPF Signés</p>
                     <span class="h3 mb-0">{{ signe_cpf_leads_count }}</span>
 
-                   
+
                   </div>
                 </div>
               </div>
@@ -152,129 +156,136 @@
               <div class="card-body">
                 <div class="row align-items-center">
                   <div class="col-3 text-center">
-                    <span class="circle circle-sm bg-primary">
+                    <span class="circle circle-sm" style="background-color: rgba(54,188,175,1);">
                       <i class="fe fe-16 fe-filter text-white mb-0"></i>
                     </span>
                   </div>
                   <div class="col">
-                      <p class="small text-muted mb-0">Conversion</p>
-                      <div class="row align-items-center no-gutters">
-                          <div class="col-auto">
-                              <span class="h3 mr-2 mb-0">{{ conversion_rate|floatformat:1 }}%</span>
-                          </div>
-                          <div class="col-md-12 col-lg">
-                              <div class="progress progress-sm mt-2" style="height:3px">
-                                  <div class="progress-bar bg-success" role="progressbar" style="width: {{ conversion_rate }}%" aria-valuenow="{{ conversion_rate }}" aria-valuemin="0" aria-valuemax="100"></div>
-                              </div>
-                          </div>
+                    <p class="small text-black mb-0">Taux de Conversion</p>
+                    <div class="row align-items-center no-gutters">
+                      <div class="col-auto">
+                        <span class="h3 mr-2 mb-0">{{ conversion_rate|floatformat:1 }}%</span>
                       </div>
+                      <div class="col-md-12 col-lg">
+                        <div class="progress progress-sm mt-2" style="height:3px">
+                          <div class="progress-bar bg-success" role="progressbar" style="width: {{ conversion_rate }}%"
+                            aria-valuenow="{{ conversion_rate }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <div class="col-md-6 col-xl-3 mb-4">
-    <div class="card shadow border-0">
-        <div class="card-body">
-            <div class="row align-items-center">
-                <div class="col-3 text-center">
-                    <span class="circle circle-sm bg-primary">
-                        <i class="fe fe-16 fe-activity text-white mb-0"></i>
+            <div class="card shadow border-0">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-3 text-center">
+                    <span class="circle circle-sm" style="background-color: rgba(54,188,175,1);">
+                      <i class="fe fe-16 fe-activity text-white mb-0"></i>
                     </span>
-                </div>
-                <div class="col">
+                  </div>
+                  <div class="col">
                     <p class="small text-muted mb-0">Notifications</p>
                     <span class="h3 mb-0">{{ unread_notification_count|default:"0" }}</span>
+                  </div>
                 </div>
+              </div>
             </div>
-        </div>
-    </div>
-</div>
+          </div>
 
         </div> <!-- end section -->
 
-<!-- Inside your HTML template -->
-<div class="container mt-5">
-  <h2>Company Lead Summary</h2>
-  <table id="company-lead-summary-table" class="display" style="width:100%">
-    <thead>
-      <tr>
-        <th>Company</th>
-        <th>Lead Count</th>
-        <th>Total Price</th>
-      </tr>
-    </thead>
-  </table>
-</div>
-
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-
-<script>
-  $(document).ready(function () {
-    // Fetch JSON data from your Django view
-    $.getJSON("{% url 'company_lead_summary' %}", function (data) {
-      // Initialize the DataTable
-      $('#company-lead-summary-table').DataTable({
-        data: data.company_summaries,
-        columns: [
-          { data: 'company_name' },
-          { data: 'lead_count' },
-          { data: 'total_price' },
-        ]
-      });
-    });
-  });
-</script>
-        
-  <div class="row">
-  <!-- Price Table Section -->
-  <div class="col-md-12">
-    <div class="card shadow price-table-card">
-      <div class="card-body d-flex flex-column align-items-center">
-        <div class="d-flex justify-content-between align-items-center mb-3 w-100">
-          <div>
-            <button type="button" class="btn btn-secondary week-button" id="prevWeek">Previous Week</button>
-          
-            <button type="button" class="btn btn-secondary week-button" id="nextWeek">Next Week</button>
-         
-          </div>
-          
-          <h4 class="text-center">Price Table</h4>
-          <div>
-            <button type="button" class="btn btn-secondary week-button" id="presentWeek">Present Week</button>
-          </div>
+        <!-- Inside your HTML template -->
+        <div class="container mt-2">
+          <h2>Résumé du chef d'entreprise</h2>
+          <table id="company-lead-summary-table" class="display" style="width:100%">
+            <thead>
+              <tr>
+                <th>Entreprise</th>
+                <th>Décompte des prospects</th>
+                <th>Prix total</th>
+              </tr>
+            </thead>
+          </table>
         </div>
-        <h6 id="table-heading" class="text-center mb-3"></h6>
-        <div class="table-container">
-          <div id="priceTable_wrapper" class="table-responsive">
-            <table id="priceTable" class="table table-striped table-bordered elegant-table">
-              <thead class="thead-dark">
-                <tr role="row">
-                  <th>User</th>
-                  <th>Monday</th>
-                  <th>Tuesday</th>
-                  <th>Wednesday</th>
-                  <th>Thursday</th>
-                  <th>Friday</th>
-                  <th>Saturday</th>
-                  <th>Sunday</th>
-                  <th>Week Total</th>
-                  <th>Month Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- Data will be populated here -->
-              </tbody>
-            </table>
-          </div>
+
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+        <script>
+          $(document).ready(function () {
+            // Fetch JSON data from your Django view
+            $.getJSON("{% url 'company_lead_summary' %}", function (data) {
+              // Initialize the DataTable
+              $('#company-lead-summary-table').DataTable({
+                data: data.company_summaries,
+                columns: [
+                  { data: 'company_name' },
+                  { data: 'lead_count' },
+                  { data: 'total_price' },
+                ]
+              });
+            });
+          });
+        </script>
+
+        <div class="row">
+          <!-- Price Table Section -->
+          <div class="col-md-12">
+            <div class="card shadow price-table-card">
+              <div class="card-body d-flex flex-column align-items-center">
+                <div class="d-flex justify-content-between align-items-center mb-3 w-100">
+                  <div>
+                    <button type="button" class="btn week-button" id="prevWeek"
+                      style="background-color: rgba(54,188,175,1);"><span class="text-white">Semaine
+                        précédente</span></button>
+
+                    <button type="button" class="btn week-button ml-2" id="nextWeek"
+                      style="background-color: rgba(54,188,175,1);"><span class="text-white">Semaine
+                        prochaine</span></button>
+
+                  </div>
+
+                  <h4 class="text-center">Tableau des prix</h4>
+                  <div>
+                    <button type="button" class="btn week-button" id="presentWeek"
+                      style="background-color: rgba(54,188,175,1);"><span class="text-white">Semaine en
+                        cours</span></button>
+                  </div>
+                </div>
+                <h6 id="table-heading" class="text-center mb-3"></h6>
+                <div class="table-container">
+                  <div id="priceTable_wrapper" class="table-responsive">
+                    <table id="priceTable" class="table table-striped table-bordered elegant-table">
+                      <thead class="thead-dark">
+                        <tr role="row">
+                          <th>Utilisateur</th>
+                          <th>Lundi</th>
+                          <th>Mardi</th>
+                          <th>Mercredi</th>
+                          <th>Jeudi</th>
+                          <th>Vendredi</th>
+                          <th>Samedi</th>
+                          <th>Dimanche</th>
+                          <th>Total de la semaine</th>
+                          <th>Mois Total</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <!-- Data will be populated here -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> <!-- .col-md-12 -->
         </div>
-      </div>
-    </div>
-  </div> <!-- .col-md-12 -->
-</div>
 
 
 
@@ -292,13 +303,13 @@
 
 <script>
   var selectedWeek = 0; // Initialize the selected week offset
-  var weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  var weekdays = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
 
   function updateTable(data) {
     var tableBody = $('#priceTable tbody');
     tableBody.empty();
 
-    $.each(data, function(userId, userData) {
+    $.each(data, function (userId, userData) {
       var row = $('<tr></tr>');
       row.append($('<td></td>').text(userData.username));
       var total = 0;
@@ -337,11 +348,11 @@
       method: 'GET',
       data: { week_offset: selectedWeek },
       dataType: 'json',
-      success: function(data) {
+      success: function (data) {
         updateTable(data);
         updateHeading(selectedWeek);
       },
-      error: function() {
+      error: function () {
         console.error('Failed to fetch price data.');
       }
     });
@@ -352,25 +363,25 @@
     var startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - (today.getDay() + 7 * weekOffset));
     var endDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 6);
 
-    var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    var monthNames = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
     var month = monthNames[startDate.getMonth()];
-    var week = weekOffset === 0 ? 'Present Week' : 'Week ' + (weekOffset > 0 ? weekOffset : 'Previous');
+    var week = weekOffset === 0 ? 'Semaine Actuelle' : 'Semaine ' + (weekOffset > 0 ? weekOffset : 'Précédente');
 
     $('#table-heading').text(month + ' | ' + week + ' (' + startDate.toDateString() + ' - ' + endDate.toDateString() + ')');
   }
 
-  $(document).ready(function() {
+  $(document).ready(function () {
     fetchAndPopulateData(0);
 
-    $('#prevWeek').click(function() {
+    $('#prevWeek').click(function () {
       fetchAndPopulateData(1);
     });
 
-    $('#nextWeek').click(function() {
+    $('#nextWeek').click(function () {
       fetchAndPopulateData(-1);
     });
 
-    $('#presentWeek').click(function() {
+    $('#presentWeek').click(function () {
       selectedWeek = 0;
       fetchAndPopulateData(0);
     });
