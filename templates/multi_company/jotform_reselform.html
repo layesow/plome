@@ -2,16 +2,48 @@
 {% load static %}
 {% block content %}
 
-
 <main role="main" class="main-content">
     <div class="container-fluid">
         <div class="card shadow">
             <div class="card-body">
-                <h1>Imported JotForm Data</h1>
-                <form method="post" action="">
+                <h1>Imported JotForm Data of Reselform selling partners</h1>
+
+                <!-- <h2>Add JotForm</h2>
+                <form method="post" action="{% url 'add_jotform' %}">
                     {% csrf_token %}
+                    <label for="name">Name:</label>
+                    <input type="text" name="name" id="name" required>
+                    <br><br>
+                    <button type="submit">Add JotForm</button>
+                </form> -->
+
+                <h2>Import JotForm Data</h2>
+                <form method="post" action="{% url 'import_jotform_data' %}">
+                    {% csrf_token %}
+                    <label for="form_id">Select a Form ID:</label>
+                    <select name="form_id" id="form_id" required>
+                        <option value="" disabled selected>Select a Form ID</option>
+                        {% for jotform in jotforms %}
+                        <option value="{{ jotform.form_id }}">{{ jotform.name }}</option>
+                        {% endfor %}
+                    </select>
                     <button type="submit">Import Data</button>
+
                 </form>
+                <h2>Map JotForm Data to Doisser</h2>
+            {% for jotform_submission in jotform_submissions %}
+            <form method="post" action="{% url 'map_jotform_to_doisser' %}">
+                {% csrf_token %}
+                <input type="hidden" name="jotform_submission_id" value="{{ jotform_submission.id }}">
+                <!-- Display information about the JotForm submission -->
+                <p>{{ jotform_submission.first_name }} {{ jotform_submission.last_name }} - {{ jotform_submission.email }}</p>
+                <!-- Add more information as needed -->
+                <button type="submit">Map to Doisser</button>
+            </form>
+            {% endfor %}
+
+            </div>
+
             <div class="table-responsive mt-4">
                 <table id="exampleDT" class="table table-bordered display nowrap" cellspacing="0" style="width:100%">
                     <thead class="table-dark">
@@ -22,11 +54,7 @@
                             <th>Email</th>
                             <th>Signature</th>
                             <th>Numéro de téléphone</th>
-                            <th>Numéro et rue</th>
-                            <th>Complément d'adresse</th>
-                            <th>Ville</th>
-                            <th>État/Région</th>
-                            <th>Code Postal</th>
+                            <th>Address</th>
                             <th>Choix de la formation</th>
                             <th>Date de début</th>
                             <th>Date de fin</th>
@@ -48,34 +76,51 @@
                             <td>{{ submission.last_name }}</td>
                             <td>{{ submission.email }}</td>
                             <td>{{ submission.signature }}</td>
-                            <td>{{ submission.numero_telephone }}</td>
-                            <td>{{ submission.numero_et_rue }}</td>
-                            <td>{{ submission.complement_adresse }}</td>
-                            <td>{{ submission.ville }}</td>
-                            <td>{{ submission.etat_region }}</td>
-                            <td>{{ submission.code_postal }}</td>
+
+                            <td>
+                                {{ submission.numero_telephone }}
+                            </td>
+                            <td>
+                                {{ submission.address }}
+                            </td>
+
                             <td>{{ submission.choix_formation }}</td>
-                            <td>{{ submission.date_debut }}</td>
-                            <td>{{ submission.date_fin }}</td>
-                            <td>{{ submission.nombre_heure }}</td>
-                            <td>{{ submission.prix_formation }}</td>
+
+                            <td>
+                                {{ submission.date_debut }}
+                            </td>
+
+                            <td>
+                                {{ submission.date_fin }}
+                            </td>
+
+                            <td>
+                                {{ submission.nombre_heure }}
+                            </td>
+
+                            <td>
+                                {{ submission.prix_formation }}
+                            </td>
                             <td>{{ submission.passage_au }}</td>
-                            <td>{{ submission.votre_conseiller }}</td>
+
+                            <td>
+                                {{ submission.votre_conseiller }}
+                                
+                            </td>
+
                             <td>{{ submission.formation }}</td>
-                            <td>{{ submission.audio_appel_qualite }}</td>
-                            <td>{{ submission.audio_suivi_formation }}</td>
+                            <td>{{ submission.audio_appel_qualite|join:', ' }}</td>
+                            <td>{{ submission.audio_suivi_formation|join:', ' }}</td>
                             <!-- Add other data fields here -->
                         </tr>
                         {% endfor %}
-                        
+                       
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-</div>
 </main>
-
 
 {% endblock %}
 {% block javascript %}
@@ -91,7 +136,6 @@
             ]
         });
         // Handle "Select All" checkbox click
-
     });
 </script>
 {% endblock %}

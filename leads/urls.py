@@ -54,6 +54,9 @@ urlpatterns = [
     path('add_company/',views.add_company,name="add_company"),
     path('delete_company/<int:company_id>/', views.delete_company, name='delete_company'),
     path('mon_aide_btp/', views.mon_aide_btp, name="mon_aide_btp"),
+    #path('manage_facebook_page_permissions/', views.manage_facebook_page_permissions, name="manage_facebook_page_permissions"),
+   
+]
     # path('update_user_permissions/', views.update_user_permissions, name='update_user_permissions'),
    
     
@@ -62,7 +65,7 @@ urlpatterns = [
 
 
 
-]
+
 
 
 

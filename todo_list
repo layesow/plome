@@ -1,25 +1,31 @@
-
-Fixed loopholes:
-
-1. After clicking on notificaton and the popup comes up the close button is not working
-2. Why the notification first need to go to lead dashboard and the pop up its better if the user click on it and instead of going to lead_dashboard
-it shows on the same current page.
-
-3. once we add the price in it and after if we want to change the qualification the price is still there so it shouldnt be there when we are changing 
-qualification. and appointment if we want to reschedule it it should send the mail again after rescheduling (completed, but in )
-
-4. Add new user: whiile inviting the new user the password field shows blank 
-5. Add new user : when we edit the user the user profile is not storing there in database its storing but not in radio buttons
-6. Assign to : In leads assign to button is not working 
-
-
-7. Qualification: When we are changing the qualification to rappel to something else after saving rappel, it should remove the rappel data which is in appoint
-ment and same for  the signe cpf and price (after saving the save button is not working)
-
-
-8.when we add the lead from adding lead and use the assign button and save its not working coming an error for the page 
-9.Notification: in notification page the sender name is not correct its not showing who is sending 
-10. in notification page, we see al the notifications but  we need when we click on notification it will open up the modal like the same thing which we did 
-for notification bell
-
-for now these are the errors which i saw if there is any please mention it
+Supprimer la partie notifications dans le tableau de bord 
+Supprimer Mon aide BTP (pour le moment) et RSP sur le tableau chiffre d'affaires
+Améliorer Front Tableau du tableau de bord (Partie CA des entreprises )
+CA Du mois et CA de la semaine
+CA de chaque personne mois et classement 
+Tableau du chiffre des entreprises : Mettre Chiffe d'affaire au lieu de Prix total
+Ulisateur : Traduire add User et user table : Traduire toutes les parties du CRM
+Supprimer Hello $nom-d'utilisateur ou changer emplacement
+Modifier l'affichage des messages d'erreur 
+Modifier template de tous les mails
+Enlever mon aide btp du menu (leads ) (Pour le moment)
+Dans Edit Lead Mettre le design du formulaire Dossier
+Dans lead : Bouton Enregistrer avant fermer ( à déplacer)
+Changer design bouton fermer
+Corriger les textes avec accent  (utf 8)
+Ajouter dossier  : Mettre date d'aujourd'hui sur la date d'inscription 
+Date de din de formation à renseigner automatiquement : 1 mois apres la date du debut de formation
+Corriger Champ numero de facture ( à controler ) nombre de caractere et format
+Partie equipe ( select box qui charge les equipes )
+Partie conseiller qui charge tous les conseillers - valeur à recuerer depuis le lead
+Charger les challenges
+Création de challenges
+Statut appel qualité (nrp et autres)
+Corrgier champs en plus (inscriptionvisio ..)
+Audio recuperer à charger sur la plateforme
+Mettre les differents status qu'on a sur un colis
+Mention commentaire sur un colis
+Message d'erreur lorqu'on clique automatiquement sur importer dossier
+Corriger les textes mal traduits
+Supprimer notification dans le menu
+Ajout de campagne (design à corriger)

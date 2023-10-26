@@ -86,32 +86,64 @@ class Doisser(models.Model):
         return self.prenom
 
 
+class JotForm(models.Model):
+    form_id = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+from django.db import models
 
 class JotFormSubmission(models.Model):
-    submission_date = models.CharField(max_length=255, null=True, blank=True)
-    first_name = models.CharField(max_length=255, null=True, blank=True)
-    last_name = models.CharField(max_length=255, null=True, blank=True)
-    email = models.CharField(max_length=255, null=True, blank=True)
-    signature = models.CharField(max_length=255, null=True, blank=True)
-    numero_telephone = models.CharField(max_length=255, null=True, blank=True)
-    numero_et_rue = models.CharField(max_length=255, null=True, blank=True)
-    complement_adresse = models.CharField(max_length=255, null=True, blank=True)
-    ville = models.CharField(max_length=255, null=True, blank=True)
-    etat_region = models.CharField(max_length=255, null=True, blank=True)
-    code_postal = models.CharField(max_length=255, null=True, blank=True)
-    choix_formation = models.CharField(max_length=255, null=True, blank=True)
-    date_debut = models.CharField(max_length=255, null=True, blank=True)
-    date_fin = models.CharField(max_length=255, null=True, blank=True)
-    nombre_heure = models.CharField(max_length=255, null=True, blank=True)
-    prix_formation = models.CharField(max_length=255, null=True, blank=True)
-    passage_au = models.CharField(max_length=255, null=True, blank=True)
-    votre_conseiller = models.CharField(max_length=255, null=True, blank=True)
-    formation = models.CharField(max_length=255, null=True, blank=True)
-    audio_appel_qualite = models.CharField(max_length=255, null=True, blank=True)
-    audio_suivi_formation = models.CharField(max_length=255, null=True, blank=True)
+    form = models.ForeignKey(JotForm, on_delete=models.CASCADE)
+    submission_date = models.TextField(null=True, blank=True)
+    first_name = models.TextField(null=True, blank=True)
+    last_name = models.TextField(null=True, blank=True)
+    email = models.CharField(max_length=250, null=True, blank=True)
+    signature = models.TextField(null=True, blank=True)
+    numero_telephone = models.TextField(null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
+    choix_formation = models.TextField(null=True, blank=True)
+    date_debut = models.TextField(null=True, blank=True)
+    date_fin = models.TextField(null=True, blank=True)
+    nombre_heure = models.TextField(null=True, blank=True)
+    prix_formation = models.TextField(null=True, blank=True)
+    passage_au = models.TextField(null=True, blank=True)
+    votre_conseiller = models.TextField(null=True, blank=True)
+    formation = models.TextField(null=True, blank=True)
+    audio_appel_qualite = models.TextField(null=True, blank=True)
+    audio_suivi_formation = models.TextField(null=True, blank=True)
+    data_json = models.JSONField(null=True, blank=True)
 
     def __str__(self):
         return self.first_name
 
 
+
+
+class JotFormSubmission_aa(models.Model):
+    form = models.ForeignKey(JotForm, on_delete=models.CASCADE)
+    submission_date = models.TextField(null=True, blank=True)
+    first_name = models.TextField(null=True, blank=True)
+    last_name = models.TextField(null=True, blank=True)
+    email = models.TextField(null=True, blank=True)
+    signature = models.TextField(null=True, blank=True)
+    numero_telephone = models.TextField(null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
+    choix_formation = models.TextField(null=True, blank=True)
+    date_debut = models.TextField(null=True, blank=True)
+    date_fin = models.TextField(null=True, blank=True)
+    nombre_heure = models.TextField(null=True, blank=True)
+    prix_formation = models.TextField(null=True, blank=True)
+    passage_au = models.TextField(null=True, blank=True)
+    votre_conseiller = models.TextField(null=True, blank=True)
+    formation = models.TextField(null=True, blank=True)
+    audio_appel_qualite = models.TextField(null=True, blank=True)
+    audio_suivi_formation = models.TextField(null=True, blank=True)
+    data_json = models.JSONField(null=True, blank=True)
+
+    def __str__(self):
+        return self.first_name
+    
 

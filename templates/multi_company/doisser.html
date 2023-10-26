@@ -11,10 +11,22 @@
 
 
   .custom-checkbox-label {
+    padding: 3px;
+    border-radius: 10px;
     background-color: black;
     /* Change the checkbox background color to black when checked */
     color: white;
     /* Change text color for checked checkbox */
+  }
+
+  #customCheck1 {}
+
+  .rectangle-form {
+    position: relative;
+    background-color: #f3f5f8;
+    border: 1px solid #000;
+    box-sizing: border-box;
+    width: 100%;
   }
 </style>
 
@@ -27,11 +39,11 @@
 
         <!-- Bouton d'importation -->
         <div class="row" style="display: flex; justify-content: start;">
-          <div class="col-md-2">
+          <div class="col-md-4">
             <button class="btn mt-1 text-white" data-toggle="modal" data-target="#addDoisserLeadModal"
               style="background-color: rgba(54,188,175,1);">Ajouter un Dossier</button>
           </div>
-          <div class="col-md-5 mt-1">
+          <div class="col-md-6 mt-1">
             <form method="post" enctype="multipart/form-data" action="{% url 'import_doisser_leads' %}">
               {% csrf_token %}
               <div class="input-group">
@@ -101,166 +113,284 @@
               <div class="modal-body">
                 <form class="needs-validation" method="POST" action="{% url 'add_doisser_lead' %}" novalidate>
                   {% csrf_token %}
-                  <div class="form-row">
-                    <div class="col-md-6 mb-3">
-                      <label for="date_dinscription">Date d'Inscription</label>
-                      <input type="date" name="date_dinscription" class="form-control" required>
-                      <div class="invalid-feedback">Please provide a valid Date.</div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="numero_edof">Numero EDof</label>
-                      <input type="text" name="numero_edof" class="form-control" maxlength="100" required>
-                      <div class="invalid-feedback">Please provide a valid Numero EDof.</div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="nom">Nom</label>
-                      <input type="text" name="nom" class="form-control" maxlength="100">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="prenom">Prenom</label>
-                      <input type="text" name="prenom" class="form-control" maxlength="100">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="telephone">Téléphone</label>
-                      <input type="number" name="telephone" class="form-control" maxlength="20">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="mail">Email</label>
-                      <input type="email" name="mail" class="form-control" maxlength="250">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="address_postal">Address Postal</label>
-                      <input type="text" name="address_postal" class="form-control" maxlength="300">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="statut_edof">Statut EDof</label>
-                      <input type="text" name="statut_edof" class="form-control" maxlength="100">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="challenge">Challenge</label>
-                      <input type="text" name="challenge" class="form-control" maxlength="300">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="colis_a_preparer">Colis à Préparer</label>
-                      <input type="text" name="colis_a_preparer" class="form-control" maxlength="300">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="prix_net">Prix Net</label>
-                      <input type="number" name="prix_net" class="form-control">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="conseiller">Conseiller</label>
-                      <input type="text" name="conseiller" class="form-control" maxlength="100">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="equipes">Équipes</label>
-                      <input type="text" name="equipes" class="form-control" maxlength="100">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="criteres_com">Critères Com</label>
-                      <input type="number" name="criteres_com" class="form-control">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="date_prevue_d_entree_en_formation">Date Prévue d'Entrée en Formation</label>
-                      <input type="datetime-local" name="date_prevue_d_entree_en_formation" class="form-control">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="date_prevue_de_fin_de_formation">Date Prévue de Fin de Formation</label>
-                      <input type="datetime-local" name="date_prevue_de_fin_de_formation" class="form-control">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="appel_effectue_le_date_time">Appel Effectué le (Date et Heure)</label>
-                      <input type="datetime-local" name="appel_effectue_le_date_time" class="form-control">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="appel_effectue_le_motifs">Appel Effectué le (Motifs)</label>
-                      <input type="datetime-local" name="appel_effectue_le_motifs" class="form-control">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="rdv_confirme_dateandtime">RDV Confirmé (Date et Heure)</label>
-                      <input type="datetime-local" name="rdv_confirme_dateandtime" class="form-control">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="rdv_confirme_confirmateur">RDV Confirmé (Confirmateur)</label>
-                      <input type="text" name="rdv_confirme_confirmateur" class="form-control" maxlength="100">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="rdv_confirme_statut_service_confirmateur">RDV Confirmé (Statut Service
-                        Confirmateur)</label>
-                      <input type="text" name="rdv_confirme_statut_service_confirmateur" class="form-control"
-                        maxlength="100">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="inscription_visio_entree_audio">Inscription Visio Entrée Audio</label>
-                      <div class="custom-control custom-checkbox custom-control-inline">
-                        <input type="checkbox" name="inscription_visio_entree_audio" class="custom-control-input"
-                          id="customCheck1">
-                        <label class="custom-control-label custom-checkbox-label" for="customCheck1">Cochez cette
-                          boîte</label>
+                  <div class="card shadow">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <label for="date_dinscription">Date d'Inscription</label>
+                          <input type="date" name="date_dinscription" class="form-control rectangle-form"
+                            placeholder="First name" aria-label="First name">
+                        </div>
                       </div>
                     </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="inscription_visio_entree_niveau_de_relance">Inscription Visio Entrée Niveau de
-                        Relance</label>
-                      <input type="text" name="inscription_visio_entree_niveau_de_relance" class="form-control"
-                        maxlength="100">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="inscription_visio_entree_somme_facturee">Inscription Visio Entrée Somme
-                        Facturée</label>
-                      <input type="number" name="inscription_visio_entree_somme_facturee" class="form-control">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="inscription_visio_entree_date_de_facturation">Inscription Visio Entrée Date de
-                        Facturation</label>
-                      <input type="datetime-local" name="inscription_visio_entree_date_de_facturation"
-                        class="form-control">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="inscription_visio_entree_date_d_encaissement">Inscription Visio Entrée Date
-                        d'Encaissement</label>
-                      <input type="datetime-local" name="inscription_visio_entree_date_d_encaissement"
-                        class="form-control">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="inscription_visio_entree_facture">Inscription Visio Entrée Facture: </label>
-                      <div class="custom-control custom-checkbox custom-control-inline">
-                        <input type="checkbox" name="inscription_visio_entree_facture" class="custom-control-input"
-                          id="customCheck2">
-                        <label class="custom-control-label custom-checkbox-label" for="customCheck2">Cochez cette
-                          boîte</label>
-                      </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="inscription_visio_entree_num_facture">Inscription Visio Entrée Numéro de
-                        Facture</label>
-                      <input type="text" name="inscription_visio_entree_num_facture" class="form-control"
-                        maxlength="300">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="inscription_visio_entree_colis_a_envoyer_le">Inscription Visio Entrée Colis à Envoyer
-                        le</label>
-                      <input type="datetime-local" name="inscription_visio_entree_colis_a_envoyer_le"
-                        class="form-control">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="inscription_visio_entree_numero_de_suivi_vers_point_relais">Inscription Visio Entrée
-                        Numéro de Suivi vers Point Relais</label>
-                      <input type="text" name="inscription_visio_entree_numero_de_suivi_vers_point_relais"
-                        class="form-control" maxlength="100">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="inscription_visio_entree_commentaires">Inscription Visio Entrée Commentaires</label>
-                      <textarea name="inscription_visio_entree_commentaires" class="form-control" rows="3"></textarea>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="inscription_visio_entree_statut_colis">Inscription Visio Entrée Statut Colis</label>
-                      <input type="text" name="inscription_visio_entree_statut_colis" class="form-control"
-                        maxlength="100">
-                    </div>
-                    <!-- Custom Fields (Handle JSONField as needed) -->
                   </div>
-                  <button class="btn btn-primary" type="submit">Envoyer</button>
+
+                  <div class="card shadow mt-2">
+                    <div class="card-body">
+                      <h6 class="text-center">Information de l’Apprenant</h6>
+                      <div class="row mt-3">
+                        <div class="col-md-6">
+                          <label for="prenom">Prenom</label>
+                          <input type="text" name="prenom" class="form-control rectangle-form" placeholder="Prenom"
+                            aria-label="Prenom">
+                        </div>
+                        <div class="col-md-6">
+                          <label for="nom">Nom</label>
+                          <input type="text" name="nom" class="form-control rectangle-form" placeholder="Nom"
+                            aria-label="Nom">
+                        </div>
+                      </div>
+                      <div class="row mt-3">
+                        <div class="col-md-6">
+                          <label for="telephone">Téléphone</label>
+                          <input type="number" name="telephone" class="form-control rectangle-form"
+                            placeholder="Téléphone" aria-label="Téléphone">
+                        </div>
+                        <div class="col-md-6">
+                          <label for="mail">Email</label>
+                          <input type="email" name="mail" class="form-control rectangle-form" placeholder="Email"
+                            aria-label="Email">
+                        </div>
+                      </div>
+                      <div class="row mt-3">
+                        <div class="col-md-12">
+                          <label for="address_postal">Address Postal</label>
+                          <input type="text" name="address_postal" class="form-control rectangle-form"
+                            placeholder="Address Postal" aria-label="Address Postal">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="card shadow mt-2">
+                    <div class="card-body">
+                      <h6 class="text-center">Information EDOF</h6>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <label for="numero_edof">Numero EDof</label>
+                          <input type="text" name="numero_edof" class="form-control rectangle-form"
+                            placeholder="Numero EDof" aria-label="Numero EDof">
+                          <div class="invalid-feedback">Veuillez fournir un numéro EDof valide.</div>
+                        </div>
+                        <div class="col-md-6">
+                          <label for="statut_edof">Statut EDof</label>
+                          <input type="text" name="statut_edof" class="form-control rectangle-form"
+                            placeholder="Statut EDof" aria-label="Statut EDof">
+                        </div>
+                      </div>
+                      <div class="row mt-3">
+                        <div class="col-md-6">
+                          <label for="date_prevue_d_entree_en_formation">Date Prévue d'Entrée en Formation</label>
+                          <input type="datetime-local" name="date_prevue_d_entree_en_formation"
+                            class="form-control rectangle-form" placeholder="Date Prévue d'Entrée en Formation"
+                            aria-label="Date Prévue d'Entrée en Formation">
+                        </div>
+                        <div class="col-md-6">
+                          <label for="date_prevue_de_fin_de_formation">Date Prévue de Fin de Formation</label>
+                          <input type="datetime-local" name="date_prevue_de_fin_de_formation"
+                            class="form-control rectangle-form" placeholder="Date Prévue de Fin de Formation"
+                            aria-label="Date Prévue de Fin de Formation">
+                        </div>
+                      </div>
+                      <div class="row mt-3">
+                        <div class="col-md-6">
+                          <label for="inscription_visio_entree_num_facture">Inscription Visio Entrée Numéro
+                            Facture</label>
+                          <input type="text" name="inscription_visio_entree_num_facture"
+                            class="form-control rectangle-form" placeholder="Inscription Visio Entrée Numéro Facture"
+                            aria-label="Inscription Visio Entrée Numéro Facture">
+                        </div>
+                        <div class="col-md-6">
+                          <label for="inscription_visio_entree_somme_facturee">Inscription Visio Entrée Somme
+                            Facturée</label>
+                          <input type="number" name="inscription_visio_entree_somme_facturee"
+                            class="form-control rectangle-form" placeholder="Inscription Visio Entrée Somme Facturée"
+                            aria-label="Inscription Visio Entrée Somme Facturée">
+                        </div>
+                      </div>
+                      <div class="row mt-3">
+                        <div class="col-md-12">
+                          <label for="inscription_visio_entree_date_d_encaissement">Inscription Visio Entrée Date
+                            d'Encaissement</label>
+                          <input type="datetime-local" name="inscription_visio_entree_date_d_encaissement"
+                            class="form-control rectangle-form"
+                            placeholder="Inscription Visio Entrée Date d'Encaissement"
+                            aria-label="Inscription Visio Entrée Date d'Encaissement">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="card shadow mt-2">
+                    <div class="card-body">
+                      <h6 class="text-center">Information conseiller</h6>
+                      <div class="row mt-3">
+                        <div class="col-md-6">
+                          <label for="conseiller">Conseiller</label>
+                          <input type="text" name="conseiller" class="form-control rectangle-form"
+                            placeholder="Conseiller" aria-label="Conseiller">
+                        </div>
+                        <div class="col-md-6">
+                          <label for="criteres_com">Critères Com</label>
+                          <input type="number" name="criteres_com" class="form-control rectangle-form"
+                            placeholder="Critères Com" aria-label="Critères Com">
+                        </div>
+                      </div>
+                      <div class="row mt-3">
+                        <div class="col-md-12">
+                          <label for="equipes">Équipes</label>
+                          <input type="text" name="equipes" class="form-control rectangle-form" placeholder="Équipes"
+                            aria-label="Équipes">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="card shadow mt-2">
+                    <div class="card-body">
+                      <h6 class="text-center">Service Qualité </h6>
+                      <div class="row mt-3">
+                        <div class="col-md-6">
+                          <label for="challenge">Challenge</label>
+                          <input type="text" name="challenge" class="form-control rectangle-form"
+                            placeholder="Challenge" aria-label="Challenge">
+                        </div>
+                        <div class="col-md-6">
+                          <label for="appel_effectue_le_date_time">Appel Effectué le (Date et Heure)</label>
+                          <input type="datetime-local" name="appel_effectue_le_date_time"
+                            class="form-control rectangle-form" placeholder="Appel Effectué le (Date et Heure)"
+                            aria-label="Appel Effectué le (Date et Heure)">
+                        </div>
+                      </div>
+                      <div class="row mt-3">
+                        <div class="col-md-6">
+                          <label for="rdv_confirme_dateandtime">RDV Confirmé (Date et Heure)</label>
+                          <input type="datetime-local" name="rdv_confirme_dateandtime"
+                            class="form-control rectangle-form" placeholder="RDV Confirmé (Date et Heure)"
+                            aria-label="RDV Confirmé (Date et Heure)">
+                        </div>
+                        <div class="col-md-6">
+                          <label for="rdv_confirme_confirmateur">RDV Confirmé (Confirmateur)</label>
+                          <input type="text" name="rdv_confirme_confirmateur" class="form-control rectangle-form"
+                            placeholder="RDV Confirmé (Confirmateur)" aria-label="RDV Confirmé (Confirmateur)">
+                        </div>
+                      </div>
+                      <div class="row mt-3">
+                        <div class="col-md-6">
+                          <label for="rdv_confirme_statut_service_confirmateur">RDV Confirmé (Statut Service
+                            Confirmateur)</label>
+                          <input type="text" name="rdv_confirme_statut_service_confirmateur"
+                            class="form-control rectangle-form" placeholder="RDV Confirmé (Statut Service Confirmateur)"
+                            aria-label="RDV Confirmé (Statut Service Confirmateur)">
+                        </div>
+                        <div class="col-md-6">
+                          <label for="prix_net">Prix Net</label>
+                          <input type="number" name="prix_net" class="form-control rectangle-form"
+                            placeholder="prix_net" aria-label="prix_net">
+                        </div>
+                      </div>
+
+                      <div class="row mt-3">
+                        <div class="col-md-6">
+                          <label for="appel_effectue_le_motifs">Appel Effectué le (Motifs)</label>
+                          <input type="datetime-local" name="appel_effectue_le_motifs"
+                            class="form-control rectangle-form" placeholder="RDV Confirmé (Statut Service Confirmateur)"
+                            aria-label="RDV Confirmé (Statut Service Confirmateur)">
+                        </div>
+                        <div class="col-md-6">
+                          <label for="inscription_visio_entree_niveau_de_relance">Inscription Visio Entrée Niveau de
+                            Relance</label>
+                          <input type="text" name="inscription_visio_entree_niveau_de_relance"
+                            class="form-control rectangle-form" placeholder="Inscription Visio Entrée Niveau de Relance"
+                            aria-label="Inscription Visio Entrée Niveau de Relance">
+                        </div>
+                      </div>
+
+                      <div class="row mt-3">
+                        <div class="col-md-6">
+                          <label for="inscription_visio_entree_date_de_facturation">Inscription Visio Entrée Date de
+                            Facturation</label>
+                          <input type="datetime-local" name="inscription_visio_entree_date_de_facturation"
+                            class="form-control rectangle-form" placeholder="RDV Confirmé (Statut Service Confirmateur)"
+                            aria-label="RDV Confirmé (Statut Service Confirmateur)">
+                        </div>
+                        <div class="col-md-6">
+                          <label for="inscription_visio_entree_numero_de_suivi_vers_point_relais">Inscription Visio
+                            Entrée Numéro de Suivi vers Point Relais</label>
+                          <input ttype="text" name="inscription_visio_entree_numero_de_suivi_vers_point_relais"
+                            class="form-control rectangle-form"
+                            placeholder="inscription_visio_entree_numero_de_suivi_vers_point_relais"
+                            aria-label="inscription_visio_entree_numero_de_suivi_vers_point_relais">
+                        </div>
+                      </div>
+
+                      <div class="row mt-3">
+                        <div class="col-md-6">
+                          <label for="inscription_visio_entree_audio">Inscription Visio Entrée Audio</label>
+                          <div class="custom-control custom-checkbox custom-control-inline">
+                            <input type="checkbox" name="inscription_visio_entree_audio" class="custom-control-input"
+                              id="customCheck1">
+                            <label class="custom-control-label custom-checkbox-label" for="customCheck1">Cochez cette
+                              boîte</label>
+                          </div>
+                        </div>
+
+                        <div class="col-md-6">
+                          <label for="inscription_visio_entree_facture">Inscription Visio Entrée Facture: </label>
+                          <div class="custom-control custom-checkbox custom-control-inline">
+                            <input type="checkbox" name="inscription_visio_entree_facture" class="custom-control-input"
+                              id="customCheck2">
+                            <label class="custom-control-label custom-checkbox-label" for="customCheck2">Cochez cette
+                              boîte</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="card shadow mt-2">
+                    <div class="card-body">
+                      <h6 class="text-center">Information Colis</h6>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <label for="inscription_visio_entree_colis_a_envoyer_le">Inscription Visio Entrée Colis à
+                            Envoyer le</label>
+                          <input type="datetime-local" name="inscription_visio_entree_colis_a_envoyer_le"
+                            class="form-control rectangle-form"
+                            placeholder="Inscription Visio Entrée Colis à Envoyer le"
+                            aria-label="Inscription Visio Entrée Colis à Envoyer le">
+                        </div>
+                        <div class="col-md-6">
+                          <label for="colis_a_preparer">Colis à Préparer</label>
+                          <input type="text" name="colis_a_preparer" class="form-control rectangle-form"
+                            placeholder="Colis à Préparer" aria-label="Colis à Préparer">
+                        </div>
+                      </div>
+                      <div class="row mt-3">
+                        <div class="col-md-12">
+                          <label for="inscription_visio_entree_statut_colis">Inscription Visio Entrée Statut
+                            Colis</label>
+                          <input type="text" name="inscription_visio_entree_statut_colis"
+                            class="form-control rectangle-form" placeholder="Inscription Visio Entrée Statut Colis"
+                            aria-label="Inscription Visio Entrée Statut Colis">
+                        </div>
+                      </div>
+                      <div class="row mt-3">
+                        <div class="col-md-12">
+
+                          <label for="inscription_visio_entree_commentaires">Inscription Visio Entrée
+                            Commentaires</label>
+                          <textarea name="inscription_visio_entree_commentaires" class="form-control rectangle-form"
+                            rows="3"></textarea>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn mb-2 btn-secondary mr-3 mb-4" data-dismiss="modal">Fermer</button>
+                    <button class="btn text-white float-right mr-3 mb-4" style="background-color: rgba(54,188,175,1);"
+                      type="submit">Envoyer</button>
+                  </div>
                 </form>
               </div>
             </div>
@@ -285,7 +415,28 @@
                 <th>Colis à préparer</th>
                 <th>Prix Net</th>
                 <th>Conseiller</th>
-                
+                <th>Équipes</th>
+                <th>Critères com</th>
+                <th>Date prévue d'entrée en formation</th>
+                <th>Date prévue de fin de formation</th>
+                <!-- Add table headers for AppelEffectueLe, RdvConfirme, and InscriptionVisioEntree fields -->
+                <th>Date/Heure de l'appel effectué</th>
+                <th>Motifs de l'appel effectué</th>
+                <th>Date/Heure du RDV confirmé</th>
+                <th>Confirmateur du RDV</th>
+                <th>Statut du service du confirmateur du RDV</th>
+                <th>Audio lors de l'inscription à la visio</th>
+                <th>Niveau de relance lors de l'inscription à la visio</th>
+                <th>Somme facturée lors de l'inscription à la visio</th>
+                <th>Date de facturation lors de l'inscription à la visio</th>
+                <th>Date d'encaissement lors de l'inscription à la visio</th>
+                <th>Facture lors de l'inscription à la visio</th>
+                <th>Numéro de facture lors de l'inscription à la visio</th>
+                <th>Date de colis à envoyer lors de l'inscription à la visio</th>
+                <th>Numéro de suivi vers le point relais lors de l'inscription à la
+                  visio</th>
+                <th>Commentaires lors de l'inscription à la visio</th>
+                <th>Statut du colis lors de l'inscription à la visio</th>
                 <th>Action</th>
 
               </tr>
@@ -305,11 +456,32 @@
                 <td>{{ record.colis_a_preparer }}</td>
                 <td>{{ record.prix_net }}</td>
                 <td>{{ record.conseiller }}</td>
-               
+                <td>{{ record.equipes }}</td>
+                <td>{{ record.criteres_com }}</td>
+                <td>{{ record.date_prevue_d_entree_en_formation }}</td>
+                <td>{{ record.date_prevue_de_fin_de_formation }}</td>
+                <!-- Add table data for AppelEffectueLe, RdvConfirme, and InscriptionVisioEntree fields -->
+                <td>{{ record.appel_effectue_le_date_time }}</td>
+                <td>{{ record.appel_effectue_le_motifs }}</td>
+                <td>{{ record.rdv_confirme_dateandtime }}</td>
+                <td>{{ record.rdv_confirme_confirmateur }}</td>
+                <td>{{ record.rdv_confirme_statut_service_confirmateur }}</td>
+                <td>{{ record.inscription_visio_entree_audio }}</td>
+                <td>{{ record.inscription_visio_entree_niveau_de_relance }}</td>
+                <td>{{ record.inscription_visio_entree_somme_facturee }}</td>
+                <td>{{ record.inscription_visio_entree_date_de_facturation }}</td>
+                <td>{{ record.inscription_visio_entree_date_d_encaissement }}</td>
+                <td>{{ record.inscription_visio_entree_facture }}</td>
+                <td>{{ record.inscription_visio_entree_num_facture }}</td>
+                <td>{{ record.inscription_visio_entree_colis_a_envoyer_le }}</td>
+                <td>{{ record.inscription_visio_entree_numero_de_suivi_vers_point_relais }}</td>
+                <td>{{ record.inscription_visio_entree_commentaires }}</td>
+                <td>{{ record.inscription_visio_entree_statut_colis }}</td>
                 <td>
                   <!-- Button trigger modal -->
-                  <button type="button" class="btn mb-2 btn-primary" data-toggle="modal"
-                    data-target="#defaultModal-{{ record.id }}"> Voir </button>
+                  <button type="button" class="btn mb-2 text-white" data-toggle="modal"
+                    data-target="#defaultModal-{{ record.id }}" style="background-color: rgba(54,188,175,1);"> Voir
+                  </button>
                   <!-- Modal -->
                 </td>
 
@@ -356,224 +528,305 @@
 
                     <div class="modal-body">
                       <div id="savingMessage-{{ record.id }}" style="display: none;">Saving Doisser lead...</div>
-                      <!-- Date d'Inscription -->
-                      <div class="row">
-                        <div class="col-md-6 mb-3">
-                          <label for="date_dinscription">Date_dinscription</label>
-                          <input type="date" name="date_dinscription" id="date_dinscription-{{ record.id }}"
-                            placeholder="date_dinscription" class="form-control"
-                            value="{{record.date_dinscription|date:'Y-m-d'}}">
+                      <div class="card shadow">
+                        <div class="card-body">
+                          <div class="row">
+                            <div class="col-md-12">
+                              <label for="date_dinscription">Date d'Inscription</label>
+                              <input type="date" name="date_dinscription" id="date_dinscription-{{ record.id }}"
+                                placeholder="date_dinscription" class="form-control rectangle-form"
+                                value="{{record.date_dinscription|date:'Y-m-d'}}">
+                            </div>
+                          </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                          <label for="numero_edof">Numero_edof</label>
-                          <input type="text" name="numero_edof" id="numero_edof-{{ record.id }}"
-                            placeholder="numero_edof" class="form-control" value="{{record.numero_edof}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label for="nom">Nom</label>
-                          <input type="text" name="nom" id="nom-{{ record.id }}" placeholder="nom" class="form-control"
-                            value="{{record.nom}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label for="prenom">Prenom</label>
-                          <input type="text" name="prenom" id="prenom-{{ record.id }}" placeholder="prenom"
-                            class="form-control" value="{{record.prenom}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label for="telephone">Telephone</label>
-                          <input type="tel" name="telephone" id="telephone-{{ record.id }}" placeholder="telephone"
-                            class="form-control" value="{{record.telephone}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label for="mail">Mail</label>
-                          <input type="email" name="mail" id="mail-{{ record.id }}" placeholder="mail"
-                            class="form-control" value="{{record.mail}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label for="address_postal">Address_postal</label>
-                          <input type="text" name="address_postal" id="address_postal-{{ record.id }}"
-                            placeholder="address_postal" class="form-control" value="{{record.address_postal}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label for="company_id">Statut_edof</label>
-                          <input type="text" name="statut_edof" id="statut_edof-{{ record.id }}"
-                            placeholder="statut_edof" class="form-control" value="{{record.statut_edof}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label for="challenge">Challenge</label>
-                          <input type="text" name="challenge" id="challenge-{{ record.id }}" placeholder="challenge"
-                            class="form-control" value="{{record.challenge}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label for="colis_a_preparer">Colis_a_preparer</label>
-                          <input type="text" name="colis_a_preparer" id="colis_a_preparer-{{ record.id }}"
-                            placeholder="colis_a_preparer" class="form-control" value="{{record.colis_a_preparer}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label for="prix_net">Prix_net</label>
-                          <input type="text" name="prix_net" id="prix_net-{{ record.id }}" placeholder="prix_net"
-                            class="form-control" value="{{record.prix_net}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label for="conseiller">Conseiller</label>
-                          <input type="text" name="conseiller" id="conseiller-{{ record.id }}" placeholder="conseiller"
-                            class="form-control" value="{{record.conseiller}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label for="company_id">Company</label>
-                          <select name="company_id" class="form-control">
-                            <!-- <option value="">Select a company</option> -->
-                            {% if record.company %}
-                            <option value="{{ record.company.id }}" selected>{{ record.company.name }}</option>
-                            {% endif %}
-                          </select>
-                        </div>
+                      </div>
 
+                      <div class="card shadow mt-2">
+                        <div class="card-body">
+                          <h6 class="text-center">Information de l’Apprenant</h6>
+                          <div class="row mt-3">
+                            <div class="col-md-6">
+                              <label for="prenom">Prenom</label>
+                              <input type="text" name="prenom" id="prenom-{{ record.id }}" placeholder="prenom"
+                                class="form-control rectangle-form" value="{{record.prenom}}">
+                            </div>
+                            <div class="col-md-6">
+                              <label for="nom">Nom</label>
+                              <input type="text" name="nom" id="nom-{{ record.id }}" placeholder="nom"
+                                class="form-control rectangle-form" value="{{record.nom}}">
+                            </div>
+                          </div>
+                          <div class="row mt-3">
+                            <div class="col-md-6">
+                              <label for="telephone">Téléphone</label>
+                              <input type="tel" name="telephone" id="telephone-{{ record.id }}" placeholder="telephone"
+                                class="form-control rectangle-form" value="{{record.telephone}}">
+                            </div>
+                            <div class="col-md-6">
+                              <label for="mail">Email</label>
+                              <input type="email" name="mail" id="mail-{{ record.id }}" placeholder="mail"
+                                class="form-control rectangle-form" value="{{record.mail}}">
+                            </div>
+                          </div>
+                          <div class="row mt-3">
+                            <div class="col-md-12">
+                              <label for="address_postal">Address Postal</label>
+                              <input type="text" name="address_postal" id="address_postal-{{ record.id }}"
+                                placeholder="address_postal" class="form-control rectangle-form"
+                                value="{{record.address_postal}}">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
+                      <div class="card shadow mt-2">
+                        <div class="card-body">
+                          <h6 class="text-center">Information EDOF</h6>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <label for="numero_edof">Numero EDof</label>
+                              <input type="text" name="numero_edof" id="numero_edof-{{ record.id }}"
+                                placeholder="numero_edof" class="form-control rectangle-form"
+                                value="{{record.numero_edof}}">
+                            </div>
+                            <div class="col-md-6">
+                              <label for="statut_edof">Statut EDof</label>
+                              <input type="text" name="statut_edof" id="statut_edof-{{ record.id }}"
+                                placeholder="statut_edof" class="form-control rectangle-form"
+                                value="{{record.statut_edof}}">
+                            </div>
+                          </div>
+                          <div class="row mt-3">
+                            <div class="col-md-6">
+                              <label for="date_prevue_d_entree_en_formation">Date Prévue d'Entrée en Formation</label>
+                              <input type="datetime-local" name="date_prevue_d_entree_en_formation"
+                                id="date_prevue_d_entree_en_formation-{{ record.id }}"
+                                placeholder="date_prevue_d_entree_en_formation" class="form-control rectangle-form"
+                                value="{{record.date_prevue_d_entree_en_formation|date:'Y-m-d\TH:i'}}">
+                            </div>
+                            <div class="col-md-6">
+                              <label for="date_prevue_de_fin_de_formation">Date Prévue de Fin de Formation</label>
+                              <input type="datetime-local" name="date_prevue_de_fin_de_formation"
+                                id="date_prevue_de_fin_de_formation-{{ record.id }}"
+                                placeholder="date_prevue_de_fin_de_formation" class="form-control rectangle-form"
+                                value="{{record.date_prevue_de_fin_de_formation|date:'Y-m-d\TH:i'}}">
+                            </div>
+                          </div>
+                          <div class="row mt-3">
+                            <div class="col-md-6">
+                              <label for="inscription_visio_entree_num_facture">Inscription Visio Entrée Numéro
+                                Facture</label>
+                              <input type="text" name="inscription_visio_entree_num_facture"
+                                id="inscription_visio_entree_num_facture-{{ record.id }}"
+                                placeholder="inscription_visio_entree_num_facture" class="form-control rectangle-form"
+                                value="{{record.inscription_visio_entree_num_facture}}">
+                            </div>
+                            <div class="col-md-6">
+                              <label for="inscription_visio_entree_somme_facturee">Inscription Visio Entrée Somme
+                                Facturée</label>
+                              <input type="text" name="inscription_visio_entree_somme_facturee"
+                                id="inscription_visio_entree_somme_facturee-{{ record.id }}"
+                                placeholder="inscription_visio_entree_somme_facturee"
+                                class="form-control rectangle-form"
+                                value="{{record.inscription_visio_entree_somme_facturee}}">
+                            </div>
+                          </div>
+                          <div class="row mt-3">
+                            <div class="col-md-12">
+                              <label for="inscription_visio_entree_date_d_encaissement">Inscription Visio Entrée Date
+                                d'Encaissement</label>
+                              <input type="datetime-local" name="inscription_visio_entree_date_d_encaissement"
+                                id="inscription_visio_entree_date_d_encaissement-{{ record.id }}"
+                                placeholder="inscription_visio_entree_date_d_encaissement"
+                                class="form-control rectangle-form"
+                                value="{{record.inscription_visio_entree_date_d_encaissement|date:'Y-m-d\TH:i'}}">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
-                        <div class="col-md-6 mb-3">
-                          <label for="equipes">Equipes</label>
-                          <input type="text" name="equipes" id="equipes-{{ record.id }}" placeholder="equipes"
-                            class="form-control" value="{{record.equipes}}">
+                      <div class="card shadow mt-2">
+                        <div class="card-body">
+                          <h6 class="text-center">Information conseiller</h6>
+                          <div class="row mt-3">
+                            <div class="col-md-6">
+                              <label for="conseiller">Conseiller</label>
+                              <input type="text" name="conseiller" id="conseiller-{{ record.id }}"
+                                placeholder="conseiller" class="form-control rectangle-form"
+                                value="{{record.conseiller}}">
+                            </div>
+                            <div class="col-md-6">
+                              <label for="criteres_com">Critères Com</label>
+                              <input type="text" name="criteres_com" id="criteres_com-{{ record.id }}"
+                                placeholder="criteres_com" class="form-control rectangle-form"
+                                value="{{record.criteres_com}}">
+                            </div>
+                          </div>
+                          <div class="row mt-3">
+                            <div class="col-md-12">
+                              <label for="equipes">Équipes</label>
+                              <input type="text" name="equipes" id="equipes-{{ record.id }}" placeholder="equipes"
+                                class="form-control rectangle-form" value="{{record.equipes}}">
+                            </div>
+                          </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                          <label for="criteres_com">Criteres_com</label>
-                          <input type="text" name="criteres_com" id="criteres_com-{{ record.id }}"
-                            placeholder="criteres_com" class="form-control" value="{{record.criteres_com}}">
+                      </div>
+
+                      <div class="card shadow mt-2">
+                        <div class="card-body">
+                          <h6 class="text-center">Service Qualité </h6>
+                          <div class="row mt-3">
+                            <div class="col-md-6">
+                              <label for="challenge">Challenge</label>
+                              <input type="text" name="challenge" id="challenge-{{ record.id }}" placeholder="challenge"
+                                class="form-control rectangle-form" value="{{record.challenge}}">
+                            </div>
+                            <div class="col-md-6">
+                              <label for="appel_effectue_le_date_time">Appel Effectué le (Date et Heure)</label>
+                              <input type="datetime-local" name="appel_effectue_le_date_time"
+                                id="appel_effectue_le_date_time-{{ record.id }}"
+                                placeholder="appel_effectue_le_date_time" class="form-control rectangle-form"
+                                value="{{record.appel_effectue_le_date_time|date:'Y-m-d\TH:i'}}">
+                            </div>
+                          </div>
+                          <div class="row mt-3">
+                            <div class="col-md-6">
+                              <label for="rdv_confirme_dateandtime">RDV Confirmé (Date et Heure)</label>
+                              <input type="datetime-local" name="rdv_confirme_dateandtime"
+                                id="rdv_confirme_dateandtime-{{ record.id }}" placeholder="rdv_confirme_dateandtime"
+                                class="form-control rectangle-form"
+                                value="{{record.rdv_confirme_dateandtime|date:'Y-m-d\TH:i'}}">
+                            </div>
+                            <div class="col-md-6">
+                              <label for="rdv_confirme_confirmateur">RDV Confirmé (Confirmateur)</label>
+                              <input type="text" name="rdv_confirme_confirmateur"
+                                id="rdv_confirme_confirmateur-{{ record.id }}" placeholder="rdv_confirme_confirmateur"
+                                class="form-control rectangle-form" value="{{record.rdv_confirme_confirmateur}}">
+                            </div>
+                          </div>
+                          <div class="row mt-3">
+                            <div class="col-md-6">
+                              <label for="rdv_confirme_statut_service_confirmateur">RDV Confirmé (Statut Service
+                                Confirmateur)</label>
+                              <input type="text" name="rdv_confirme_statut_service_confirmateur"
+                                id="rdv_confirme_statut_service_confirmateur-{{ record.id }}"
+                                placeholder="rdv_confirme_statut_service_confirmateur"
+                                class="form-control rectangle-form"
+                                value="{{record.rdv_confirme_statut_service_confirmateur}}">
+                            </div>
+                            <div class="col-md-6">
+                              <label for="prix_net">Prix Net</label>
+                              <input type="text" name="prix_net" id="prix_net-{{ record.id }}" placeholder="prix_net"
+                                class="form-control rectangle-form" value="{{record.prix_net}}">
+                            </div>
+                          </div>
+
+                          <div class="row mt-3">
+                            <div class="col-md-6">
+                              <label for="appel_effectue_le_motifs">Appel Effectué le (Motifs)</label>
+                              <input type="datetime-local" name="appel_effectue_le_motifs"
+                                id="appel_effectue_le_motifs-{{ record.id }}" placeholder="appel_effectue_le_motifs"
+                                class="form-control rectangle-form"
+                                value="{{record.appel_effectue_le_motifs|date:'Y-m-d\TH:i'}}">
+                            </div>
+                            <div class="col-md-6">
+                              <label for="inscription_visio_entree_niveau_de_relance">Inscription Visio Entrée Niveau de
+                                Relance</label>
+                              <input type="text" name="inscription_visio_entree_niveau_de_relance"
+                                id="inscription_visio_entree_niveau_de_relance-{{ record.id }}"
+                                placeholder="inscription_visio_entree_niveau_de_relance"
+                                class="form-control rectangle-form"
+                                value="{{record.inscription_visio_entree_niveau_de_relance}}">
+                            </div>
+                          </div>
+
+                          <div class="row mt-3">
+                            <div class="col-md-6">
+                              <label for="inscription_visio_entree_date_de_facturation">Inscription Visio Entrée Date de
+                                Facturation</label>
+                              <input type="datetime-local" name="inscription_visio_entree_date_de_facturation"
+                                id="inscription_visio_entree_date_de_facturation-{{ record.id }}"
+                                placeholder="inscription_visio_entree_date_de_facturation"
+                                class="form-control rectangle-form"
+                                value="{{record.inscription_visio_entree_date_de_facturation|date:'Y-m-d\TH:i'}}">
+                            </div>
+                            <div class="col-md-6">
+                              <label for="inscription_visio_entree_numero_de_suivi_vers_point_relais">Inscription Visio
+                                Entrée Numéro de Suivi vers Point Relais</label>
+                              <input type="text" name="inscription_visio_entree_numero_de_suivi_vers_point_relais"
+                                id="inscription_visio_entree_numero_de_suivi_vers_point_relais-{{ record.id }}"
+                                placeholder="inscription_visio_entree_numero_de_suivi_vers_point_relais"
+                                class="form-control rectangle-form"
+                                value="{{record.inscription_visio_entree_numero_de_suivi_vers_point_relais}}">
+                            </div>
+                          </div>
+
+                          <div class="row mt-3">
+                            <div class="col-md-6">
+                              <label for="inscription_visio_entree_audio">Inscription Visio Entrée Audio</label>
+                              <div class="custom-control custom-checkbox custom-control-inline">
+                                <input type="text" name="inscription_visio_entree_audio"
+                                  id="inscription_visio_entree_audio-{{ record.id }}"
+                                  placeholder="inscription_visio_entree_audio" class="form-control rectangle-form"
+                                  value="{{record.inscription_visio_entree_audio}}">
+                              </div>
+                            </div>
+
+                            <div class="col-md-6">
+                              <label for="inscription_visio_entree_facture">Inscription Visio Entrée Facture: </label>
+                              <div class="custom-control custom-checkbox custom-control-inline">
+                                <input type="text" name="inscription_visio_entree_facture"
+                                  id="inscription_visio_entree_facture-{{ record.id }}"
+                                  placeholder="inscription_visio_entree_facture" class="form-control rectangle-form"
+                                  value="{{record.inscription_visio_entree_facture}}">
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                          <label for="date_prevue_d_entree_en_formation">Date_prevue_d_entree_en_formation</label>
-                          <input type="datetime-local" name="date_prevue_d_entree_en_formation"
-                            id="date_prevue_d_entree_en_formation-{{ record.id }}"
-                            placeholder="date_prevue_d_entree_en_formation" class="form-control"
-                            value="{{record.date_prevue_d_entree_en_formation|date:'Y-m-d\TH:i'}}">
+                      </div>
+
+                      <div class="card shadow mt-2">
+                        <div class="card-body">
+                          <h6 class="text-center">Information Colis</h6>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <label for="inscription_visio_entree_colis_a_envoyer_le">Inscription Visio Entrée Colis à
+                                Envoyer le</label>
+                              <input type="datetime-local" name="inscription_visio_entree_colis_a_envoyer_le"
+                                id="inscription_visio_entree_colis_a_envoyer_le-{{ record.id }}"
+                                placeholder="inscription_visio_entree_colis_a_envoyer_le"
+                                class="form-control rectangle-form"
+                                value="{{record.inscription_visio_entree_colis_a_envoyer_le|date:'Y-m-d\TH:i'}}">
+                            </div>
+                            <div class="col-md-6">
+                              <label for="colis_a_preparer">Colis à Préparer</label>
+                              <input type="text" name="colis_a_preparer" id="colis_a_preparer-{{ record.id }}"
+                                placeholder="colis_a_preparer" class="form-control rectangle-form"
+                                value="{{record.colis_a_preparer}}">
+                            </div>
+                          </div>
+                          <div class="row mt-3">
+                            <div class="col-md-12">
+                              <label for="inscription_visio_entree_statut_colis">Inscription Visio Entrée Statut
+                                Colis</label>
+                              <input type="text" name="inscription_visio_entree_statut_colis"
+                                id="inscription_visio_entree_statut_colis-{{ record.id }}"
+                                placeholder="inscription_visio_entree_statut_colis" class="form-control rectangle-form"
+                                value="{{record.inscription_visio_entree_statut_colis}}">
+                            </div>
+                          </div>
+                          <div class="row mt-3">
+                            <div class="col-md-12">
+
+                              <label for="inscription_visio_entree_commentaires">Inscription Visio Entrée
+                                Commentaires</label>
+                              <input type="text" name="inscription_visio_entree_commentaires"
+                                id="inscription_visio_entree_commentaires-{{ record.id }}"
+                                placeholder="inscription_visio_entree_commentaires" class="form-control rectangle-form"
+                                value="{{record.inscription_visio_entree_commentaires}}">
+                            </div>
+                          </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                          <label for="date_prevue_de_fin_de_formation">Date_prevue_de_fin_de_formation</label>
-                          <input type="datetime-local" name="date_prevue_de_fin_de_formation"
-                            id="date_prevue_de_fin_de_formation-{{ record.id }}"
-                            placeholder="date_prevue_de_fin_de_formation" class="form-control"
-                            value="{{record.date_prevue_de_fin_de_formation|date:'Y-m-d\TH:i'}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label for="appel_effectue_le_date_time">Appel_effectue_le_date_time</label>
-                          <input type="datetime-local" name="appel_effectue_le_date_time"
-                            id="appel_effectue_le_date_time-{{ record.id }}" placeholder="appel_effectue_le_date_time"
-                            class="form-control" value="{{record.appel_effectue_le_date_time|date:'Y-m-d\TH:i'}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label for="appel_effectue_le_motifs">Appel_effectue_le_motifs</label>
-                          <input type="datetime-local" name="appel_effectue_le_motifs"
-                            id="appel_effectue_le_motifs-{{ record.id }}" placeholder="appel_effectue_le_motifs"
-                            class="form-control" value="{{record.appel_effectue_le_motifs|date:'Y-m-d\TH:i'}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label for="rdv_confirme_dateandtime">RDV_confirme_dateandtime</label>
-                          <input type="datetime-local" name="rdv_confirme_dateandtime"
-                            id="rdv_confirme_dateandtime-{{ record.id }}" placeholder="rdv_confirme_dateandtime"
-                            class="form-control" value="{{record.rdv_confirme_dateandtime|date:'Y-m-d\TH:i'}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label for="rdv_confirme_confirmateur">RDV_confirme_confirmateur</label>
-                          <input type="text" name="rdv_confirme_confirmateur"
-                            id="rdv_confirme_confirmateur-{{ record.id }}" placeholder="rdv_confirme_confirmateur"
-                            class="form-control" value="{{record.rdv_confirme_confirmateur}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label
-                            for="rdv_confirme_statut_service_confirmateur">RDV_confirme_statut_service_confirmateur</label>
-                          <input type="text" name="rdv_confirme_statut_service_confirmateur"
-                            id="rdv_confirme_statut_service_confirmateur-{{ record.id }}"
-                            placeholder="rdv_confirme_statut_service_confirmateur" class="form-control"
-                            value="{{record.rdv_confirme_statut_service_confirmateur}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label for="inscription_visio_entree_audio">Inscription_visio_entree_audio</label>
-                          <input type="text" name="inscription_visio_entree_audio"
-                            id="inscription_visio_entree_audio-{{ record.id }}"
-                            placeholder="inscription_visio_entree_audio" class="form-control"
-                            value="{{record.inscription_visio_entree_audio}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label
-                            for="inscription_visio_entree_niveau_de_relance">Inscription_visio_entree_niveau_de_relance</label>
-                          <input type="text" name="inscription_visio_entree_niveau_de_relance"
-                            id="inscription_visio_entree_niveau_de_relance-{{ record.id }}"
-                            placeholder="inscription_visio_entree_niveau_de_relance" class="form-control"
-                            value="{{record.inscription_visio_entree_niveau_de_relance}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label
-                            for="inscription_visio_entree_somme_facturee">Inscription_visio_entree_somme_facturee</label>
-                          <input type="text" name="inscription_visio_entree_somme_facturee"
-                            id="inscription_visio_entree_somme_facturee-{{ record.id }}"
-                            placeholder="inscription_visio_entree_somme_facturee" class="form-control"
-                            value="{{record.inscription_visio_entree_somme_facturee}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label
-                            for="inscription_visio_entree_date_de_facturation">Inscription_visio_entree_date_de_facturation</label>
-                          <input type="datetime-local" name="inscription_visio_entree_date_de_facturation"
-                            id="inscription_visio_entree_date_de_facturation-{{ record.id }}"
-                            placeholder="inscription_visio_entree_date_de_facturation" class="form-control"
-                            value="{{record.inscription_visio_entree_date_de_facturation|date:'Y-m-d\TH:i'}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label
-                            for="inscription_visio_entree_date_d_encaissement">Inscription_visio_entree_date_d_encaissement</label>
-                          <input type="datetime-local" name="inscription_visio_entree_date_d_encaissement"
-                            id="inscription_visio_entree_date_d_encaissement-{{ record.id }}"
-                            placeholder="inscription_visio_entree_date_d_encaissement" class="form-control"
-                            value="{{record.inscription_visio_entree_date_d_encaissement|date:'Y-m-d\TH:i'}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label for="inscription_visio_entree_facture">Inscription_visio_entree_facture</label>
-                          <input type="text" name="inscription_visio_entree_facture"
-                            id="inscription_visio_entree_facture-{{ record.id }}"
-                            placeholder="inscription_visio_entree_facture" class="form-control"
-                            value="{{record.inscription_visio_entree_facture}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label for="inscription_visio_entree_num_facture">Inscription_visio_entree_num_facture</label>
-                          <input type="text" name="inscription_visio_entree_num_facture"
-                            id="inscription_visio_entree_num_facture-{{ record.id }}"
-                            placeholder="inscription_visio_entree_num_facture" class="form-control"
-                            value="{{record.inscription_visio_entree_num_facture}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label
-                            for="inscription_visio_entree_colis_a_envoyer_le">Inscription_visio_entree_colis_a_envoyer_le</label>
-                          <input type="datetime-local" name="inscription_visio_entree_colis_a_envoyer_le"
-                            id="inscription_visio_entree_colis_a_envoyer_le-{{ record.id }}"
-                            placeholder="inscription_visio_entree_colis_a_envoyer_le" class="form-control"
-                            value="{{record.inscription_visio_entree_colis_a_envoyer_le|date:'Y-m-d\TH:i'}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label
-                            for="inscription_visio_entree_numero_de_suivi_vers_point_relais">Inscription_visio_entree_numero_de_suivi_vers_point_relais</label>
-                          <input type="text" name="inscription_visio_entree_numero_de_suivi_vers_point_relais"
-                            id="inscription_visio_entree_numero_de_suivi_vers_point_relais-{{ record.id }}"
-                            placeholder="inscription_visio_entree_numero_de_suivi_vers_point_relais"
-                            class="form-control"
-                            value="{{record.inscription_visio_entree_numero_de_suivi_vers_point_relais}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label
-                            for="inscription_visio_entree_commentaires">Inscription_visio_entree_commentaires</label>
-                          <input type="text" name="inscription_visio_entree_commentaires"
-                            id="inscription_visio_entree_commentaires-{{ record.id }}"
-                            placeholder="inscription_visio_entree_commentaires" class="form-control"
-                            value="{{record.inscription_visio_entree_commentaires}}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <label
-                            for="inscription_visio_entree_statut_colis">Inscription_visio_entree_statut_colis</label>
-                          <input type="text" name="inscription_visio_entree_statut_colis"
-                            id="inscription_visio_entree_statut_colis-{{ record.id }}"
-                            placeholder="inscription_visio_entree_statut_colis" class="form-control"
-                            value="{{record.inscription_visio_entree_statut_colis}}">
-                        </div>
-                        <!-- Add more fields here -->
                       </div>
                     </div>
                     <!-- Lead History Tab -->
@@ -632,19 +885,11 @@
                               aria-labelledby="documents-tab">
                               <!-- Contenu de l'onglet "Documents" -->
                               <div class="documents-container">
-                                <form method="post" enctype="multipart/form-data" action="#">
-                                  {% csrf_token %}
-                                  <div>
-                                    <label for="attachment">Attachment:</label>
-                                    <input type="file" name="attachment" id="attachment">
-                                  </div>
-                                  <div>
-                                    <label for="title">Title:</label>
-                                    <input type="text" name="title" id="title">
-                                  </div>
-                                  <button type="submit">Attach File</button>
-                                </form>
-
+                                <h3>Documents disponibles :</h3>
+                                <ul>
+                                  <li><a href="#">Document 1</a></li>
+                                </ul>
+                                <p>Pour accéder à un document, cliquez sur le lien correspondant.</p>
                               </div>
                               <!-- Ajoutez ici le code HTML pour afficher les documents, par exemple une liste de liens -->
                             </div>

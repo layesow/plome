@@ -7,17 +7,25 @@
   <title>Tiny Dashboard - A Bootstrap Dashboard Template</title>
 
 
-<style>
+  <style>
     .btn-primary {
-        position: relative;
-        overflow: hidden;
-        transition: transform 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease;
     }
 
     .btn-primary:hover {
-        transform: scale(1.1);
+      transform: scale(1.1);
     }
-</style>
+
+    /* Ajoutez ces styles à votre fichier CSS */
+    .modalBody {
+      max-height: 100vh;
+      /* Limitez la hauteur pour permettre le défilement */
+      overflow-y: auto;
+      /* Activez le défilement vertical si nécessaire */
+    }
+  </style>
   <link rel="stylesheet" href="{%static 'css/feather.css' %}">
   <!-- Date Range Picker CSS -->
   <link rel="stylesheet" href="{%static 'css/daterangepicker.css' %}">
@@ -44,10 +52,11 @@
   <link rel="stylesheet" href="{%static 'css/app-light.css'%}" id="lightTheme">
   <link rel="stylesheet" href="{%static 'css/app-dark.css'%}" id="darkTheme" disabled>
 
-<!-- data table new -->
+  <!-- data table new -->
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">  
-<!--and data table new -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
+  <!--and data table new -->
+
 </head>
 
 <body class="vertical  light  ">
@@ -58,7 +67,7 @@
       </button>
       <form class="form-inline mr-auto searchform text-muted">
         <input class="form-control mr-sm-2 bg-transparent border-0 pl-4 text-muted" type="search"
-          placeholder="Type something..." aria-label="Search">
+          placeholder="Saisissez quelque chose..." aria-label="Search">
       </form>
       <ul class="nav">
         <li class="nav-item">
@@ -72,7 +81,8 @@
           </a>
         </li>
         <li class="nav-item nav-notif">
-          <a class="nav-link text-muted my-2" href="./#" data-toggle="modal" onclick="fetchNotifications()" data-target="#notificationModal">
+          <a class="nav-link text-muted my-2" href="./#" data-toggle="modal" onclick="fetchNotifications()"
+            data-target="#notificationModal">
             <span class="fe fe-bell fe-16"></span>
             <span class="dot dot-md bg-success"></span>
           </a>
@@ -85,10 +95,10 @@
             </span>
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-            
-            <a class="dropdown-item" href="{% url 'sales_dashboard' %}">Dashboard</a>
-            <a class="dropdown-item" href="{% url 'profile_settings' %}">Settings</a>
-            <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+
+            <a class="dropdown-item" href="{% url 'sales_dashboard' %}">Tableau de bord</a>
+            <a class="dropdown-item" href="{% url 'profile_settings' %}">Réglages</a>
+            <a class="dropdown-item" href="{% url 'logout' %}">Se déconnecter</a>
           </div>
         </li>
       </ul>
@@ -104,9 +114,9 @@
             <svg version="1.1" id="logo" class="navbar-brand-img brand-sm" xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 120 120" xml:space="preserve">
               <g>
-                <polygon class="st0" points="78,105 15,105 24,87 87,87 	" />
-                <polygon class="st0" points="96,69 33,69 42,51 105,51 	" />
-                <polygon class="st0" points="78,33 15,33 24,15 87,15 	" />
+                <polygon class="st0" style="fill: rgba(54, 188, 175, 1);" points="78,105 15,105 24,87 87,87" />
+                <polygon class="st0" style="fill: rgba(54, 188, 175, 1);" points="96,69 33,69 42,51 105,51" />
+                <polygon class="st0" style="fill: rgba(54, 188, 175, 1);" points="78,33 15,33 24,15 87,15" />
               </g>
             </svg>
           </a>
@@ -115,18 +125,18 @@
           <li class="nav-item dropdown">
             <a href="#dashboard" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
               <i class="fe fe-home fe-16"></i>
-              <span class="ml-3 item-text">Dashboard</span><span class="sr-only">(current)</span>
+              <span class="ml-3 item-text">Tableau de bord</span><span class="sr-only">(current)</span>
             </a>
             <ul class="collapse list-unstyled pl-4 w-100" id="dashboard">
               <li class="nav-item">
-                <a class="nav-link pl-3" href="{% url 'sales_dashboard' %}"><span class="ml-1">Home</span></a>
+                <a class="nav-link pl-3" href="{% url 'sales_dashboard' %}"><span class="ml-1">Accueil</span></a>
               </li>
               <!-- Add more dropdown items here if needed -->
             </ul>
           </li>
         </ul>
         <ul class="navbar-nav flex-fill w-100 mb-2">
-          
+
           </li>
 
           <li class="nav-item dropdown">
@@ -136,13 +146,14 @@
             </a>
             <ul class="collapse list-unstyled pl-4 w-100" id="forms">
               <li class="nav-item">
-                <a class="nav-link pl-3" href="{% url 'sales_lead' %}"><span class="ml-1 item-text"> Sales Leads</span></a>
+                <a class="nav-link pl-3" href="{% url 'sales_lead' %}"><span class="ml-1 item-text"> Leads de
+                    vente</span></a>
               </li>
               <li class="nav-item">
-                <a class="nav-link pl-3" href="{% url 'facebook_leads' %}"><span class="ml-1 item-text">Facebook
-                    leads</span></a>
+                <a class="nav-link pl-3" href="{% url 'facebook_leads' %}"><span class="ml-1 item-text">Leads
+                    Facebook</span></a>
               </li>
-           
+
 
 
             </ul>
@@ -150,36 +161,37 @@
           <li class="nav-item dropdown">
             <a href="#profile" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
               <i class="fe fe-user fe-16"></i>
-              <span class="ml-3 item-text">Profile</span>
+              <span class="ml-3 item-text">Profil</span>
             </a>
             <ul class="collapse list-unstyled pl-4 w-100" id="profile">
-             
-                <a class="nav-link pl-3" href="{% url 'profile_settings' %}"><span class="ml-1">Settings</span></a>
-              </li>
 
-            </ul>
-
+              <a class="nav-link pl-3" href="{% url 'profile_settings' %}"><span class="ml-1">Réglages</span></a>
           </li>
-               <li class="nav-item dropdown">
-            <a href="#notification" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
-              <i class="fe fe-info fe-16"></i>
-              <span class="ml-3 item-text">Notifications</span>
-            </a>
-            <ul class="collapse list-unstyled pl-4 w-100" id="notification">
-             
-                <a class="nav-link pl-3" href="{% url 'view_notifications' %}"><span class="ml-1">Notification</span></a>
-              </li>
 
-            </ul>
-          </li>
+        </ul>
+
+        </li>
+        <li class="nav-item dropdown">
+          <a href="#notification" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
+            <i class="fe fe-info fe-16"></i>
+            <span class="ml-3 item-text">Notifications</span>
+          </a>
+          <ul class="collapse list-unstyled pl-4 w-100" id="notification">
+
+            <a class="nav-link pl-3" href="{% url 'view_notifications' %}"><span class="ml-1">Notification</span></a>
+        </li>
+
+        </ul>
+        </li>
         </ul>
         <div class="btn-box w-100 mt-4 mb-1">
-    <a href="{% url 'logout' %}" class="btn mb-2 btn-primary btn-lg btn-block">
-        <i class="fe fe-log-out fe-12 mx-2"></i><span class="small">Logout</span>
-    </a>
-</div>
-        
-      
+          <a href="{% url 'logout' %}" class="btn mb-2 btn-lg btn-block text-white"
+            style="background-color: rgba(54,188,175,1);">
+            <i class="fe fe-log-out fe-12 mx-2"></i><span class="small">Se déconnecter</span>
+          </a>
+        </div>
+
+
       </nav>
     </aside>
     {% block content %}
@@ -198,7 +210,24 @@
   <script src="{%static 'js/tinycolor-min.js'%}"></script>
   <script src="{%static 'js/config.js'%}"></script>
   <script src="{%static 'js/apps.js'%}"></script>
-  
+
+  <!-- je pour fermer le popup de la notification-->
+  <script>
+    $(document).ready(function () {
+      $(".close").click(function () {
+        // Fermer le modal en utilisant le data-dismiss attribut
+        $(".modal").modal("hide");
+      });
+    });
+
+  </script>
+  <script>
+    $(document).ready(function () {
+      $("#fermerPopup").click(function () {
+        $(".modal").modal("hide");
+      });
+    });
+  </script>
 
   <!-- datatable script -->
   {% block javascript %}
@@ -208,7 +237,8 @@
 </body>
 
 <!-- Add this in your base.html template -->
-<div class="modal fade modal-notif modal-slide" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
+<div class="modal fade modal-notif modal-slide" id="notificationModal" tabindex="-1" role="dialog"
+  aria-labelledby="defaultModalLabel" aria-hidden="true">
   <!-- Your modal content here, but replace the notifications list with the following -->
   <div class="modal-dialog modal-sm" role="document">
     <div class="modal-content" style="height: 100%; background:white">
@@ -222,213 +252,213 @@
       <div class="modal-body" style="overflow-y: auto;">
         <div class="list-group list-group-flush my-n3" id="notificationList">
           <!-- Dynamic notifications will be added here -->
-          <div class="list-group-item">Loading notifications...</div>
+          <div class="list-group-item">Chargement des notifications...</div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary btn-block" onclick="clearAllNotifications()" data-dismiss="modal">Clear All</button>
+        <button type="button" class="btn btn-secondary btn-block" onclick="clearAllNotifications()"
+          data-dismiss="modal">Tout effacer</button>
       </div>
     </div>
   </div>
   <!-- Rest of your modal content -->
 </div>
 
-  <style>
-    .read {
-      text-decoration: line-through;
-    }
+<style>
+  .read {
+    text-decoration: line-through;
+  }
+</style>
+<!-- Add the following script at the end of your base.html template -->
+<script>
+  function fetchNotifications() {
+    $.ajax({
+      url: '{% url "get_notifications" %}',
+      dataType: 'json',
+      success: function (data) {
+        var unreadNotificationCount = $('#unreadNotificationCount'); // Reference to the badge
+        var notificationList = $('#notificationList');
+        notificationList.empty(); // Clear existing notifications
+        unreadNotificationCount.text(0);
 
-  </style>
-  <!-- Add the following script at the end of your base.html template -->
-  <script>
-    function fetchNotifications() {
-      $.ajax({
-        url: '{% url "get_notifications" %}',
-        dataType: 'json',
-        success: function(data) {
-          var unreadNotificationCount = $('#unreadNotificationCount'); // Reference to the badge
-          var notificationList = $('#notificationList');
-          notificationList.empty(); // Clear existing notifications
-          unreadNotificationCount.text(0);
-    
-          if (data.length === 0) {
-            notificationList.append('<div class="list-group-item">No new notifications</div>');
-          } else {
-            var totalCount = 0;
-            var customNotification = '';
-            var groupCount = 0;
-            var currentHour = null;
-    
-            data.forEach(function(notification) {
-              console.log(data)
-              // Calculate time ago
-              var notificationTime = new Date(notification.timestamp);
-              var currentTime = new Date();
-              var timeDiff = Math.floor((currentTime - notificationTime) / 1000); // Time difference in seconds
-    
-              var formattedTimestamp = notificationTime.toLocaleString();
-    
-              // Function to format time ago
-              function formatTimeAgo(timeDiff) {
-                if (timeDiff < 60) {
-                  return timeDiff + 's ago';
-                } else if (timeDiff < 3600) {
-                  return Math.floor(timeDiff / 60) + 'm ago';
-                } else if (timeDiff < 86400) {
-                  return Math.floor(timeDiff / 3600) + 'h ago';
-                } else {
-                  return Math.floor(timeDiff / 86400) + 'd ago';
-                }
+        if (data.length === 0) {
+          notificationList.append('<div class="list-group-item">Pas de notifications</div>');
+        } else {
+          var totalCount = 0;
+          var customNotification = '';
+          var groupCount = 0;
+          var currentHour = null;
+
+          data.forEach(function (notification) {
+            console.log(data)
+            // Calculate time ago
+            var notificationTime = new Date(notification.timestamp);
+            var currentTime = new Date();
+            var timeDiff = Math.floor((currentTime - notificationTime) / 1000); // Time difference in seconds
+
+            var formattedTimestamp = notificationTime.toLocaleString();
+
+            // Function to format time ago
+            function formatTimeAgo(timeDiff) {
+              if (timeDiff < 60) {
+                return 'il y\'a' + ' ' + timeDiff + ' ' + 's';
+              } else if (timeDiff < 3600) {
+                return 'il y\'a' + ' ' + Math.floor(timeDiff / 60) + ' ' + 'm';
+              } else if (timeDiff < 86400) {
+                return 'il y\'a' + ' ' + Math.floor(timeDiff / 3600) + ' ' + 'h';
+              } else {
+                return 'il y\'a' + ' ' + Math.floor(timeDiff / 86400) + ' ' + 'j';
               }
-    
-              var notificationHour = notificationTime.getHours();
-              if (currentHour === null || notificationHour === currentHour) {
-                if (notification.is_read) {
-                  groupCount += 1;
-                }
-              } 
-              
-              /* else {
-                if (groupCount > 0) {
-                  viewAllLink = '<a href="{% url "all_notifications" %}" class="view-all-link">View all notifications</a>';
-                  // Display the custom notification for the previous hour group
-                  customNotification = '<div class="list-group-item bg-transparent">' +
-                    '<div class="row align-items-center">' +
-                    '<div class="col">' +
-                    '<small><strong>' + groupCount + ' notifications received in the last hour</strong></small><br/>' +
-                    viewAllLink +
-                    '</div>' +
-                    '</div>' +
-                    '</div>';
-                  notificationList.append(customNotification);
-    
-                  groupCount = 1;
-                }
-              } */
-    
-              var itemHtml =
-                '<div id="notification-' + notification.id + '" class="list-group-item bg-transparent"  onclick="handleNotificationClick(' + notification.id + ', ' + notification.lead_id + ')">' +
-                '<div class="row align-items-center">' +
-                '<div class="col-auto">' +
-                '<span class="fe fe-bell fe-24"></span>' +
-                '</div>' +
-                '<div class="col">' +
-                '<small class="' + (notification.is_read ? 'read' : 'unread') + '"><strong>' + notification.message + '</strong></small>' +
-                '<div class="my-0 text-muted small">' + formattedTimestamp + '</div>' +
-                '<div class="my-0 text-muted small">' + formatTimeAgo(timeDiff) + '</div>' +
-                '</div>' +
-                '<div class="col-auto">' +
-                '<span class="fe fe-x-circle fe-16 text-primary cursor-pointer" onclick="markNotificationRead(' + notification.id + ')"></span>' +
-                '</div>' +
-                '</div>' +
-                '</div>';
-    
-              notificationList.append(itemHtml);
-              if (notification.is_read) {
-                totalCount += 1;
-              }
-              
-              currentHour = notificationHour;
-            });
-            
-            if (groupCount > 0) {
-              viewAllLink = '<a href="{% url "view_notifications" %}" class="view-all-link">View all notifications</a>';
-              // Display the custom notification for the last hour group
-              customNotification = '<div class="list-group-item bg-transparent">' +
-                '<div class="row align-items-center">' +
-                '<div class="col">' +
-                '<small><strong>' + groupCount + ' notifications received in the last hour</strong></small><br>' +
-                viewAllLink +
-                '</div>' +
-                '</div>' +
-                '</div>';
-              notificationList.append(customNotification);
             }
-    
-            unreadNotificationCount.text(totalCount);
-          }
-        },
-        error: function() {
-          console.error('Failed to fetch notifications.');
-        }
-      });
-    }
 
-    function handleNotificationClick(notificationId, leadId) {
-      // Mark the notification as read via AJAX
-      markNotificationRead(notificationId);
-      // Open the lead edit modal
-      openLeadModal(leadId);
-    }
+            var notificationHour = notificationTime.getHours();
+            if (currentHour === null || notificationHour === currentHour) {
+              if (notification.is_read) {
+                groupCount += 1;
+              }
+            }
 
-function openLeadModal(leadId) {
-  // Open the lead edit modal
-  var currentUrl = window.location.href;
-  if (currentUrl.includes("sales_lead")) {
-    // Check if the leadId is provided
-    if (leadId) {
-      // Trigger the modal to open based on the provided leadId
-      $('#editModal-' + leadId).modal('show');
-    }
-  } else {
-    // Redirect to sales_lead and include the openModal parameter
-    window.location.href = '/lead/sales_lead/?openModal=' + leadId;
-  }
-}
-
-// Check if the openModal parameter exists in the URL
-var urlParams = new URLSearchParams(window.location.search);
-var openModalLeadId = urlParams.get('openModal');
-
-$(document).ready(function () {
-  if (openModalLeadId) {
-    // Use the leadId from the parameter to open the corresponding modal
-    $('#editModal-' + openModalLeadId).modal('show');
-  }
-});
-
-    function markNotificationRead(notificationId) {
-      $.ajax({
-        url: '{% url "mark_notification_read" %}',
-        type: 'POST',
-        data: {
-          notification_id: notificationId,
-          csrfmiddlewaretoken: '{{ csrf_token }}'
-        },
-        dataType: 'json',
-        success: function(response) {
-          if (response.success) {
-            $('.close').click(); 
-          }
-        },
-        error: function() {
-          console.error('Failed to mark notification as read.');
-        }
-      });
-    }
+            /* else {
+              if (groupCount > 0) {
+                viewAllLink = '<a href="{% url "all_notifications" %}" class="view-all-link</a>';
+                // Display the custom notification for the previous hour group
+                customNotification = '<div class="list-group-item bg-transparent">' +
+                  '<div class="row align-items-center">' +
+                  '<div class="col">' +
+                  '<small><strong>' + groupCount + ' notifications received in the last hour</strong></small><br/>' +
+                  viewAllLink +
+                  '</div>' +
+                  '</div>' +
+                  '</div>';
+                notificationList.append(customNotification);
   
-    function clearAllNotifications() {
-      // Make an AJAX call to mark all notifications as read
-      $.ajax({
-        url: '{% url "clear_all_notifications" %}',
-        type: 'POST',
-        data: { csrfmiddlewaretoken: '{{ csrf_token }}' },
-        dataType: 'json',
-        success: function(response) {
-          if (response.success) {
-            // Notifications cleared successfully
-            // Now close the notification slide
-            $('#notificationModal').modal('hide');
-            // Optionally, you can reload the page to refresh the notifications
-            // location.reload();
+                groupCount = 1;
+              }
+            } */
+
+            var itemHtml =
+              '<div id="notification-' + notification.id + '" class="list-group-item bg-transparent"  onclick="handleNotificationClick(' + notification.id + ', ' + notification.lead_id + ')">' +
+              '<div class="row align-items-center">' +
+              '<div class="col-auto">' +
+              '<span class="fe fe-bell fe-24"></span>' +
+              '</div>' +
+              '<div class="col">' +
+              '<small class="' + (notification.is_read ? 'read' : 'unread') + '"><strong>' + notification.message + '</strong></small>' +
+              '<div class="my-0 text-muted small">' + formattedTimestamp + '</div>' +
+              '<div class="my-0 text-muted small">' + formatTimeAgo(timeDiff) + '</div>' +
+              '</div>' +
+              '<div class="col-auto">' +
+              '<span class="fe fe-x-circle fe-16 text-primary cursor-pointer" onclick="markNotificationRead(' + notification.id + ')"></span>' +
+              '</div>' +
+              '</div>' +
+              '</div>';
+
+            notificationList.append(itemHtml);
+            if (notification.is_read) {
+              totalCount += 1;
+            }
+
+            currentHour = notificationHour;
+          });
+
+          if (groupCount > 0) {
+            viewAllLink = '<a href="{% url "view_notifications" %}" class="view-all-link">Voir toutes les notifications</a>';
+            // Display the custom notification for the last hour group
+            customNotification = '<div class="list-group-item bg-transparent">' +
+              '<div class="row align-items-center">' +
+              '<div class="col">' +
+              '<small><strong>' + groupCount + ' notifications reçues dans la dernière heure</strong></small><br>' +
+              viewAllLink +
+              '</div>' +
+              '</div>' +
+              '</div>';
+            notificationList.append(customNotification);
           }
-        },
-        error: function() {
-          console.error('Failed to clear all notifications.');
+
+          unreadNotificationCount.text(totalCount);
         }
-      });
+      },
+      error: function () {
+        console.error('Failed to fetch notifications.');
+      }
+    });
+  }
+
+  function handleNotificationClick(notificationId, leadId) {
+    // Mark the notification as read via AJAX
+    markNotificationRead(notificationId);
+    // Open the lead edit modal
+    openLeadModal(leadId);
+  }
+
+  function openLeadModal(leadId) {
+    // Open the lead edit modal
+    var currentUrl = window.location.href;
+    if (currentUrl.includes("sales_lead")) {
+      // Check if the leadId is provided
+      if (leadId) {
+        // Trigger the modal to open based on the provided leadId
+        $('#editModal-' + leadId).modal('show');
+      }
+    } else {
+      // Redirect to sales_lead and include the openModal parameter
+      window.location.href = '/lead/sales_lead/?openModal=' + leadId;
     }
-    </script>
+  }
+
+  // Check if the openModal parameter exists in the URL
+  var urlParams = new URLSearchParams(window.location.search);
+  var openModalLeadId = urlParams.get('openModal');
+
+  $(document).ready(function () {
+    if (openModalLeadId) {
+      // Use the leadId from the parameter to open the corresponding modal
+      $('#editModal-' + openModalLeadId).modal('show');
+    }
+  });
+
+  function markNotificationRead(notificationId) {
+    $.ajax({
+      url: '{% url "mark_notification_read" %}',
+      type: 'POST',
+      data: {
+        notification_id: notificationId,
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+      },
+      dataType: 'json',
+      success: function (response) {
+        if (response.success) {
+          $('.close').click();
+        }
+      },
+      error: function () {
+        console.error('Failed to mark notification as read.');
+      }
+    });
+  }
+
+  function clearAllNotifications() {
+    // Make an AJAX call to mark all notifications as read
+    $.ajax({
+      url: '{% url "clear_all_notifications" %}',
+      type: 'POST',
+      data: { csrfmiddlewaretoken: '{{ csrf_token }}' },
+      dataType: 'json',
+      success: function (response) {
+        if (response.success) {
+          // Notifications cleared successfully
+          // Now close the notification slide
+          $('#notificationModal').modal('hide');
+          // Optionally, you can reload the page to refresh the notifications
+          // location.reload();
+        }
+      },
+      error: function () {
+        console.error('Failed to clear all notifications.');
+      }
+    });
+  }
+</script>
 
 
 </html>

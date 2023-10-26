@@ -10,7 +10,7 @@
 
   /* Add some background color to the form */
   .animated-form {
-    background-color: #f5f5f5;
+    background-color: #ffffff;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -35,7 +35,7 @@
 
   /* Add some background color to the form */
   .animated-form {
-    background-color: #f5f5f5;
+    background-color: #ffffff;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -77,8 +77,12 @@
   }
 
   .animated-icon {
-    animation: heartbeat 1s ease-in-out infinite;
-    color: #3498db;
+    animation: heartbeat 2s ease-in-out infinite;
+  }
+
+  .nav-tabs .nav-link.active {
+    color: rgba(54, 188, 175, 1);
+    border-color: rgba(54, 188, 175, 1);
   }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -98,9 +102,9 @@
           <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
           <form method="post" class="animated-form">
             {% csrf_token %}
-            <div class="row mt-5 align-items-center">
-              <div class="col-md-3 text-center mb-5">
-                <i class="fas fa-user fa-4x animated-icon"></i>
+            <div class="row mt-1 align-items-center">
+              <div class="col-md-3 text-center mb-1">
+                <i class="fas fa-user fa-4x animated-icon" style="color:rgba(54,188,175,1);"></i>
                 <!-- You can add an animated icon or background here -->
               </div>
               <div class="col">

@@ -38,9 +38,22 @@ class LeadHistory(models.Model):
 class FacebookPage(models.Model):
     form_id = models.CharField(max_length=100)
     page_name = models.CharField(max_length=100)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    
+    def __str__(self):
+        return self.page_name
     
 
+
+class FacebookPageGroup(models.Model):
+    group_name = models.CharField(max_length=100)
+    users = models.ManyToManyField(User, related_name='facebook_groups')
+    associated_pages = models.ManyToManyField(FacebookPage, related_name='groups')
+
+class UserGroupPermission(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    group = models.ForeignKey(FacebookPageGroup, on_delete=models.CASCADE)
+    can_fetch = models.BooleanField(default=False)
    
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -60,6 +73,11 @@ def create_facebook_page_instances(sender, instance, created, **kwargs):
                 new_page.save()
 
 
+
+
+class Document(models.Model):
+    title = models.CharField(max_length=100)
+    file = models.FileField(upload_to='documents/')
 
 
 class token(models.Model):
@@ -83,6 +101,7 @@ class Lead(models.Model):
         ('nrp3', 'NRP3'),
         ('en_cours', 'En cours'),
         ('rappel', 'Rappel'),
+        ('demande_de_documentation', 'Demande de documentation '),
         ('faux_numero', 'Faux numéro'),
         ('pas_de_budget', 'Pas de budget'),
         ('pas_interesse', 'Pas intéressé'), 
@@ -108,6 +127,7 @@ class Lead(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     read_mail = models.BooleanField(default=False)
     company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True, blank=True, related_name='leads')
+    document = models.ForeignKey(Document, on_delete=models.SET_NULL, null=True, blank=True, related_name='lead')
    
     LEAD_SOURCE_CHOICES = (
         ('facebook', 'Facebook'),

@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<main role="main" class="main-content">
+    <div class="container-fluid">
+        <div class="card shadow">
+            <div class="card-body">
+                <h1>Imported JotForm Data of AA</h1>
+                <form method="post" action="{% url 'import_jotform_data_aa' %}">
+                    {% csrf_token %}
+                    <button type="submit">Import Data</button>
+                </form>
+            </div>
+            <div class="table-responsive mt-4">
+                <table id="exampleDT" class="table table-bordered display nowrap" cellspacing="0" style="width:100%">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Submission Date</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th>Signature</th>
+                            <th>Numéro de téléphone</th>
+                            <th>Address</th>
+                            <th>Choix de la formation</th>
+                            <th>Date de début</th>
+                            <th>Date de fin</th>
+                            <th>Nombre d'heure</th>
+                            <th>Prix de la formation</th>
+                            <th>Passage au</th>
+                            <th>Votre Conseiller/ère</th>
+                            <th>Formation</th>
+                            <th>Audio Appel Qualité</th>
+                            <th>Audio Suivi Formation</th>
+                            <!-- Add other headers here -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for submission in jotform_submissions_aa %}
+                        <tr>
+                            <td>{{ submission.submission_date }}</td>
+                            <td>{{ submission.first_name }}</td>
+                            <td>{{ submission.last_name }}</td>
+                            <td>{{ submission.email }}</td>
+                            <td>{{ submission.signature }}</td>
+
+                            <td>
+                                {{ submission.numero_telephone }}
+                            </td>
+                            <td>
+                                {{ submission.address }}
+                            </td>
+
+
+
+
+                            <td>{{ submission.choix_formation }}</td>
+
+                            <td>
+                                {{ submission.date_debut }}
+                            </td>
+
+                            <td>
+                                {{ submission.date_fin }}
+
+                            </td>
+
+                            <td>
+
+                                {{ submission.nombre_heure }}
+
+                            </td>
+
+                            <td>
+                                {{ submission.prix_formation }}
+                            </td>
+                            <td>{{ submission.passage_au }}</td>
+
+                            <td>
+                                {% if submission.votre_conseiller %}
+                                {{ submission.votre_conseiller.answer }}: {{ submission.votre_conseiller.value }}
+                                {% else %}
+                                N/A
+                                {% endif %}
+                            </td>
+
+                            <td>{{ submission.formation }}</td>
+                            <td>{{ submission.audio_appel_qualite }}</td>
+                            <td>{{ submission.audio_suivi_formation }}</td>
+                            <!-- Add other data fields here -->
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock %}
+{% block javascript %}
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.1/css/select.bootstrap.css" />
+<script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var table = $('#exampleDT').DataTable({
+            responsive: true,
+            order: [
+                [1, 'asc']
+            ]
+        });
+        // Handle "Select All" checkbox click
+    });
+</script>
+{% endblock %}

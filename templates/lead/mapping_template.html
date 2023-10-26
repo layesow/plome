@@ -19,27 +19,26 @@
 
     <div class="row justify-content-center">
       <div class="col-12">
-        <h2 class="mb-2 page-title">Facebook Page Mapping</h2>
+        <h2 class="mb-2 page-title">Manage Facebook Page Permissions</h2>
 
         <div class="row my-2">
           <div class="col-md-12">
             <div class="card shadow">
               <div class="card-body">
-                <form method="post" action="{% url 'map_facebook_pages' %}" id="facebook_mapping_form">
+                <h4>Permission Management</h4>
+                <form method="post" action="{% url 'map_facebook_pages' %}">
                   {% csrf_token %}
-                
-                  <!-- Modify the 'selected_page' dropdown -->
+
                   <div class="form-group">
-                    <label for="selected_page">Select Facebook Page</label>
-                    <select id="selected_page" name="selected_page" class="form-control" required>
-                      <option value="">-- Select Page --</option>
-                      {% for page in facebook_pages %}
-                      <option value="{{ page.pk }}">{{ page.page_name }}</option>
+                    <label for="selected_group">Select Facebook Group</label>
+                    <select id="selected_group" name="selected_group" class="form-control" required>
+                      <option value="">-- Select Group --</option>
+                      {% for group in facebook_groups %}
+                      <option value="{{ group.pk }}">{{ group.group_name }}</option>
                       {% endfor %}
                     </select>
                   </div>
 
-                
                   <div class="form-group">
                     <label for="selected_user">Select User</label>
                     <select id="selected_user" name="selected_user" class="form-control" required>
@@ -49,16 +48,41 @@
                       {% endfor %}
                     </select>
                   </div>
-                
-                  <button type="submit" name="map_facebook" class="btn btn-primary">Map Facebook Page</button>
+
+                  <div class="form-group">
+                    <label for="permission_status">Permission to Fetch</label>
+                    <select id="permission_status" name="permission_status" class="form-control" required>
+                      <option value="yes">Yes</option>
+                      <option value="no">No</option>
+                    </select>
+                  </div>
+
+                  <button type="submit" name="update_permission" class="btn btn-primary">Update Permission</button>
                 </form>
 
-
+                <!-- Display the table of permissions -->
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Group Name</th>
+                      <th>User Name</th>
+                      <th>Can Fetch</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for permission in user_permissions %}
+                    <tr>
+                      <td>{{ permission.group.group_name }}</td>
+                      <td>{{ permission.user.username }}</td>
+                      <td>
+                        {% if permission.can_fetch %}Yes{% else %}No{% endif %}
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
 
                 <!-- ... (remaining HTML code) ... -->
-
-
-                 
               </div>
             </div>
           </div>

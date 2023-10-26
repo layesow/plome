@@ -328,7 +328,7 @@ def lead_dashboard(request, lead_id=None):
             except Company.DoesNotExist:
                 pass
 
-        return render(request, 'lead/leads_dashboard.html', {'leads': filtered_leads, 'users': users, 'sections': nav_data,'page_names': page_names,'companies': companies})
+        return render(request, 'lead/leads_dashboard.html', {'leads': filtered_leads, 'users': users, 'sections': nav_data,'page_names': page_names,'companies': companies,'documents': Document.objects.all()})
 
 
 
@@ -947,12 +947,19 @@ def delete_attachment(request, attachment_id):
 
 
 
+
+
+
+
 from django.contrib.admin.models import LogEntry, CHANGE
 from django.contrib.contenttypes.models import ContentType
+from django.core.mail import EmailMessage
 
 def lead_edit(request, lead_id):
     lead = get_object_or_404(Lead, id=lead_id)
     company_id = None
+    documents = Document.objects.all()
+    
 
     if request.method == 'POST':
         form_data = request.POST.copy()  # Make a copy of the POST data to modify it
@@ -969,6 +976,7 @@ def lead_edit(request, lead_id):
                 messages.error(request, 'Invalid user ID selected for assignment.')
 
         changes = {}
+        
         
 
         # Check if each field has been changed and update the changes dictionary
@@ -1067,6 +1075,7 @@ def lead_edit(request, lead_id):
             lead.price = None
 
 
+
         custom_fields_data = {}
         for key, value in form_data.items():
             if key.startswith('custom_fields.'):
@@ -1106,12 +1115,15 @@ def lead_edit(request, lead_id):
                 messages.error(request, 'Company not found')
             transfer_lead_to_doisser(request, lead)
          # Associate a company with the lead if selected
+         
+         
        
+   
                 
-        
-        #lead.save()
+
 
         lead.save()
+       
 
 
         #Saving the notification for assign
@@ -1120,6 +1132,8 @@ def lead_edit(request, lead_id):
             user = CustomUserTypes.objects.get(id=assigned_user_id)
             notification = Notification(user=user, lead=lead, message=notification_message)
             notification.save()
+            
+        
         messages.success(request, 'Lead edited successfully.')
 
         
@@ -1153,7 +1167,7 @@ def lead_edit(request, lead_id):
         }
         return JsonResponse({'success': True})
 
-    return render(request, 'lead/lead_edit.html', {'lead': lead})
+    return render(request, 'lead/lead_edit.html', {'lead': lead,'documents': documents})
 
 from django.http import JsonResponse
 from .models import PriceEntry
@@ -1709,7 +1723,7 @@ def delete_company(request, company_id):
         
         
 
-from .models import Lead, FacebookPage  # Import your Lead and FacebookPage models
+
 import csv
 import facebook
 from django.http import JsonResponse  # Import JsonResponse
@@ -1819,64 +1833,65 @@ def fetch_facebook_leads(request):
 
 
 
-from django.shortcuts import render, redirect
-from .models import FacebookPage, CustomUserTypes
 
-def map_facebook_pages_to_users(request):
-    if request.method == 'POST':
-        # Get the selected Facebook page and user who can fetch from the form submission
-        selected_page_id = request.POST.get('selected_page')
-        selected_user_id = request.POST.get('selected_user')
-        print("PageID", selected_page_id)
-        print("Page User",selected_user_id)
+# from django.shortcuts import render, redirect
+# from .models import FacebookPage, CustomUserTypes
 
-        # Check if selected_page_id and selected_user_id are empty or None
-        if not selected_page_id:
-            error_message = "Selected Facebook Page is required."
-            return render(request, 'error_template.html', {'error_message': error_message})
+# def map_facebook_pages_to_users(request):
+#     if request.method == 'POST':
+#         # Get the selected Facebook page and user who can fetch from the form submission
+#         selected_page_id = request.POST.get('selected_page')
+#         selected_user_id = request.POST.get('selected_user')
+#         print("PageID", selected_page_id)
+#         print("Page User",selected_user_id)
 
-        if not selected_user_id:
-            error_message = "Selected User is required."
-            return render(request, 'error_template.html', {'error_message': error_message})
+#         # Check if selected_page_id and selected_user_id are empty or None
+#         if not selected_page_id:
+#             error_message = "Selected Facebook Page is required."
+#             return render(request, 'error_template.html', {'error_message': error_message})
 
-        try:
-            # Retrieve the selected Facebook Page
-            selected_page = FacebookPage.objects.get(pk=selected_page_id)
+#         if not selected_user_id:
+#             error_message = "Selected User is required."
+#             return render(request, 'error_template.html', {'error_message': error_message})
 
-            # Retrieve the user who can fetch
-            selected_user = CustomUserTypes.objects.get(pk=selected_user_id)
+#         try:
+#             # Retrieve the selected Facebook Page
+#             selected_page = FacebookPage.objects.get(pk=selected_page_id)
 
-            # Iterate through users to update permissions
-            for user in CustomUserTypes.objects.all():
-                # Update the user field for the Facebook Page
-                selected_page.user = user
-                selected_page.save()
+#             # Retrieve the user who can fetch
+#             selected_user = CustomUserTypes.objects.get(pk=selected_user_id)
 
-                # Update the "can fetch" permission for the user
-                user.can_fetch = user == selected_user
-                user.save()
+#             # Iterate through users to update permissions
+#             for user in CustomUserTypes.objects.all():
+#                 # Update the user field for the Facebook Page
+#                 selected_page.user = user
+#                 selected_page.save()
 
-            # Ensure that the selected page is connected to all users
-            connect_page_to_all_users(selected_page)
+#                 # Update the "can fetch" permission for the user
+#                 user.can_fetch = user == selected_user
+#                 user.save()
 
-            # Redirect to a success page or display a success message
-            return redirect('map_facebook_pages')  # Replace with the actual URL name
-        except (FacebookPage.DoesNotExist, CustomUserTypes.DoesNotExist):
-            # Handle cases where the selected Facebook Page or user doesn't exist
-            error_message = "Selected Facebook Page or user not found."
-            return render(request, 'error_template.html', {'error_message': error_message})
+#             # Ensure that the selected page is connected to all users
+#             connect_page_to_all_users(selected_page)
+
+#             # Redirect to a success page or display a success message
+#             return redirect('map_facebook_pages')  # Replace with the actual URL name
+#         except (FacebookPage.DoesNotExist, CustomUserTypes.DoesNotExist):
+#             # Handle cases where the selected Facebook Page or user doesn't exist
+#             error_message = "Selected Facebook Page or user not found."
+#             return render(request, 'error_template.html', {'error_message': error_message})
 
 
 
-    # Retrieve a list of all Facebook Pages and Users for the template
-    facebook_pages = FacebookPage.objects.all()
-    users = CustomUserTypes.objects.all()
+#     # Retrieve a list of all Facebook Pages and Users for the template
+#     facebook_pages = FacebookPage.objects.all()
+#     users = CustomUserTypes.objects.all()
 
-    # Filter and display only the unique Facebook pages
-    unique_pages = FacebookPage.objects.values('page_name').distinct()
-    connected_pages = FacebookPage.objects.filter(user__in=users).distinct()
+#     # Filter and display only the unique Facebook pages
+#     unique_pages = FacebookPage.objects.values('page_name').distinct()
+#     connected_pages = FacebookPage.objects.filter(user__in=users).distinct()
 
-    return render(request, 'lead/mapping_template.html', {'facebook_pages': connected_pages, 'users': users})
+#     return render(request, 'lead/mapping_template.html', {'facebook_pages': connected_pages, 'users': users})
 
 
 def connect_page_to_all_users(selected_page):
@@ -1913,8 +1928,9 @@ def connect_all_new_pages_to_users():
                 new_page.save()
 
 
+#this code will also create the facebook group with facebook page
 from django.shortcuts import render, redirect
-from .models import FacebookPage
+from .models import FacebookPage, FacebookPageGroup
 from django.contrib.auth.decorators import login_required
 
 @login_required
@@ -1925,44 +1941,111 @@ def create_facebook_page(request):
 
         # Create a new FacebookPage instance and save it to the database
         facebook_page = FacebookPage(form_id=form_id, page_name=page_name, user=request.user)
-        messages.success(request, 'New Facebook page has been added and linked with all users.')
         facebook_page.save()
-        #messages.success(request, 'New Facebook page has been added and linked with all users.')
+
+        # Create a group for the Facebook page
+        group_name = page_name  # Use the page name as the group name
+        facebook_group, created = FacebookPageGroup.objects.get_or_create(group_name=group_name)
+
+        # Add all users to the group
+        for user in CustomUserTypes.objects.all():  # Assuming you are using Django's built-in User model
+            facebook_group.users.add(user)
+
+        # Associate the Facebook page with the group
+        facebook_page.group = facebook_group
+        facebook_page.save()
+
+        messages.success(request, 'New Facebook page has been added and linked with all users.')
 
         # Redirect to a success page or wherever you want
         return redirect('create_facebook_page')  # Replace with the actual URL name
 
     return render(request, 'lead/add_page_template.html')
 
+from django.shortcuts import render, redirect
+from .models import FacebookPageGroup, UserGroupPermission
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+
+@login_required
+def map_facebook_pages_to_users(request):
+    facebook_groups = FacebookPageGroup.objects.all()
+
+    if request.method == 'POST':
+        selected_group_id = request.POST.get('selected_group')
+        selected_user_id = request.POST.get('selected_user')
+        permission_status = request.POST.get('permission_status')
+
+        if selected_group_id and selected_user_id:
+            selected_group = FacebookPageGroup.objects.get(pk=selected_group_id)
+            selected_user = CustomUserTypes.objects.get(pk=selected_user_id)
+
+            user_permission, created = UserGroupPermission.objects.get_or_create(
+                user=selected_user,
+                group=selected_group,
+            )
+
+            if permission_status == 'yes':
+                user_permission.can_fetch = True
+            elif permission_status == 'no':
+                user_permission.can_fetch = False
+            user_permission.save()
+
+            return redirect('map_facebook_pages')
+
+    user_permissions = UserGroupPermission.objects.all()
+    users = CustomUserTypes.objects.all()  # Add this line to fetch all users
+
+    return render(request, 'lead/mapping_template.html', {'facebook_groups': facebook_groups, 'user_permissions': user_permissions, 'users': users})
+
+
+# from django.shortcuts import render, redirect
+# from .models import FacebookPage, CustomUserTypes, FacebookPageGroup
+
 # def map_facebook_pages_to_users(request):
 #     if request.method == 'POST':
-#         # Get the selected page and user from the form submission
-#         selected_page_id = request.POST.get('selected_page')
+#         # Get the selected Facebook group and user from the form submission
+#         selected_group_id = request.POST.get('selected_group')
 #         selected_user_id = request.POST.get('selected_user')
 
-#         try:
-#             # Retrieve the selected Facebook Page and User
-#             selected_page = FacebookPage.objects.get(pk=selected_page_id)
-#             selected_user = CustomUserTypes.objects.get(pk=selected_user_id)
-
-#             # Update the user field for the Facebook Page
-#             selected_page.user = selected_user
-#             selected_page.save()
-
-#             # Redirect to a success page or display a success message
-#             return redirect('map_facebook_pages')  # Replace 'success_page' with the actual URL name
-#         except (FacebookPage.DoesNotExist, CustomUserTypes.DoesNotExist):
-#             # Handle cases where the selected page or user doesn't exist
-#             error_message = "Selected Facebook Page or User not found."
+#         # Check if selected_group_id and selected_user_id are empty or None
+#         if not selected_group_id:
+#             error_message = "Selected Facebook Group is required."
 #             return render(request, 'error_template.html', {'error_message': error_message})
 
-#     # If the request method is not POST, or if the form hasn't been submitted
-#     # Retrieve a list of all Facebook Pages and Users for the template
-#     facebook_pages = FacebookPage.objects.all()
+#         if not selected_user_id:
+#             error_message = "Selected User is required."
+#             return render(request, 'error_template.html', {'error_message': error_message})
+
+#         try:
+#             # Retrieve the selected Facebook Group and user
+#             selected_group = FacebookPageGroup.objects.get(pk=selected_group_id)
+#             selected_user = CustomUserTypes.objects.get(pk=selected_user_id)
+
+#             # Associate the selected user with the group
+#             selected_group.users.add(selected_user)
+
+#             # Set permissions for fetching (assuming you have a 'can_fetch' field in CustomUserTypes)
+#             selected_user.can_fetch = True
+#             selected_user.save()
+
+#             # Redirect to a success page or display a success message
+#             return redirect('map_facebook_pages')  # Replace with the actual URL name
+#         except (FacebookPageGroup.DoesNotExist, CustomUserTypes.DoesNotExist):
+#             # Handle cases where the selected Facebook Group or user doesn't exist
+#             error_message = "Selected Facebook Group or user not found."
+#             return render(request, 'error_template.html', {'error_message': error_message})
+
+#     # Retrieve a list of all Facebook Groups and Users for the template
+#     facebook_groups = FacebookPageGroup.objects.all()
 #     users = CustomUserTypes.objects.all()
-#     return render(request, 'lead/mapping_template.html', {'facebook_pages': facebook_pages, 'users': users})
 
+#     return render(request, 'lead/mapping_template.html', {'facebook_groups': facebook_groups, 'users': users})
 
+from django.http import JsonResponse
+from .models import FacebookPage, FetchedLead, UserGroupPermission
+import facebook
+from django.contrib.auth.decorators import login_required
 
 @login_required
 def fetch_sales_leads(request):
@@ -1979,8 +2062,9 @@ def fetch_sales_leads(request):
         # Get the currently logged-in user
         current_user = request.user  # Assumes you are using Django's built-in authentication
 
-        # Check if the user has permission to fetch leads (can_fetch is True)
-        if not current_user.can_fetch:
+        # Check if the user has permission to fetch leads (using UserGroupPermission)
+        user_permission = UserGroupPermission.objects.filter(user=current_user, can_fetch=True).first()
+        if not user_permission:
             response_data['error'] = "You do not have permission to fetch leads."
             return JsonResponse(response_data)
 
@@ -2074,6 +2158,118 @@ def fetch_sales_leads(request):
             response_data['error'] = f"Error connecting to Facebook Graph API: {e}"
 
     return JsonResponse(response_data)
+
+
+# @login_required
+# def fetch_sales_leads(request):
+#     response_data = {}  # Create a dictionary to store response data
+
+#     try:
+#         token_instance = token.objects.latest('id')
+#         access_token = token_instance.access_token
+#     except token.DoesNotExist:
+#         response_data['error'] = "Access token not found. Please add an access token."
+#         return JsonResponse(response_data)
+
+#     try:
+#         # Get the currently logged-in user
+#         current_user = request.user  # Assumes you are using Django's built-in authentication
+
+#         # Check if the user has permission to fetch leads (can_fetch is True)
+#         if not current_user.can_fetch:
+#             response_data['error'] = "You do not have permission to fetch leads."
+#             return JsonResponse(response_data)
+
+#         # Retrieve all the Facebook pages associated with the current user
+#         user_facebook_pages = FacebookPage.objects.filter(user=current_user)
+#     except FacebookPage.DoesNotExist:
+#         response_data['error'] = "No Facebook pages found for the current user."
+#         return JsonResponse(response_data)
+
+#     for facebook_page in user_facebook_pages:
+#         try:
+#             graph = facebook.GraphAPI(access_token=access_token, version="3.0")
+
+#             leads = []
+#             cursor = None
+
+#             while True:
+#                 try:
+#                     params = {'fields': 'field_data,ad_id', 'limit': 100}
+#                     if cursor:
+#                         params['after'] = cursor
+#                     response = graph.get_object(f"/{facebook_page.form_id}/leads", **params)
+#                     leads.extend(response['data'])
+#                     if 'paging' in response and 'cursors' in response['paging']:
+#                         cursor = response['paging']['cursors']['after']
+#                     else:
+#                         break
+#                 except facebook.GraphAPIError as e:
+#                     response_data['error'] = f"Error retrieving leads: {e}"
+#                     return JsonResponse(response_data)
+
+#             for lead in leads:
+#                 # Check if the lead's Facebook ID has already been fetched
+#                 facebook_lead_id = lead.get('id')  # Assuming 'id' is the field that stores the Facebook ID
+#                 if not FetchedLead.objects.filter(facebook_lead_id=facebook_lead_id).exists():
+#                     # This lead is new; fetch and save it
+
+#                     # Your lead fetching and saving logic here
+#                     # For example:
+#                     name = None
+#                     email = None
+#                     phone = None
+#                     nom_de_la_campagne = None
+#                     avez_vous_travaille = None
+#                     status = None
+#                     date_de_soumission = None  # Initialize date_de_soumission
+
+#                     for field in lead['field_data']:
+#                         if field['name'] == 'full_name':
+#                             name = field['values'][0]
+#                         elif field['name'] == 'email':
+#                             email = field['values'][0]
+#                         elif field['name'] == 'phone_number':
+#                             phone = field['values'][0]
+#                         elif field['name'] == 'campaign_name':
+#                             nom_de_la_campagne = field['values'][0]
+#                         elif field['name'] == 'vous_avez_déjà_travaillé_?':
+#                             avez_vous_travaille = field['values'][0]
+#                         elif field['name'] == 'created_time':
+#                             date_de_soumission = field['values'][0]
+
+#                     if 'ad_id' in lead:
+#                         status = 'new'
+#                     else:
+#                         status = 'expired'
+
+#                     # Assign the lead to the user mapped to the Facebook page
+#                     assigned_user = facebook_page.user  # Assuming you have a 'user' field in your FacebookPage model
+
+#                     lead_instance = Lead(
+#                         nom_de_la_campagne=nom_de_la_campagne,
+#                         avez_vous_travaille=avez_vous_travaille,
+#                         nom_prenom=name,
+#                         telephone=phone,
+#                         email=email,
+#                         qualification=None,
+#                         comments=None,
+#                         assigned_to=assigned_user,
+#                         date_de_soumission=date_de_soumission,
+#                         facebook_page=facebook_page,
+#                         lead_source='facebook',
+#                     )
+#                     lead_instance.save()
+
+#                     # Store the Facebook ID of the fetched lead
+#                     fetched_lead = FetchedLead(lead=lead_instance, facebook_lead_id=facebook_lead_id)
+#                     fetched_lead.save()
+
+#             response_data['message'] = "Sales Leads fetched and saved to the database."
+#         except facebook.GraphAPIError as e:
+#             response_data['error'] = f"Error connecting to Facebook Graph API: {e}"
+
+#     return JsonResponse(response_data)
 
 
 # @login_required

@@ -15,6 +15,9 @@ admin.site.register(Attachment)
 admin.site.register(FacebookPage)
 admin.site.register(token)
 admin.site.register(FetchedLead)
+admin.site.register(Document)
+admin.site.register(FacebookPageGroup)
+admin.site.register(UserGroupPermission)
 
 
 

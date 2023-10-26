@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<main role="main" class="main-content">
+    <div class="container-fluid">
+        <div class="card shadow">
+            <div class="card-body">
+                <form method="post" action="{% url 'create_form_settings' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="company">Select a Company:</label>
+                        <select id="company" name="company" class="form-control">
+                            {% for company in companies %}
+                            <option value="{{ company.id }}">{{ company.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="form_name">Form Name:</label>
+                        <input type="text" id="form_name" name="form_name" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Form</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
