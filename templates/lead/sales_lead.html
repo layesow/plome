@@ -51,15 +51,15 @@
       margin-bottom: 20px;
     }
     .filter.sales-filter select {
-      appearance: none;
+      appearance: auto;
       padding: 10px 15px;
       border: none;
-      border-radius: 5px;
+      border-radius: 3px;
       background-color: #f0f0f0;
       color: #333;
       font-size: 14px;
       transition: background-color 0.3s;
-      width: 200px; /* Set width of dropdown */
+      width: 226px; /* Set width of dropdown */
     }
     .filter.sales-filter select:focus {
       outline: none;
@@ -97,7 +97,6 @@
       color: #0c5460;
     }
 </style>
-
 <main role="main" class="main-content">
   <div class="container-fluid">
     <div class="container-fluid">
@@ -110,7 +109,6 @@
         {% endfor %}
       </div>
       {% endif %}
-
       <script>
         // Function to handle form submission
         function handleFormSubmit(event) {
@@ -168,7 +166,6 @@
       </script>
     <script>
         var customFieldCounter = 0;
-
         function addCustomField() {
             var container = document.getElementById('custom-fields-container');
             var customFieldDiv = document.createElement('div');
@@ -181,13 +178,11 @@
             fieldNameInput.name = 'custom_field_name[]';
             fieldNameInput.className = 'form-control';
             fieldNameInput.placeholder = 'Custom Field Name';
-
             // Restore saved values from local storage
             var savedName = localStorage.getItem('custom_field_name_' + customFieldCounter);
             if (savedName) {
                 fieldNameInput.value = savedName;
             }
-
             var fieldValueDiv = document.createElement('div');
             fieldValueDiv.className = 'col-md-5 mb-3';
             var fieldValueInput = document.createElement('input');
@@ -219,7 +214,6 @@
             container.appendChild(customFieldDiv);
             customFieldCounter++;
         }
-
         function saveCustomFields() {
             var customFieldNames = document.getElementsByName('custom_field_name[]');
             var customFieldValues = document.getElementsByName('custom_field_value[]');
@@ -234,7 +228,6 @@
                 }
             }
         }
-
         // Populate saved custom fields on page load
         window.onload = function() {
             var container = document.getElementById('custom-fields-container');
@@ -294,21 +287,17 @@
       
 <div class="container">
   <div class="header">
-    <h2 class="page-title">Sales Leads table</h2>
+    <h2 class="page-title">Tableau des Leads</h2>
   </div>
-
-
-
   <div class="notification info-notification">
-    Info: Please select a qualification and click "Apply Filters."
+    Info : Veuillez sélectionner une qualification et cliquer sur "Appliquer les filtres".
   </div>
   <br>
-
   <form method="GET" action="{% url 'sales_lead' %}" class="filter-form sales-filter">
-    <div class="filter sales-filter">
-      <label for="qualification_filter">Filter by Qualification:</label>
-      <select name="qualification" id="qualification_filter">
-        <option value="">-- Select Qualification --</option>
+    <div class="filter sales-filter" style="background-color: #313131; border-radius: 5px;">
+      <label for="qualification_filter" class="text-white ml-2 mr-2">Filtrer par qualification :</label>
+      <select name="qualification" id="qualification_filter" >
+        <option value="">-- Choisir une qualification --</option>
         <option value="nrp1">NRP1</option>
         <option value="nrp2">NRP2</option>
         <option value="nrp3">NRP3</option>
@@ -322,7 +311,7 @@
         <option value="signe_cpf">Signé CPF</option>
       </select>
     </div>
-    <button type="submit" class="btn apply-button">Apply Filters</button>
+    <button type="submit" class="btn text-white" style="background-color: rgba(54,188,175,1);">Appliquer les filtres</button>
   </form>
 
 
@@ -335,9 +324,7 @@
         {% endfor %}
     </select>
 </div> -->
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
 $(document).ready(function() {
     // Fetch leads when the page loads
@@ -359,7 +346,6 @@ $(document).ready(function() {
     });
 });
 </script>
-
 <!-- <form method="post" action="{% url 'fetch_sales_leads' %}">
     {% csrf_token %}
     <label for="page_filter">Filter by Page Name:</label>
@@ -371,20 +357,14 @@ $(document).ready(function() {
     </select>
     <button type="submit" name="fetch_sales_leads">Fetch Leads</button>
 </form> -->
-
-
-
-
 </div>
-
-
           <!-- Modal -->
           <div class="modal fade" id="defaultModal" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="defaultModalLabel">Add lead</h5>
+                  <h5 class="modal-title" id="defaultModalLabel">Ajouter un lead</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
@@ -400,19 +380,19 @@ $(document).ready(function() {
                             {% comment %} <input type="text" class="form-control" id="prenom" name="prenom" required>
                             {% endcomment %}
                             <input type="date" name="date_de_soumission" class="form-control" required>
-                            <div class="invalid-feedback">Please provide a valid Date.</div>
+                            <div class="invalid-feedback">Veuillez indiquer une date valide.</div>
                           </div>
                           <div class="col-md-6 mb-3">
                             <label for="nom_de_la_campagne">Nom de la Campagne</label>
                             {% comment %} <input type="text" class="form-control" id="nom" name="nom" required>
                             {% endcomment %}
                             <input type="text" name="nom_de_la_campagne" class="form-control" maxlength="100" required>
-                            <div class="invalid-feedback">Please provide a valid nom.</div>
+                            <div class="invalid-feedback">Veuillez fournir un nom valide.</div>
                           </div>
                           <div class="col-md-6 mb-3">
                             <label for="avez_vous_travaille">Avez-vous travaillé</label>
                             <input type="text" name="avez_vous_travaille" class="form-control" maxlength="100" required>
-                            <div class="invalid-feedback">Please provide a valid email.</div>
+                            <div class="invalid-feedback">Veuillez fournir un email valide.</div>
                           </div>
                           <div class="col-md-6 mb-3">
                             <label for="telephone">Nom & Prenom</label>
@@ -422,18 +402,18 @@ $(document).ready(function() {
                           {% comment %} <div class="col-md-6 mb-3">
                             <label for="date_de_soumission">Prénom</label>
                             <input type="text" name="prenom" class="form-control" maxlength="100" required>
-                            <div class="invalid-feedback">Please provide a valid date de soumission.</div>
+                            <div class="invalid-feedback">Veuillez fournir une date de soumission valide.</div>
                           </div> {% endcomment %}
                           <div class="col-md-6 mb-3">
                             <label for="Téléphone">Téléphone</label>
                             <input type="text" name="telephone" class="form-control" maxlength="20" required>
-                            <div class="invalid-feedback">Please provide a valid nom de la campagne.</div>
+                            <div class="invalid-feedback">Veuillez fournir un nom de campagne valide.</div>
                           </div>
                           <div class="form-group col-md-6 mb-3">
                             <label for="qualification">Qualification</label>
                               <select name="qualification" class="form-control" id="qualification" name="qualification"
                                 required>
-                                <option value="">--Select Qualification-- </option>
+                                <option value="">--Choisir une qualification-- </option>
                                 <option value="nrp1">NRP1</option>
                                 <option value="nrp2">NRP2</option>
                                 <option value="nrp3">NRP3</option>
@@ -446,32 +426,30 @@ $(document).ready(function() {
                                 <option value="signe_pole_emploi">Signé Pôle Emploi</option>
                                 <option value="signe_cpf">Signé CPF</option>
                               </select>
-                              <div class="invalid-feedback">Please select a qualification.</div>
+                              <div class="invalid-feedback">Veuillez choisir une qualification.</div>
                           </div>
                           <div class="form-group col-md-6 mb-3">
                             <label for="Email">Email</label>
                             <input type="email" name="email" class="form-control" required>
                           </div>
                           <div class="col-md-6 mb-3">
-                            <label for="Comments">Comments</label>
+                            <label for="Comments">Commentaires</label>
                             <textarea name="comments" class="form-control" required></textarea>
-                            <div class="invalid-feedback">Please provide a valid nom de la campagne.</div>
+                            <div class="invalid-feedback">Veuillez fournir un nom de campagne valide.</div>
                           </div>
                           <div class="col-md-6 mb-3">
-                            <label for="assigned_to">Assign To</label>
+                            <label for="assigned_to">Assigner à</label>
                             <select name="assigned_to" class="form-control">
-                              <option value="">-- Select User --</option>
+                              <option value="">-- Sélectionner un utilisateur --</option>
                               {% for user in users %}
                               <option value="{{ user.id }}">{{ user.username }}</option>
                               {% endfor %}
                             </select>
                           </div>
-
                           
                           <div class="col-md-6 mb-3">
-                            <button class="btn btn-primary" type="submit">Submit</button>
+                            <button class="btn btn-primary" type="submit">Envoyer</button>
                           </div>
-
                       </form>
                     </div> <!-- /.card-body -->
                   </div>
@@ -481,14 +459,13 @@ $(document).ready(function() {
           </div>
         </div>
         <!-- and Modal -->
-
         <!-- Import Leads Modal -->
         <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel"
           aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="importModalLabel">Import Leads</h5>
+                <h5 class="modal-title" id="importModalLabel">Importer des prospects</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -497,22 +474,20 @@ $(document).ready(function() {
                 <form method="post" enctype="multipart/form-data" action="{% url 'import_leads' %}">
                   {% csrf_token %}
                   <div class="form-group">
-                    <label for="file">Select CSV or Excel File</label>
+                    <label for="file">Sélectionnez un fichier CSV ou Excel</label>
                     <input type="file" name="file" id="file" class="form-control-file" required>
                   </div>
-                  <button type="submit" class="btn btn-primary">Import</button>
+                  <button type="submit" class="btn btn-primary">Importer</button>
                 </form>
               </div>
             </div>
           </div>
         </div>
-
         <div class="modal fade" id='showhsitory'>
           <div class="modal-dialog modal-xl">
-
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">History Entries</h5>
+                <h5 class="modal-title">Entrées de l'histoire</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -522,12 +497,11 @@ $(document).ready(function() {
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="closeHistoryModel"
-                  data-dismiss="modal">Close</button>
+                  data-dismiss="modal">Fermez</button>
               </div>
             </div>
           </div>
         </div>
-
         <!-- Small table -->
         <div class="row my-2">
           <div class="col-md-12">
@@ -536,7 +510,7 @@ $(document).ready(function() {
                 <!-- table -->
                 <div class="table-responsive">
                   <table id="exampleDT" class="table table-bordered display nowrap" cellspacing="0" style="width:100%">
-                    <thead class="fw-bold">
+                    <thead class="table-dark">
                       <tr>
                         <th><input type="checkbox" id="selectAllCheckbox"></th>
                         <th data-toggle="select" data-lead-id="lead_id">Date de Soumission</th>
@@ -546,8 +520,8 @@ $(document).ready(function() {
                         <th data-toggle="select">Téléphone</th>
                         <th data-toggle="select">Email</th>
                         <th data-toggle="select">Qualification</th>
-                        <th data-toggle="select">Comments</th>
-                        <th data-toggle="select">Assign to</th>
+                        <th data-toggle="select">Commentaires</th>
+                        <th data-toggle="select">Assigner à</th>
                         <!-- <th data-toggle="select">Mentioned</th> -->
                         <!--<th data-toggle="select">Mention Action</th>-->
                         <th data-toggle="select">Action</th>
@@ -568,12 +542,10 @@ $(document).ready(function() {
                         <td>{{ lead.qualification }}</td>
                         <td>{{ lead.comments }}</td>
                         <td>{{ lead.assigned_to }}</td>
-
                         <!-- <td>
                           Mentioned to {{ lead.transfer_to }}
                           
                         </td> -->
-
                         <!--<td>
                         Mentioned to {{ lead.transfer_to }}
                       <div id="user_mentions_list_{{ lead.id }}" class="user-mentions-list"></div> 
@@ -581,7 +553,6 @@ $(document).ready(function() {
                           <button class="transfer_button" data-lead-id="{{ lead.id }}" data-user-mentions="{{ lead.get_user_mentions_json }}">Mention</button>
                           
                       </td>-->
-
                         <td>
                           {% comment %} <button class="btn btn-sm dropdown-toggle more-horizontal" type="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -594,18 +565,16 @@ $(document).ready(function() {
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dr4">
                               <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal"
-                                data-target="#editModal-{{ lead.id }}">View</a>
-
+                                data-target="#editModal-{{ lead.id }}">Voir</a>
                             </div>
                           </div>
-
                           <!-- edit modal -->
-                          <div class="modal fade" id="editModal-{{ lead.id }}" tabindex="-1" role="dialog"
+                          <div class="modal fade modalBody" id="editModal-{{ lead.id }}" tabindex="-1" role="dialog"
                             aria-labelledby="editModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-xl" role="document">
                               <div class="modal-content">
                                 <div class="modal-header">
-                                  <h5 class="modal-title" id="editModalLabel">Edit Lead
+                                  <h5 class="modal-title" id="editModalLabel">Modifier Lead
                                   </h5>
                                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -623,7 +592,6 @@ $(document).ready(function() {
                                           class="form-control" value="{{ lead.date_de_soumission|date:'Y-m-d' }}"
                                           required autocomplete="off">
                                       </div>
-
                                       <div class="form-group col-md-6">
                                         <label for="nom_de_la_campagne">Nom de la campagne</label>
                                         <input type="text" name="nom_de_la_campagne" id="nom_de_la_campagne"
@@ -659,10 +627,9 @@ $(document).ready(function() {
                                       </div>
                                       <div class="form-group col-md-6">
                                         <label for="qualification">Qualification</label>
-
                                         <select name="qualification" id="qualification" class="form-control qualification-select" data-lead-id="{{ lead.id }}" required>
                                           <option value="" {% if not lead.select_qualification %}selected{% endif %}>
-                                            --Select Qualification--</option>
+                                            --Choisir une qualification--</option>
                                           <option value="nrp1" {% if lead.qualification == 'nrp1' %} selected
                                             {% endif %}>
                                             NRP1
@@ -696,7 +663,7 @@ $(document).ready(function() {
                                         </select>
                                       </div>
                                       <div class="form-group col-md-6">
-                                        <label for="comments">Comments</label>
+                                        <label for="comments">Commentaires</label>
                                         <textarea name="comments" id="comments" class="form-control"
                                           required>{{ lead.comments }}</textarea>
                                       </div>
@@ -706,13 +673,13 @@ $(document).ready(function() {
                                         <div class="input-group mb-3">
                                           <input type="text" class="form-control" name="appointmentStatDateTime" id="appointmentStatDateTime{{ lead.id }}" placeholder="Click Schedule" aria-label="Click Schedule" readonly  value="{{ lead.appointment_date_time }}" aria-describedby="button-addon2">
                                           <div class="input-group-append">
-                                            <button class="btn btn-primary clicktoschedule" data-lead-id="{{ lead.id }}" type="button" id="button-addon2">Schedule New</button>
+                                            <button class="btn btn-primary clicktoschedule" data-lead-id="{{ lead.id }}" type="button" id="button-addon2"> Nouveau calendrier</button>
                                           </div>
                                         </div>
                                       </div>
                                         <div class="form-group col-md-6" id="signecpfprice{{ lead.id }}" {% if lead.qualification == 'signe_cpf' %}
                                           style="display:block;" {% else %} style="display:none;" {% endif %}>
-                                          <label for="price">Price</label>
+                                          <label for="price">Prix</label>
                                           <input type="text" name="price" id="priceStat{{ lead.id }}" class="form-control" placeholder="Price"
                                             value="{{ lead.price }}" required autocomplete="off">
                                           <!-- Add a dropdown for selecting the company -->
@@ -720,9 +687,9 @@ $(document).ready(function() {
                                             <form method="post" action="{% url 'lead_edit' lead.id %}">
                                               {% csrf_token %}
                                               <div class="form-group">
-                                                <label for="company_id">Select Company:</label>
+                                                <label for="company_id">Choisir l'entreprise:</label>
                                                 <select name="company_id" id="company_id" class="form-control">
-                                                  <option value="" disabled>Select a company</option>
+                                                  <option value="" disabled>Choisir une entreprise</option>
                                                   {% for company in companies %}
                                                   {% if company.id == lead.company.id %}
                                                   <option value="{{ company.id }}" selected>{{ company.name }}</option>
@@ -740,7 +707,6 @@ $(document).ready(function() {
                             
                                       <div id="loadBasedQualification{{ lead.id }}"></div>
                                       <!-- {% if lead.custom_fields %}
-
                                       {% for key, value in lead.custom_fields.items %}
                                       <div class="form-group col-md-6">
                                         <label for="{{ key }}">{{ key }}</label>
@@ -748,10 +714,8 @@ $(document).ready(function() {
                                           class="form-control" value="{{ value }}">
                                       </div>
                                       {% endfor %} -->
-
                                       {% endif %}
                                       
-
                                     </div>
                                     <!-- <div class="col-md-12 mb-3">
                             <button type="button" class="btn btn-secondary" onclick="addCustomField('custom-fields-container')">Add Custom
@@ -765,10 +729,8 @@ $(document).ready(function() {
                           <div class="col-md-12 mb-3">
        
     </div>
-
  
                                   </form>
-
                                 </div>
                                 
                                 <!-- Your form fields -->
@@ -777,11 +739,10 @@ $(document).ready(function() {
                                     <div class="card card-primary card-outline card-tabs">
                                       <div class="card-header card-header-regular p-0 pt-1">
                                         <ul class="nav nav-tabs mx-3" id="myTabs">
-
                                       
                                           <li class="nav-item">
                                             <a class="nav-link  show-otherhistory-btn" data-lead-id="{{ lead.id }}" data-toggle="tab"
-                                              href="#history{{ lead.id }}" data-url="{% url 'lead_otherhistory' lead.id %}">History</a>
+                                              href="#history{{ lead.id }}" data-url="{% url 'lead_otherhistory' lead.id %}">Historique</a>
                                           </li>
                                           <li class="nav-item">
                                             <a class="nav-link  show-history-btn" data-toggle="tab"
@@ -798,7 +759,6 @@ $(document).ready(function() {
                                         </ul>
                                       </div>
                                     </div>
-
                                     <div class="tab-content" id="accordionContent" class="collapse">
                                       <div class="tab-pane fade" id="historymention{{ lead.id }}">
                                         <div class="row">
@@ -812,11 +772,11 @@ $(document).ready(function() {
                                                     <table class="table table-hover">
                                                       <thead class="thead-dark">
                                                         <tr>
-                                                          <th>Timestamp</th>
-                                                          <th>User</th>
-                                                          <th>Previous To</th>
-                                                          <th>Assigned To</th>
-                                                          <th>Changes</th>
+                                                          <th>Horaire</th>
+                                                          <th>Utilisateur</th>
+                                                          <th>Précédent À</th>
+                                                          <th>Assigné À</th>
+                                                          <th>Modifications</th>
                                                         </tr>
                                                       </thead>
                                                       <tbody>
@@ -852,7 +812,6 @@ $(document).ready(function() {
                                           </div>
                                         </div>
                                       </div>
-
                                       <div class="tab-pane fade" id="history{{ lead.id }}">
                                         <div class="row">
                                           <div class="col-12" >
@@ -867,9 +826,9 @@ $(document).ready(function() {
                                                         <thead class="fw-bold">
                                                           <tr>
                                                             <th>ID</th>
-                                                            <th>User</th>
-                                                            <th>Action Time</th>
-                                                            <th>Action Made</th>
+                                                            <th>Utilisateur</th>
+                                                            <th>Heure de l'action</th>
+                                                            <th>Action effectuée</th>
                                                           </tr>
                                                         </thead>
                                                         <tbody>
@@ -892,25 +851,20 @@ $(document).ready(function() {
                                           </div>
                                         </div>
                                       </div>
-
                                     
-
                                   <!-- and tabs -->
-
                                   <!--  tabs accordeon -->
                                   <!-- and tabs -->
                                   <!-- end of new changes -->
-
                                   <!-- Your form fields -->
                                   <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn close text-white" style="background-color: #555; padding: 10px; font-size: 15px;" id="fermerPopup" data-dismiss="modal">Fermer
+                                      
+                                    </button>
                                     <button type="button" class="btn btn-primary"
-                                      onclick="updateLead('{{ lead.id }}')">Save</button>
-
+                                      onclick="updateLead('{{ lead.id }}')">Enregistrer</button>
                                   </div>
-
                                   <!-- Your JavaScript code -->
-
                                   <script>
                                     function updateLead(leadId) {
                                       console.log('updateLead function called');
@@ -933,9 +887,7 @@ $(document).ready(function() {
                                       xhr.send(formData);
                                     }
                                   </script>
-
                         </td>
-
                       </tr>
                       {% endfor %}
                     </tbody>
@@ -949,13 +901,12 @@ $(document).ready(function() {
     </div> <!-- .row -->
   </div>
   </div> <!-- .container-fluid -->
-
   <div class="modal fade modal-shortcut modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="defaultModalLabel">Shortcuts</h5>
+          <h5 class="modal-title" id="defaultModalLabel">Raccourcis</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -966,13 +917,13 @@ $(document).ready(function() {
               <div class="squircle bg-success justify-content-center">
                 <i class="fe fe-cpu fe-32 align-self-center text-white"></i>
               </div>
-              <p>Control area</p>
+              <p>Zone de contrôle</p>
             </div>
             <div class="col-6 text-center">
               <div class="squircle bg-primary justify-content-center">
                 <i class="fe fe-activity fe-32 align-self-center text-white"></i>
               </div>
-              <p>Activity</p>
+              <p>Activité</p>
             </div>
           </div>
           <div class="row align-items-center">
@@ -980,13 +931,13 @@ $(document).ready(function() {
               <div class="squircle bg-primary justify-content-center">
                 <i class="fe fe-droplet fe-32 align-self-center text-white"></i>
               </div>
-              <p>Droplet</p>
+              <p>Gouttes</p>
             </div>
             <div class="col-6 text-center">
               <div class="squircle bg-primary justify-content-center">
                 <i class="fe fe-upload-cloud fe-32 align-self-center text-white"></i>
               </div>
-              <p>Upload</p>
+              <p>Téléverser</p>
             </div>
           </div>
           <div class="row align-items-center">
@@ -994,13 +945,13 @@ $(document).ready(function() {
               <div class="squircle bg-primary justify-content-center">
                 <i class="fe fe-users fe-32 align-self-center text-white"></i>
               </div>
-              <p>Users</p>
+              <p>Utilisateurs</p>
             </div>
             <div class="col-6 text-center">
               <div class="squircle bg-primary justify-content-center">
                 <i class="fe fe-settings fe-32 align-self-center text-white"></i>
               </div>
-              <p>Settings</p>
+              <p>Réglages</p>
             </div>
           </div>
         </div>
@@ -1008,11 +959,8 @@ $(document).ready(function() {
     </div>
   </div>
 </main> <!-- main -->
-
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script>  
   $(document).ready(function() {
     /*test */
@@ -1203,19 +1151,15 @@ $(document).ready(function() {
     });
   });
 </script>
-
-
 {% endblock %}
 {% block javascript %}
 <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.1/css/select.bootstrap.css" />
 <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
-
 <!-- Include Bootstrap JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
 <!-- Include Bootstrap CSS -->
-
 <!-- Include Bootstrap JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
 <!-- Include Bootstrap CSS -->
@@ -1231,11 +1175,9 @@ $(document).ready(function() {
        $('#editModal-' + openModalLeadId).modal('show');
       }, 2000); 
     }
-
     
     const rappelFields = $('#rappelFields');
     const rappelDateInput = $('#rappel_date');
-
     function getAccurateDataofQUalification(selectedV, leadID){
       $.ajax({
         type: 'POST',
@@ -1279,12 +1221,10 @@ $(document).ready(function() {
           }
       });
     });
-
     $(document).on('change', '.qualification-select', function() {
         var selectedValue = $(this).val();
         var leadId = $(this).data('lead-id');
         $('#editModal-'+leadId).hide();
-
         if (selectedValue === 'rappel') {
           $("#rappelappointment"+leadId).css("display", "block");
           $("#signecpfprice"+leadId).css("display", "none");
@@ -1410,7 +1350,6 @@ $(document).ready(function() {
         $("#signecpfprice"+leadId).css("display", "none");
       }
     });
-
     $(document).on('click', '.show-history-btn', function(event) {
       event.preventDefault();
       var leadId = $(this).data('lead-id');
@@ -1422,7 +1361,6 @@ $(document).ready(function() {
         //$('#showhsitory').modal('show');
       });
     });
-
     $(document).on('click', '.show-otherhistory-btn', function(event) {
       event.preventDefault();
       var leadId = $(this).data('lead-id');
