@@ -1,0 +1,1635 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+  .mention-textarea {
+    font-family: 'Arial';
+    color: rgb(20, 95, 245);
+    font-weight: bold;
+  }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      
+      margin: 0 auto;
+      padding: 20px;
+      max-width: auto;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .page-title {
+      font-size: 24px;
+      margin: 0;
+    }
+    .buttons {
+      display: flex;
+      gap: 10px;
+    }
+    .btn {
+      padding: 7px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .add-button {
+      background-color: #36BCAF;
+      color: #ffffff;
+    }
+    .import-button:hover {
+      background-color: #28a745;
+      color: #ffffff;
+    }
+    .export-button {
+      background-color: #17a2b8;
+      color: #ffffff;
+    }
+    .filter-form {
+      display: flex;
+      align-items: flex-end;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .filter {
+      display: flex;
+      flex-direction: column;
+    }
+    .apply-button {
+      background-color: #dc3545;
+      color: #ffffff;
+    }
+    .assign-section {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .assign-button {
+      background-color: #6c757d;
+      color: #ffffff;
+    }
+    /* Custom dropdown styles */
+    .custom-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    .custom-dropdown select {
+      appearance: none;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      background-color: #f0f0f0;
+      color: #333;
+      font-size: 14px;
+      transition: background-color 0.3s;
+    }
+    .custom-dropdown select:focus {
+      outline: none;
+      background-color: #e0e0e0;
+    }
+    .custom-dropdown::after {
+      content: "\25BE";
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: #555;
+    }
+
+    
+    
+</style>
+
+<main role="main" class="main-content">
+  <div class="">
+    <div class="">
+      {% if messages %}
+      <div class="card shadow">
+        <div class="card-body">
+        {% for message in messages %}
+        <div class="alert mb-0 alert-{{ message.tags }}" role="alert">
+          {{ message }}
+        </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+    <script>
+        var customFieldCounter = 0;
+
+        function addCustomField() {
+            var container = document.getElementById('custom-fields-container');
+            var customFieldDiv = document.createElement('div');
+            customFieldDiv.className = 'form-row';
+            
+            var fieldNameDiv = document.createElement('div');
+            fieldNameDiv.className = 'col-md-5 mb-3';
+            var fieldNameInput = document.createElement('input');
+            fieldNameInput.type = 'text';
+            fieldNameInput.name = 'custom_field_name[]';
+            fieldNameInput.className = 'form-control';
+            fieldNameInput.placeholder = 'Custom Field Name';
+
+            // Restore saved values from local storage
+            var savedName = localStorage.getItem('custom_field_name_' + customFieldCounter);
+            if (savedName) {
+                fieldNameInput.value = savedName;
+            }
+
+            var fieldValueDiv = document.createElement('div');
+            fieldValueDiv.className = 'col-md-5 mb-3';
+            var fieldValueInput = document.createElement('input');
+            fieldValueInput.type = 'text';
+            fieldValueInput.name = 'custom_field_value[]';
+            fieldValueInput.className = 'form-control';
+            fieldValueInput.placeholder = 'Custom Field Value';
+            
+            var deleteButtonDiv = document.createElement('div');
+            deleteButtonDiv.className = 'col-md-2 text-right mb-3';
+            var deleteButton = document.createElement('button');
+            deleteButton.type = 'button';
+            deleteButton.className = 'btn btn-danger';
+            deleteButton.textContent = 'Delete';
+            deleteButton.onclick = function() {
+                container.removeChild(customFieldDiv);
+                localStorage.removeItem('custom_field_name_' + customFieldCounter);
+                localStorage.removeItem('custom_field_value_' + customFieldCounter);
+            };
+            
+            fieldNameDiv.appendChild(fieldNameInput);
+            fieldValueDiv.appendChild(fieldValueInput);
+            deleteButtonDiv.appendChild(deleteButton);
+            
+            customFieldDiv.appendChild(fieldNameDiv);
+            customFieldDiv.appendChild(fieldValueDiv);
+            customFieldDiv.appendChild(deleteButtonDiv);
+            
+            container.appendChild(customFieldDiv);
+            customFieldCounter++;
+        }
+
+        function saveCustomFields() {
+            var customFieldNames = document.getElementsByName('custom_field_name[]');
+            var customFieldValues = document.getElementsByName('custom_field_value[]');
+            
+            for (var i = 0; i < customFieldNames.length; i++) {
+                var name = customFieldNames[i].value;
+                var value = customFieldValues[i].value;
+                
+                if (name && value) {
+                    localStorage.setItem('custom_field_name_' + i, name);
+                    localStorage.setItem('custom_field_value_' + i, value);
+                }
+            }
+        }
+
+        // Populate saved custom fields on page load
+        window.onload = function() {
+            var container = document.getElementById('custom-fields-container');
+            for (var i = 0; i < localStorage.length; i++) {
+                var key = localStorage.key(i);
+                if (key.startsWith('custom_field_value_')) {
+                    var index = key.split('_')[3];
+                    var name = localStorage.getItem('custom_field_name_' + index);
+                    var value = localStorage.getItem('custom_field_value_' + index);
+                    
+                    // Create custom field and populate saved values
+                    var customFieldDiv = document.createElement('div');
+                    customFieldDiv.className = 'form-row';
+                    
+                    var fieldNameDiv = document.createElement('div');
+                    fieldNameDiv.className = 'col-md-5 mb-3';
+                    var fieldNameInput = document.createElement('input');
+                    fieldNameInput.type = 'text';
+                    fieldNameInput.name = 'custom_field_name[]';
+                    fieldNameInput.className = 'form-control';
+                    fieldNameInput.value = name;
+                    
+                    var fieldValueDiv = document.createElement('div');
+                    fieldValueDiv.className = 'col-md-5 mb-3';
+                    var fieldValueInput = document.createElement('input');
+                    fieldValueInput.type = 'text';
+                    fieldValueInput.name = 'custom_field_value[]';
+                    fieldValueInput.className = 'form-control';
+                    fieldValueInput.value = value;
+                    
+                    var deleteButtonDiv = document.createElement('div');
+                    deleteButtonDiv.className = 'col-md-2 text-right mb-3';
+                    var deleteButton = document.createElement('button');
+                    deleteButton.type = 'button';
+                    deleteButton.className = 'btn btn-danger';
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.onclick = function() {
+                        container.removeChild(customFieldDiv);
+                        localStorage.removeItem('custom_field_name_' + index);
+                        localStorage.removeItem('custom_field_value_' + index);
+                    };
+                    
+                    fieldNameDiv.appendChild(fieldNameInput);
+                    fieldValueDiv.appendChild(fieldValueInput);
+                    deleteButtonDiv.appendChild(deleteButton);
+                    
+                    customFieldDiv.appendChild(fieldNameDiv);
+                    customFieldDiv.appendChild(fieldValueDiv);
+                    customFieldDiv.appendChild(deleteButtonDiv);
+                    
+                    container.appendChild(customFieldDiv);
+                    customFieldCounter = Math.max(customFieldCounter, parseInt(index) + 1);
+                }
+            }
+        }
+    </script>
+    <div class="row my-2">
+    <div class="col-md-12">
+      <div class="card shadow">
+        <div class="card-body">
+          <div class="header">
+            <h2 class="page-title">Tableau de bord prospects</h2>
+            <div class="button ">
+              <button class="btn add-button" data-toggle="modal" data-target="#defaultModal">Ajouter un lead</button>
+              <button class="btn import-button ml-2" data-toggle="modal" data-target="#importModal">Importer</button>
+              <a href="{% url 'export_leads' 'csv' %}" class="btn export-button ml-2">Exporter CSV</a>
+              <a href="{% url 'export_leads' 'xlsx' %}" class="btn export-button ml-2">Exporter XLSX</a>
+            </div>
+          </div>
+          <div class="filters">
+            <!--
+              <form method="GET" action="{% url 'lead_dashboard' %}" class="filter-form">
+                <div class="filter custom-dropdown">
+                  <label for="user_filter">Filter by User:</label>
+                  <select name="user_id" id="user_filter">
+                    <option value="">All</option>
+                    {% for user in users %}
+                    <option value="{{ user.id }}" {% if request.GET.user_id == user.id|stringformat:"s" %}selected{% endif %}>
+                      {{ user.username }}
+                    </option>
+                    {% endfor %}
+                  </select>
+                </div>
+          
+                <div class="filter custom-dropdown">
+                  <label for="qualification_filter">Filter by Qualification:</label>
+                  <select name="qualification" id="qualification_filter">
+                    <option value="">Qualification</option>
+                    <option value="nrp1">NRP1</option>
+                    <option value="nrp2">NRP2</option>
+                    <option value="nrp3">NRP3</option>
+                  </select>
+                </div>
+                <button type="submit" class="btn apply-button">Apply Filters</button>
+              </form>
+            -->
+            <form method="GET" action="{% url 'lead_dashboard' %}" class="filter-form form-inline">
+              <div class="form-group" style="background-color: #313131; border-radius: 5px;">
+                <label for="user_filter" class="text-white ml-2 mr-2">Filtrer par Utilisateur :</label>
+                <select name="user_id" id="user_filter" class="form-control">
+                  <option value="">Choisir l’utilisateur</option>
+                  {% for user in users %}
+                  <option value="{{ user.id }}" {% if request.GET.user_id == user.id|stringformat:"s" %}selected{% endif %}>
+                    {{ user.username }}
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+            
+              <div class="form-group" style="background-color: #313131; border-radius: 5px;">
+                <label for="qualification_filter" class="text-white ml-2 mr-2">Filtrer par Qualification :</label>
+                <select name="qualification" id="qualification_filter" class="form-control">
+                  <option value="">Choisir qualification</option>
+                  <option value="nrp1">NRP1</option>
+                  <option value="nrp2">NRP2</option>
+                  <option value="nrp3">NRP3</option>
+                  <!-- Ajoutez les autres options ici -->
+                </select>
+              </div>
+              <input type="submit" value="Appliquer les filtres" class="btn btn-danger">
+              
+            </form>
+            
+          </div>
+          
+        
+          <div class="form-inline">
+            <div class="form-group mr-1" style="background-color: #313131; border-radius: 5px;">
+              <label for="assignToUser" class="text-white ml-2 mr-2">Affecter à :</label>
+              <select name="" id="assignToUser" class="form-control">
+                <option value="">Choisir l'utilisateur</option>
+                {% for user in users %}
+                <option value="{{ user.id }}">{{ user.username }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <input type="submit" id="assignButton" value="Assign" class="btn btn-secondary">
+    
+            <div class="form-group ml-3 mr-3">
+              <form method="post" action="{% url 'save_facebook_form_ids' %}">
+                {% csrf_token %}
+                <div class="form-control">
+                  ID form :
+                </div>
+                <input type="submit" name="save_facebook_form_ids" value="Save" class="btn text-white" style="background-color: #36BCAF; border-radius: 5px;">
+              </form>
+            </div>
+    
+            <form method="post" action="{% url 'fetch_facebook_leads' %}" class="form-inline">
+              {% csrf_token %}
+              <div class="form-group mr-1" style="background-color: #313131; border-radius: 5px;">
+                <label for="page_filter" class="text-white ml-2 mr-2">Filtre Facebook:</label>
+                <select class="form-control" class="form-control" name="page_name" id="page_filter">
+                  <option value="">Tous</option>
+                  {% for name in page_names %}
+                  <option value="{{ name }}">{{ name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <input type="submit" name="fetch_facebook_leads" value="Trouver des prospects" class="btn btn-secondary">
+            </form>
+          </div>
+    
+           <div class="mt-3">
+                <!-- Votre modèle HTML pour l'ajout ou la mise à jour des jetons d'accès -->
+              <form method="post" action="{% url 'update_access_token' %}" class="form-inline">
+                {% csrf_token %}
+                <div class="form-group mr-1" style="background-color: #313131; border-radius: 5px;">
+                <label for="access_token" class="text-white ml-2 mr-2">Token d'accès:</label>
+                <input type="text" class="form-control" name="access_token" id="access_token">
+              </div>
+              <input type="submit" name="update_access_token" value="Mise à jour du token d'accès" class="btn btn-secondary">
+    
+              </form>
+           </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    
+
+
+
+
+          <!-- Use button tags for the export buttons -->
+          {% comment %} <button type="button" class="btn btn-danger mb-2" id="deleteLeadsBtn" data-toggle="modal"
+            data-target="#deleteModal">
+            Delete Leads
+          </button> {% endcomment %}
+
+          <!-- Modal -->
+          <div class="modal fade" id="defaultModal" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="defaultModalLabel">Ajouter un prospect</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class="card shadow mb-4">
+                    <div class="card-body">
+                      <form class="needs-validation" method="POST" action="{% url 'lead_dashboard' %}" novalidate="">
+                        {% csrf_token %}
+                        <div class="form-row">
+                          <div class="col-md-6 mb-3">
+                            <label for="date_de_soumission">Date de Soumission</label>
+                            {% comment %} <input type="text" class="form-control" id="prenom" name="prenom" required>
+                            {% endcomment %}
+                            <input type="date" name="date_de_soumission" class="form-control" required>
+                            <div class="invalid-feedback">Please provide a valid Date.</div>
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <label for="nom_de_la_campagne">Nom de la Campagne</label>
+                            {% comment %} <input type="text" class="form-control" id="nom" name="nom" required>
+                            {% endcomment %}
+                            <input type="text" name="nom_de_la_campagne" class="form-control" maxlength="100" required>
+                            <div class="invalid-feedback">Veuillez fournir un nom valide.</div>
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <label for="avez_vous_travaille">Avez-vous travaillé</label>
+                            <input type="text" name="avez_vous_travaille" class="form-control" maxlength="100" required>
+                            <div class="invalid-feedback">Veuillez fournir un email valide.</div>
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <label for="telephone">Nom & Prenom</label>
+                            <input type="text" name="nom_prenom" class="form-control" maxlength="100" required>
+                            <div class="invalid-feedback">Veuillez fournir un numéro de téléphone valide.</div>
+                          </div>
+                          {% comment %} <div class="col-md-6 mb-3">
+                            <label for="date_de_soumission">Prénom</label>
+                            <input type="text" name="prenom" class="form-control" maxlength="100" required>
+                            <div class="invalid-feedback">Veuillez fournir une date de soumission valide.</div>
+                          </div> {% endcomment %}
+                          <div class="col-md-6 mb-3">
+                            <label for="Téléphone">Téléphone</label>
+                            <input type="text" name="telephone" class="form-control" maxlength="20" required>
+                            <div class="invalid-feedback">Veuillez fournir un nom de campagne valide.</div>
+                          </div>
+                          <div class="form-group col-md-6 mb-3">
+                            <label for="qualification">Qualification</label>
+                              <select name="qualification" class="form-control" id="qualification" 
+                                required>
+                                <option value="">--Select Qualification-- </option>
+                                <option value="nrp1">NRP1</option>
+                                <option value="nrp2">NRP2</option>
+                                <option value="nrp3">NRP3</option>
+                                <option value="en_cours">En cours</option>
+                                <option value="rappel">Rappel</option>
+                                <option value="faux_numero">Faux numéro</option>
+                                <option value="pas_de_budget">Pas de budget</option>
+                                <option value="pas_interesse">Pas intéressé</option>
+                                <option value="ne_pas_rappele">Ne pas rappeler</option>
+                                <option value="signe_pole_emploi">Signé Pôle Emploi</option>
+                                <option value="signe_cpf">Signé CPF</option>
+                              </select>
+                              <div class="invalid-feedback">Veuillez sélectionner une qualification.</div>
+                          </div>
+                          <div class="form-group col-md-6 mb-3">
+                            <label for="Email">Email</label>
+                            <input type="email" name="email" class="form-control" required>
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <label for="Comments">Comments</label>
+                            <textarea name="comments" class="form-control" required></textarea>
+                            <div class="invalid-feedback">Veuillez fournir un nom de la campagne valide.</div>
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <label for="assigned_to">Assigner à</label>
+                            <select name="assigned_to" class="form-control">
+                              <option value="">-- Sélectionner un utilisateur --</option>
+                              {% for user in users %}
+                              <option value="{{ user.id }}">{{ user.username }}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
+
+                          <div class="col-md-12 mb-3">
+                            <div class="modal-footer">
+                              <button type="button" class="btn close text-white" style="background-color: #555; padding: 10px; font-size: 15px;" id="fermerPopup" data-dismiss="modal">Fermer
+                                
+                              </button>
+                              
+                              <button type="button" class="btn btn-primary">Sauvegarder</button>
+
+                            </div>
+                          </div>
+                      </form>
+                    </div> <!-- /.card-body -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+       
+
+        <!-- and Modal -->
+
+        <!-- Import Leads Modal -->
+        <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="importModalLabel">Importer des prospects</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form method="post" enctype="multipart/form-data" action="{% url 'import_leads' %}">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <label for="file">Sélectionner un fichier CSV ou Excel</label>
+                    <input type="file" name="file" id="file" class="form-control-file" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Importer</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade" id='showhsitory'>
+          <div class="modal-dialog modal-xl">
+
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Entrées de l'histoire</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div id="loadhistory"></div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="closeHistoryModel"
+                  data-dismiss="modal">Fermer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Small table -->
+        <div class="row my-2">
+          <div class="col-md-12">
+            <div class="card shadow">
+              <div class="card-body">
+                <!-- table -->
+                <div class="table-responsive">
+                  <table id="exampleDT" class="table table-bordered display nowrap" cellspacing="0" style="width:100%">
+                    <thead class="table-dark">
+                      <tr>
+                        <th><input type="checkbox" id="selectAllCheckbox"></th>
+                        <th data-toggle="select" data-lead-id="lead_id">Date de Soumission</th>
+                        <th data-toggle="select">Nom de la Campagne </th>
+                        <th data-toggle="select">Avez-vous travaillé</th>
+                        <th data-toggle="select">Nom & Prenom</th>
+                        <th data-toggle="select">Téléphone</th>
+                        <th data-toggle="select">Email</th>
+                        <th data-toggle="select">Qualification</th>
+                        <th data-toggle="select">Comments</th>
+                        <th data-toggle="select">Assign to</th>
+                        <!-- <th data-toggle="select">Mentioned</th> -->
+                        <!--<th data-toggle="select">Mention Action</th>-->
+                        <th data-toggle="select">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for lead in leads %}
+                      <tr>
+                        <td data-lead-id="{{ lead.id }}"></td>
+                        {% comment %} <td>{{ forloop.counter }}</td> {% endcomment %}
+                        <td>{{ lead.date_de_soumission }}</td>
+                        <td>{{ lead.nom_de_la_campagne }}</td>
+                        <td>{{ lead.avez_vous_travaille }}</td>
+                        <td>{{ lead.nom_prenom }}</td>
+                        {% comment %} <td>{{ lead.prenom }}</td> {% endcomment %}
+                        <td>{{ lead.telephone }}</td>
+                        <td>{{ lead.email }}</td>
+                        <td>{{ lead.qualification }}</td>
+                        <td>{{ lead.comments }}</td>
+                        <td>{{ lead.assigned_to }}</td>
+
+                        <!-- <td>
+                          Mentioned to {{ lead.transfer_to }}
+                          
+                        </td> -->
+
+                        <!--<td>
+                        Mentioned to {{ lead.transfer_to }}
+                      <div id="user_mentions_list_{{ lead.id }}" class="user-mentions-list"></div> 
+                          <textarea id="assign_comment_field_{{ lead.id }}" name="assign_comment" class="mention-textarea">{{ lead.assign_comment }}</textarea>
+                          <button class="transfer_button" data-lead-id="{{ lead.id }}" data-user-mentions="{{ lead.get_user_mentions_json }}">Mention</button>
+                          
+                      </td>-->
+
+                        <td>
+                          {% comment %} <button class="btn btn-sm dropdown-toggle more-horizontal" type="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="text-muted sr-only">Action</span>
+                          </button> {% endcomment %}
+                          <div class="dropdown">
+                            <button class="btn btn-sm dropdown-toggle" type="button" id="dr4" data-toggle="dropdown"
+                              aria-haspopup="true" aria-expanded="false">
+                              <span class="text-muted sr-only">Action</span>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dr4">
+                              <a class="dropdown-item" href="{% url 'toggle_lead_status' lead.id %}">
+                                {% if lead.is_active %}
+                                Désactiver
+                                {% else %}
+                                Activer
+                                {% endif %}
+                              </a>
+
+                              <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal"
+                                data-target="#editModal-{{ lead.id }}">Voir</a>
+
+                            </div>
+                          </div>
+
+                          <!-- edit modal -->
+                          <div class="modal fade modalBody" id="editModal-{{ lead.id }}" tabindex="-1" role="dialog"
+                            aria-labelledby="editModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="editModalLabel">Modifier le prospect
+                                  </h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  <form id="editForm-{{ lead.id }}" method="post"
+                                    action="{% url 'lead_edit' lead.id %}">
+                                    {% csrf_token %}
+                                    <!-- Add form fields for user data editing -->
+                                    <div class="form-row">
+                                      <div class="form-group col-md-6">
+                                        <label for="date_de_soumission">Date de Soumission</label>
+                                        <input type="date" name="date_de_soumission" id="date_de_soumission"
+                                          class="form-control" value="{{ lead.date_de_soumission|date:'Y-m-d' }}"
+                                          required autocomplete="off">
+                                      </div>
+
+                                      <div class="form-group col-md-6">
+                                        <label for="nom_de_la_campagne">Nom de la campagne</label>
+                                        <input type="text" name="nom_de_la_campagne" id="nom_de_la_campagne"
+                                          class="form-control" placeholder="nom_de_la_campagne"
+                                          value="{{ lead.nom_de_la_campagne }}" required autocomplete="off">
+                                      </div>
+                                      <div class="form-group col-md-6">
+                                        <label for="avez_vous_travaille">Avez vous travaille</label>
+                                        <input type="text" name="avez_vous_travaille" id="avez_vous_travaille"
+                                          class="form-control" placeholder="avez_vous_travaille"
+                                          value="{{ lead.avez_vous_travaille }}" required autocomplete="off">
+                                      </div>
+                                      <div class="form-group col-md-6">
+                                        <label for="nom">Nom & Prenom</label>
+                                        <input type="text" name="nom_prenom" id="nom_prenom" class="form-control"
+                                          placeholder="nom" value="{{ lead.nom_prenom }}" required autocomplete="off">
+                                      </div>
+                                      {% comment %} <div class="form-group col-md-6">
+                                        <label for="prenom">Prenom</label>
+                                        <input type="text" name="prenom" id="prenom" class="form-control"
+                                          placeholder="prenom" value="{{ lead.prenom }}" required autocomplete="off">
+                                      </div> {% endcomment %}
+                                      <div class="form-group col-md-6">
+                                        <label for="telephone">Telephone</label>
+                                        <input type="text" name="telephone" id="telephone" class="form-control"
+                                          placeholder="telephone" value="{{ lead.telephone }}" required
+                                          autocomplete="off">
+                                      </div>
+                                      <div class="form-group col-md-6">
+                                        <label for="email">Email</label>
+                                        <input type="email" name="email" id="email" class="form-control"
+                                          placeholder="email" value="{{ lead.email }}" required autocomplete="off">
+                                      </div>
+                                      <div class="form-group col-md-6">
+                                        <label for="qualification">Qualification</label>
+
+                                        <select name="qualification" id="qualification" class="form-control qualification-select" data-lead-id="{{ lead.id }}" required>
+                                          <option value="" {% if not lead.select_qualification %}selected{% endif %}>
+                                            --Sélectionnez une qualification--</option>
+                                          <option value="nrp1" {% if lead.qualification == 'nrp1' %} selected
+                                            {% endif %}>
+                                            NRP1
+                                          </option>
+                                          <option value="nrp2" {% if lead.qualification == 'nrp2' %} selected
+                                            {% endif %}>
+                                            NRP2
+                                          </option>
+                                          <option value="nrp3" {% if lead.qualification == 'nrp3' %} selected
+                                            {% endif %}>
+                                            NRP3
+                                          </option>
+                                          <option value="en_cours" {% if lead.qualification == 'en_cours' %} selected
+                                            {% endif %}>En cours</option>
+                                          <option value="rappel" {% if lead.qualification == 'rappel' %} selected
+                                            {% endif %}>
+                                            Rappel</option>
+                                          <option value="faux_numero" {% if lead.qualification == 'faux_numero' %}
+                                            selected {% endif %}>Faux numéro</option>
+                                          <option value="pas_de_budget" {% if lead.qualification == 'pas_de_budget' %}
+                                            selected {% endif %}>Pas de budget</option>
+                                          <option value="pas_interesse" {% if lead.qualification == 'pas_interesse' %}
+                                            selected {% endif %}>Pas intéressé</option>
+                                          <option value="ne_pas_rappele" {% if lead.qualification == 'ne_pas_rappele' %}
+                                            selected {% endif %}>Ne pas rappeler</option>
+                                          <option value="signe_pole_emploi"
+                                            {% if lead.qualification == 'signe_pole_emploi' %} selected {% endif %}>
+                                            Signé Pôle Emploi</option>
+                                          <option value="signe_cpf" {% if lead.qualification == 'signe_cpf' %} selected
+                                            {% endif %}>Signé CPF</option>
+                                        </select>
+                                      </div>
+                                      <div class="form-group col-md-6">
+                                        <label for="comments">Commentaires</label>
+                                        <textarea name="comments" id="comments" class="form-control"
+                                          required>{{ lead.comments }}</textarea>
+                                      </div>
+                                      <div class="form-group col-md-6">
+                                        <label for="assigned_to">Assigner à</label>
+                                        <select name="assigned_to" id="assigned_to" class="form-control" required>
+                                          <option value="">-- Sélectionner un utilisateur --</option>
+                                          {% for user in users %}
+                                          <option value="{{ user.id }}"
+                                            {% if user.id == lead.assigned_to.id %}selected{% endif %}>
+                                            {{ user.username }}
+                                          </option>
+                                          {% endfor %}
+                                        </select>
+                                        
+                                      </div>
+                                      
+                                      <div class="form-group col-md-6" id="rappelappointment{{ lead.id }}" {% if lead.qualification == 'rappel' %} style="display:block;" {% else %} style="display:none;" {% endif %}>
+                                        <label for="appointment">Date et heure du rendez-vous</label>
+                                        <div class="input-group mb-3">
+                                          <input type="text" class="form-control" name="appointmentStatDateTime" id="appointmentStatDateTime{{ lead.id }}" placeholder="Click Schedule" aria-label="Click Schedule" readonly  value="{{ lead.appointment_date_time }}" aria-describedby="button-addon2">
+                                          <div class="input-group-append">
+                                            <button class="btn btn-primary clicktoschedule" data-lead-id="{{ lead.id }}" type="button" id="button-addon2">Calendrier Nouveau</button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="form-group col-md-6" id="signecpfprice{{ lead.id }}" {% if lead.qualification == 'signe_cpf' %} style="display:block;" {% else %} style="display:none;" {% endif %}>
+                                        <label for="price">Prix</label>
+                                          <input type="text" name="price" id="priceStat{{ lead.id }}" class="form-control"
+                                            placeholder="Price" value="{{ lead.price }}" required autocomplete="off">
+                                          <!-- Add a dropdown for selecting the company -->
+                                      <div class="form-group col-md-6">
+                                        <form method="post" action="{% url 'lead_edit' lead.id %}">
+                                          {% csrf_token %}
+                                          <div class="form-group">
+                                            <label for="company_id">Sélectionnez une entreprise:</label>
+                                            <select name="company_id" id="company_id" class="form-control">
+                                              <option value="" disabled>Sélectionnez une entreprise</option>
+                                              {% for company in companies %}
+                                              {% if company.id == lead.company.id %}
+                                              <option value="{{ company.id }}" selected>{{ company.name }}</option>
+                                              {% else %}
+                                              <option value="{{ company.id }}">{{ company.name }}</option>
+                                              {% endif %}
+                                              {% endfor %}
+                                            </select>
+                                          </div>
+                                          
+                                            </form>
+                                          </div>
+
+                                      </div>
+                                            </div>
+                                            
+                                      <div id="loadBasedQualification{{ lead.id }}"></div>
+                                 
+
+
+                                
+                                      <!-- <div class="col-md-12 mb-3">
+                            <button type="button" class="btn btn-secondary" onclick="addCustomField('custom-fields-container')">Add Custom
+                              Field</button>
+                               <button type="button" class="btn btn-primary" onclick="saveCustomFields()">Save Custom Fields</button>
+                          </div> -->
+                          
+                          <div class="col-md-12 mb-3" id="custom-fields-container">
+                            <!-- Custom Fields will be dynamically added here -->
+                          </div>
+                          <div class="col-md-12 mb-3">
+       
+    </div>
+    
+                                  </form>
+
+                                </div>
+                                <!-- Your form fields -->
+                                <div class="modal-footer">
+                                  <div class="container mt-1">
+                                    <div class="card card-primary card-outline card-tabs">
+                                      <div class="card-header card-header-regular p-0 pt-1">
+                                        <ul class="nav nav-tabs mx-3" id="myTabs">
+
+                                          <li class="nav-item">
+                                            <a class="nav-link active" data-toggle="tab"
+                                              href="#doccument{{ lead.id }}">Documents</a>
+                                          </li>
+                                          <li class="nav-item">
+                                            <a class="nav-link  show-otherhistory-btn" data-lead-id="{{ lead.id }}" data-toggle="tab"
+                                              href="#history{{ lead.id }}" data-url="{% url 'lead_otherhistory' lead.id %}">Historique</a>
+                                          </li>
+                                          <li class="nav-item">
+                                            <a class="nav-link  show-history-btn" data-toggle="tab"
+                                              href="#historymention{{ lead.id }}" data-lead-id="{{ lead.id }}"
+                                              data-url="{% url 'lead_history' lead.id %}">Mention</a>
+                                          </li>
+                                          <li class="nav-item ml-auto">
+                                            <div data-toggle="collapse" data-target="#accordionContent">
+                                              <div class="nav-link mb-0 mx-2">
+                                                <i class="fe fe-maximize-2"></i>
+                                              </div>
+                                            </div>
+                                          </li>
+                                        </ul>
+                                      </div>
+                                    </div>
+
+                                    <div class="tab-content" id="accordionContent" class="collapse">
+                                      <div class="tab-pane fade" id="historymention{{ lead.id }}">
+                                        <div class="row">
+                                          <div class="col-md-8">
+                                            <div id="historymentionData{{ lead.id }}">
+                                              <div class="card">
+                                                <div class="card-body mx-1"
+                                                  style="max-height: 300px; overflow-y: auto;">
+                                                  <blockquote>
+                                                    <!-- added the mention for mention history -->
+                                                    <table class="table table-hover">
+                                                      <thead class="thead-dark">
+                                                        <tr>
+                                                          <th>Timestamp</th>
+                                                          <th>Utilisateur</th>
+                                                          <th>Précédent à</th>
+                                                          <th>Assigné à</th>
+                                                          <th>Changements</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        {% for entry in history_entries %}
+                                                        <tr>
+                                                          <td>{{ entry.timestamp }}</td>
+                                                          <td>{{ entry.user.username }}</td>
+                                                          <td>{{ entry.previous_assigned_to.username }}</td>
+                                                          <td>{{ entry.current_assigned_to.username }}</td>
+                                                          <td>{{ entry.changes }}</td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                      </tbody>
+                                                    </table>
+                                                  </blockquote>
+                                                </div>
+                                                <!-- /.card-body -->
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <div class="col-md-4">
+                                            <div class="card">
+                                              <div class="card-body mx-1" style="max-height: 300px; overflow-y: auto;">
+                                                <div id="user_mentions_list_{{ lead.id }}" class="user-mentions-list">
+                                                </div>
+                                                <textarea id="assign_comment_field_{{ lead.id }}" name="assign_comment"
+                                                  class="mention-textarea">{{ lead.assign_comment }}</textarea>
+                                                <button class="transfer_button" data-lead-id="{{ lead.id }}"
+                                                  data-user-mentions="{{ lead.get_user_mentions_json }}">Mention</button>
+                                              </div>
+                                              <!-- /.card-body -->
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div class="tab-pane fade" id="history{{ lead.id }}">
+                                        <div class="row">
+                                          <div class="col-12" >
+                                            <div id="historyotherData{{ lead.id }}">
+                                              <div class="card" >
+                                                <div class="card-body mx-1" style="max-height: 300px; overflow-y: auto;">
+                                                  <blockquote>
+                                                    <!-- added the log entry for history-->
+                                                    <div class="table-responsive">
+                                                      <table id="example" class="table table-bordered display nowrap"
+                                                        cellspacing="0" style="width:100%">
+                                                        <thead class="fw-bold">
+                                                          <tr>
+                                                            <th>ID</th>
+                                                            <th>Utilisateur</th>
+                                                            <th>Temps d'action</th>
+                                                            <th>Action effectuée</th>
+                                                          </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                          {% for entry in history_entries %}
+                                                          <tr>
+                                                            <td>{{ entry.id }}</td>
+                                                            <td>{{ entry.user.username }}</td>
+                                                            <td>{{ entry.timestamp }}</td>
+                                                            <td>{{ entry.changes }}</td>
+                                                          </tr>
+                                                          {% endfor %}
+                                                        </tbody>
+                                                      </table>
+                                                    </div>
+                                                  </blockquote>
+                                                </div>
+                                                <!-- /.card-body -->
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div class="tab-pane fade  show active" id="doccument{{ lead.id }}">
+                                        <div class="row">
+                                          <div class="col-6">
+                                            <div class="card">
+                                              <div class="card-body mx-1" style="max-height: 300px; overflow-y: auto;">
+                                                <blockquote>
+
+                                                  <form method="post" enctype="multipart/form-data"
+                                                    action="{% url 'attach_file_to_lead' lead_id=lead.id %}">
+                                                    {% csrf_token %}
+                                                    <div>
+                                                      <label for="attachment">Pièce jointe:</label>
+                                                      <input type="file" name="attachment" id="attachment">
+                                                    </div>
+                                                    <div>
+                                                      <label for="title">Titre:</label>
+                                                      <input type="text" name="title" id="title">
+                                                    </div>
+                                                    <button type="submit">Joindre un fichier</button>
+                                                  </form>
+
+                                                </blockquote>
+                                              </div>
+                                              <!-- /.card-body -->
+                                            </div>
+                                          </div>
+
+                                          <div class="col-6">
+                                            <div class="card">
+                                              <div class="card-body mx-1" style="max-height: 300px; overflow-y: auto;">
+                                                <h5>Documents</h5>
+                                                <ul id="attachment-list">
+                                                  {% for attachment in lead.attachments.all %}
+                                                  <li>
+                                                    <a
+                                                      href="{% url 'download_attachment' attachment_id=attachment.id attachment_name=attachment.file.name %}">
+                                                      {{ attachment.title }}
+                                                    </a>
+                                                    <button class="btn btn-sm btn-danger ml-2"
+                                                      onclick="confirmDelete({{ attachment.id }})">Supprimer</button>
+                                                  </li>
+                                                  {% endfor %}
+                                                </ul>
+                                              </div>
+                                              <!-- /.card-body -->
+                                            </div>
+                                          </div>
+
+                                         <script>
+                                            function confirmDelete(attachmentId) {
+                                              if (confirm('Are you sure you want to delete this attachment?')) {
+                                                deleteAttachment(attachmentId);
+                                              }
+                                            }
+
+                                            function deleteAttachment(attachmentId) {
+                                              $.ajax({
+                                                type: 'POST',
+                                                url: '{% url 'delete_attachment' attachment_id=0 %}'.replace('0', attachmentId),
+                                                data: {
+                                                  csrfmiddlewaretoken: '{{ csrf_token }}',
+                                                },
+                                                success: function() {
+                                                  // Remove the deleted attachment from the UI
+                                                  $('#attachment-list li').filter(function() {
+                                                    return $(this).find('button').attr('onclick').includes(
+                                                      attachmentId.toString());
+                                                  }).remove();
+                                                },
+                                                error: function() {
+                                                  alert('An error occurred while deleting the attachment.');
+                                                }
+                                              });
+                                            }
+                                          </script>
+
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <!-- and tabs -->
+
+                                  <!--  tabs accordeon -->
+                                  <!-- and tabs -->
+                                  <!-- end of new changes -->
+
+                                  <!-- Your form fields -->
+                                  
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn close text-white" style="background-color: #555; padding: 10px; font-size: 15px;" id="fermerPopup" data-dismiss="modal">Fermer
+                                      
+                                    </button>
+                                    
+                                    <button type="button" class="btn btn-primary"
+                                      onclick="updateLead('{{ lead.id }}')">Sauvegarder</button>
+
+                                  </div>
+
+                                  <!-- Your JavaScript code -->
+
+                                  <script>
+                                    function updateLead(leadId) {
+                                      console.log('updateLead function called');
+                                      var form = document.getElementById('editForm-' + leadId);
+                                      var formData = new FormData(form);
+                                      var xhr = new XMLHttpRequest();
+                                      xhr.open('POST', form.action, true);
+                                      xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                                      xhr.onreadystatechange = function() {
+                                        if (xhr.readyState === 4 && xhr.status === 200) {
+                                          var response = JSON.parse(xhr.responseText);
+                                          if (response.success) {
+                                            // Perform any other desired actions
+                                            //$('#editModal-' + leadId).modal('hide');
+                                            alert('Lead data updated successfully!');
+                                            location.reload(); // Reload the page
+                                          }
+                                        }
+                                      };
+                                      xhr.send(formData);
+                                    }
+                                  </script>
+
+                        </td>
+
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div> <!-- simple table -->
+          </div>
+        </div> <!-- end section -->
+      </div> <!-- .col-12 -->
+    </div> <!-- .row -->
+  </div>
+  </div> <!-- .container-fluid -->
+
+  <div class="modal fade modal-shortcut modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="defaultModalLabel">Raccourcis</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body px-5">
+          <div class="row align-items-center">
+            <div class="col-6 text-center">
+              <div class="squircle bg-success justify-content-center">
+                <i class="fe fe-cpu fe-32 align-self-center text-white"></i>
+              </div>
+              <p>Control area</p>
+            </div>
+            <div class="col-6 text-center">
+              <div class="squircle bg-primary justify-content-center">
+                <i class="fe fe-activity fe-32 align-self-center text-white"></i>
+              </div>
+              <p>Activity</p>
+            </div>
+          </div>
+          <div class="row align-items-center">
+            <div class="col-6 text-center">
+              <div class="squircle bg-primary justify-content-center">
+                <i class="fe fe-droplet fe-32 align-self-center text-white"></i>
+              </div>
+              <p>Droplet</p>
+            </div>
+            <div class="col-6 text-center">
+              <div class="squircle bg-primary justify-content-center">
+                <i class="fe fe-upload-cloud fe-32 align-self-center text-white"></i>
+              </div>
+              <p>Upload</p>
+            </div>
+          </div>
+          <div class="row align-items-center">
+            <div class="col-6 text-center">
+              <div class="squircle bg-primary justify-content-center">
+                <i class="fe fe-users fe-32 align-self-center text-white"></i>
+              </div>
+              <p>Users</p>
+            </div>
+            <div class="col-6 text-center">
+              <div class="squircle bg-primary justify-content-center">
+                <i class="fe fe-settings fe-32 align-self-center text-white"></i>
+              </div>
+              <p>Settings</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main> <!-- main -->
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>  
+  $(document).ready(function() {
+    /*test */
+    $(document).ready(function() {
+      // Function to get all users from the server
+      function getAllUsers() {
+        $.ajax({
+          url: '{% url "get_all_users" %}',
+          method: 'GET',
+          success: function(users) {
+            // Store the users in a global variable
+            window.allUsers = users;
+          },
+          error: function(error) {
+            console.error("Error fetching users:", error);
+          }
+        });
+      }
+      // Get the list of all users on page load
+      getAllUsers();
+      // Handle "@" typing and show the user mentions list
+      $(document).on("input", ".mention-textarea", function() {
+        const leadId = $(this).attr('id').split('_').pop();
+        const value = $(this).val();
+        const userMentionsList = $(`#user_mentions_list_${leadId}`);
+        if (value.endsWith('@') && window.allUsers) {
+          userMentionsList.empty();
+          for (const user of window.allUsers) {
+            const mentionItem = $("<div>").text(`@${user.username}`).attr('data-user-id', user.id);
+            userMentionsList.append(mentionItem);
+          }
+          userMentionsList.show();
+        } else {
+          userMentionsList.hide();
+        }
+      });
+      // Handle click on a mention item and insert the selected username in the textarea
+      $(document).on("click", ".user-mentions-list div", function() {
+        const username = $(this).text().slice(1); // Exclude the "@" prefix by removing the first character
+        const leadId = $(this).closest("td").find(".mention-textarea").attr('id').split('_').pop();
+        const textarea = $(`#assign_comment_field_${leadId}`);
+        const currentValue = textarea.val();
+        const mentionStartIndex = currentValue.lastIndexOf('@');
+        // Find the start and end indices of the last selected user mention, if any
+        let existingMentionStartIndex = -1;
+        let existingMentionEndIndex = -1;
+        if (mentionStartIndex >= 0) {
+          existingMentionStartIndex = mentionStartIndex;
+          existingMentionEndIndex = currentValue.indexOf('@', mentionStartIndex + 1);
+          if (existingMentionEndIndex === -1) {
+            existingMentionEndIndex = currentValue.length;
+          }
+        }
+        // Remove the last selected user mention, if any
+        let updatedValue = currentValue;
+        if (existingMentionStartIndex >= 0 && existingMentionEndIndex >= 0) {
+          updatedValue = currentValue.substring(0, existingMentionStartIndex) + currentValue.substring(
+            existingMentionEndIndex);
+        }
+        // Append the selected username if it's not already present
+        const mentionAlreadyExists = updatedValue.includes(`@${username}`);
+        if (!mentionAlreadyExists) {
+          updatedValue = updatedValue.trim();
+          updatedValue = updatedValue ? `${updatedValue} @${username} ` : `@${username} `;
+        }
+        textarea.val(updatedValue);
+        $(`#user_mentions_list_${leadId}`).hide();
+        // Move the cursor position after the inserted text and the added space
+        const cursorPos = updatedValue.length;
+        textarea[0].setSelectionRange(cursorPos, cursorPos);
+        textarea[0].focus(); // Optional: Move the cursor to the end of the inserted text
+      });
+      // Handle keyboard navigation and selection
+      $(document).on("keydown", ".mention-textarea", function(event) {});
+      // Handle click on a mention item and insert the selected username in the textarea
+      $(document).on("click", ".user-mentions-list div", function() {
+        const username = $(this).text().slice(1); // Exclude the "@" prefix by removing the first character
+        const leadId = $(this).closest("td").find(".mention-textarea").attr('id').split('_').pop();
+        const textarea = $(`#assign_comment_field_${leadId}`);
+        const currentValue = textarea.val();
+        const mentionStartIndex = currentValue.lastIndexOf('@');
+        // Find the start and end indices of the last selected user mention, if any
+        let existingMentionStartIndex = -1;
+        let existingMentionEndIndex = -1;
+        if (mentionStartIndex >= 0) {
+          existingMentionStartIndex = mentionStartIndex;
+          existingMentionEndIndex = currentValue.indexOf('@', mentionStartIndex + 1);
+          if (existingMentionEndIndex === -1) {
+            existingMentionEndIndex = currentValue.length;
+          }
+        }
+        // Remove the last selected user mention, if any
+        let updatedValue = currentValue;
+        if (existingMentionStartIndex >= 0 && existingMentionEndIndex >= 0) {
+          updatedValue = currentValue.substring(0, existingMentionStartIndex) + currentValue.substring(
+            existingMentionEndIndex);
+        }
+        // Append the selected username if it's not already present
+        const mentionAlreadyExists = updatedValue.includes(`@${username}`);
+        if (!mentionAlreadyExists) {
+          updatedValue = updatedValue.trim();
+          updatedValue = updatedValue ? `${updatedValue} @${username} ` : `@${username} `;
+        }
+        textarea.val(updatedValue);
+        $(`#user_mentions_list_${leadId}`).hide();
+        // Move the cursor position after the inserted text and the added space
+        const cursorPos = updatedValue.length;
+        textarea[0].setSelectionRange(cursorPos, cursorPos);
+        textarea[0].focus(); // Optional: Move the cursor to the end of the inserted text
+      });
+      // Handle keyboard navigation and selection
+      $(document).on("keydown", ".mention-textarea", function(event) {
+        const userMentionsList = $(this).closest("td").find(".user-mentions-list");
+        if (userMentionsList.is(":visible")) {
+          const mentionItems = userMentionsList.find("div");
+          const currentSelected = userMentionsList.find(".selected");
+          if (event.key === "ArrowUp" && currentSelected.prev().length) {
+            currentSelected.removeClass("selected");
+            currentSelected.prev().addClass("selected");
+          } else if (event.key === "ArrowDown" && currentSelected.next().length) {
+            currentSelected.removeClass("selected");
+            currentSelected.next().addClass("selected");
+          } else if (event.key === "Enter" && currentSelected.length) {
+            const username = currentSelected.text();
+            const leadId = $(this).attr('id').split('_').pop();
+            const textarea = $(`#assign_comment_field_${leadId}`);
+            const currentValue = textarea.val();
+            const mentionStartIndex = currentValue.lastIndexOf('@');
+            const updatedValue = currentValue.substring(0, mentionStartIndex) + username + " " +
+              currentValue.substring(mentionStartIndex);
+            textarea.val(updatedValue);
+            userMentionsList.hide();
+          }
+        }
+      });
+    });
+    /*test */
+    // Handle clicking outside the user mentions list to close it
+    $(document).on('click', function(event) {
+      const target = $(event.target);
+      if (!target.hasClass('mention-textarea') && !target.hasClass('mention-item')) {
+        $('.user-mentions-list').hide();
+      }
+    });
+    // Handle clicking on the "Transfer" button
+    $(document).on("click", ".transfer_button", function() {
+      const leadId = $(this).attr('data-lead-id');
+      const textarea = $(`#assign_comment_field_${leadId}`);
+      const user_mentions_text = textarea.val().trim();
+      // Use regular expression to extract all mentions
+      const mentions = user_mentions_text.match(/@\w+/g);
+      const mentionsArray = [];
+      // Construct the array of mention objects
+      for (const mention of mentions) {
+        const username = mention.substring(1); // Remove "@" from the mention
+        mentionsArray.push({
+          "username": username,
+          "full_text": mention
+        });
+        break
+      }
+      $.ajax({
+        url: '{% url "transfer_leads" %}',
+        method: 'POST',
+        data: {
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+          'leadid': leadId,
+          'username': JSON.stringify(mentionsArray[0]),
+          'fulltext': user_mentions_text
+        },
+        success: function(jsonData) {
+          Swal.fire(
+            'Success!',
+            'successfully transfered',
+            'success'
+          ).then(function() {
+            location.reload();
+          });
+        },
+        error: function(error) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: error.error
+          });
+        }
+      });
+    });
+  });
+</script>
+
+
+{% endblock %}
+{% block javascript %}
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.1/css/select.bootstrap.css" />
+<script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+
+<!-- Include Bootstrap JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+<!-- Include Bootstrap CSS -->
+
+<!-- Include Bootstrap JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+<!-- Include Bootstrap CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+<script>
+  $(document).ready(function() {
+    var queryParams = new URLSearchParams(window.location.search);
+    var openModalLeadId = queryParams.get('openModal');
+    console.log('open',openModalLeadId)
+    if (openModalLeadId) {
+      setTimeout(function() {
+       $('#editModal-' + openModalLeadId).modal('show');
+      }, 2000); 
+    }
+
+    
+    const rappelFields = $('#rappelFields');
+    const rappelDateInput = $('#rappel_date');
+
+    function getAccurateDataofQUalification(selectedV, leadID){
+      $.ajax({
+        type: 'POST',
+        url: '{% url "get_qualification_data" %}',
+        data: {
+            'lead_id': leadID,
+            'selectedValue':selectedV,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        dataType: 'json',
+        success: function(response) {
+          data = response.result
+          if (selectedV === 'rappel') {
+            $('#appointmentStatDateTime'+leadID).val(data);
+          } else {
+            $('#priceStat'+leadID).val(data);
+          }
+        }
+      });
+    }
+    $('.clicktoschedule').click(function() {
+      var leadId = $(this).data('lead-id');
+      $.confirm({
+          title: 'Set Appointment',
+          content: 'Provide the date and time for the appointment:',
+          buttons: {
+              confirm: function() {
+                  var selectedDate = $('#appointmentDate').val();
+                  var selectedTime = $('#appointmentTime').val();
+                  var formattedDateTime = selectedDate + ' ' + selectedTime;
+                  $('#appointmentStatDateTime'+leadId).val(formattedDateTime);
+              },
+              cancel: function() {
+              }
+          },
+          // Add form inputs for date and time
+          onContentReady: function() {
+              var self = this;
+              self.setContentAppend('<input type="date" class="form-control" id="appointmentDate" required><br>');
+              self.setContentAppend('<input type="time" class="form-control" id="appointmentTime" required>');
+          }
+      });
+    });
+
+    $(document).on('change', '.qualification-select', function() {
+        var selectedValue = $(this).val();
+        var leadId = $(this).data('lead-id');
+        $('#editModal-'+leadId).hide();
+
+        if (selectedValue === 'rappel') {
+          $("#rappelappointment"+leadId).css("display", "block");
+          $("#signecpfprice"+leadId).css("display", "none");
+          $.confirm({
+              title: 'Set Appointment',
+              content: 'Provide the date and time for the appointment:',
+              buttons: {
+                  confirm: function() {
+                      // Get the selected date and time values from the modal
+                      var selectedDate = $('#appointmentDate').val();
+                      var selectedTime = $('#appointmentTime').val();
+                      
+                      $.ajax({
+                        type: 'POST',
+                        url: '{% url "save_appointment" %}',
+                        data: {
+                            'lead_id': leadId,
+                            'appointment_date': selectedDate,
+                            'appointment_time': selectedTime,
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                              Swal.fire(
+                                'Success!',
+                                'Appointment Intiated',
+                                'success'
+                              ).then(function() {
+                                getAccurateDataofQUalification(selectedValue, leadId);
+                                $('#editModal-'+leadId).show();
+                              });
+                            } else {
+                              Swal.fire({
+                                icon: 'error',
+                                title: 'something went wrong!',
+                                text: error.error
+                              });
+                            }
+                        },
+                        error: function() {
+                          Swal.fire({
+                            icon: 'error',
+                            title: 'something went wrong!',
+                            text: error.error
+                          });
+                        }
+                    });
+                  },
+                  cancel: function() {
+                    $('#qualification').val('');
+                    $('#editModal-'+leadId).show();
+                  }
+              },
+              // Add form inputs for date and time
+              onContentReady: function() {
+                  var self = this;
+                  self.setContentAppend('<input type="date" class="form-control" id="appointmentDate" required><br>');
+                  self.setContentAppend('<input type="time" class="form-control" id="appointmentTime" required>');
+              }
+          });
+        } 
+        else if (selectedValue === 'signe_cpf') {
+          $("#rappelappointment"+leadId).css("display", "none");
+          $("#signecpfprice"+leadId).css("display", "block");
+          $.confirm({
+            title: 'Enter Price',
+            content: 'Provide the pricing',
+            buttons: {
+                confirm: function() {
+                    var price = $('#price').val();
+                    $.ajax({
+                      type: 'POST',
+                      url: '{% url "save_signe_cpf" %}',
+                      data: {
+                          'lead_id': leadId,
+                          'price': price,
+                          csrfmiddlewaretoken: '{{ csrf_token }}'
+                      },
+                      dataType: 'json',
+                      success: function(response) {
+                          if (response.success) {
+                            Swal.fire(
+                              'Success!',
+                              'Price Saved',
+                              'success'
+                            ).then(function() {
+                                getAccurateDataofQUalification(selectedValue, leadId);
+                                $('#editModal-'+leadId).show();
+                            });
+                          } else {
+                            Swal.fire({
+                              icon: 'error',
+                              title: 'something went wrong!',
+                              text: error.error
+                            });
+                          }
+                      },
+                      error: function() {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Something went wrong!',
+                            text: 'Failed to save price'
+                        }); 
+                      }
+                  });
+                },
+                close: function(){
+                  $('#qualification').val('');
+                  $('#editModal-'+leadId).show();
+                  
+                }
+            },
+            onContentReady: function() {
+              var self = this;
+              self.setContentAppend('<input type="text" class="form-control" id="price" placeholder="Enter price" focus required>');
+              $('#price').prop('disabled', false);
+          }
+        });
+      } else {
+        $('#editModal-'+leadId).show();
+        $("#rappelappointment"+leadId).css("display", "none");
+        $("#signecpfprice"+leadId).css("display", "none");
+      }
+    });
+
+    $(document).on('click', '.show-history-btn', function(event) {
+      event.preventDefault();
+      var leadId = $(this).data('lead-id');
+      var url = $(this).data('url');
+      $.get(url, function(data) {
+        // Append the lead history modal to the body
+        $('#historymentionData' + leadId).html(data);
+        // Show the modal
+        //$('#showhsitory').modal('show');
+      });
+    });
+
+    $(document).on('click', '.show-otherhistory-btn', function(event) {
+      event.preventDefault();
+      var leadId = $(this).data('lead-id');
+      var url = $(this).data('url');
+      $.get(url, function(data) {
+        // Append the lead history modal to the body
+        $('#historyotherData' + leadId).html(data);
+        // Show the modal
+        //$('#showhsitory').modal('show');
+      });
+    });
+  });
+  $('#closeHistoryModel').click(function(event) {
+    $('#showhsitory').modal('hide');
+  });
+  $(document).ready(function() {
+    var table = $('#exampleDT').DataTable({
+      responsive: true,
+      columnDefs: [{
+        orderable: false,
+        className: 'select-checkbox',
+        targets: 0
+      }],
+      select: {
+        style: 'multi',
+        selector: 'td:first-child'
+      },
+      order: [
+        [1, 'asc']
+      ]
+    });
+    // Handle "Select All" checkbox click
+    $('#selectAllCheckbox').on('click', function() {
+      var isChecked = this.checked;
+      table.rows({
+        page: 'current'
+      }).every(function() {
+        this.select(isChecked);
+      });
+    });
+    /*$('#assignButton').on('click', function() {
+      var selectedLeads = [];
+      var assignToUser = $('#assignToUser').val();
+      table.rows({
+        selected: true,
+        order: [
+          [1, 'asc']
+        ]
+      });
+      order: [
+        [1, 'asc']
+      ]
+    });*/
+    $('#assignButton').on('click', function() {
+      var selectedLeads = [];
+      var assignToUser = $('#assignToUser').val();
+      table.rows({
+        selected: true
+      }).every(function() {
+        var rowData = this.data();
+        var rowNode = this.node();
+        var leadId = rowNode.querySelector('td:first-child').getAttribute('data-lead-id');
+        var lead = {
+          id: leadId,
+          date_de_soumission: rowData[1],
+          nom_de_la_campagne: rowData[2],
+          avez_vous_travaille: rowData[3],
+          nom_prenom: rowData[4],
+          telephone: rowData[5],
+          email: rowData[6],
+          qualification: rowData[8] || null,
+          comments: rowData[9] || null,
+        };
+        selectedLeads.push(lead);
+      });
+    
+      if (selectedLeads.length > 0 && assignToUser) {
+        $.ajax({
+          type: 'POST',
+          url: '{% url "assign_leads" %}',
+          data: {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            selected_leads: JSON.stringify(selectedLeads),
+            assign_to_user: assignToUser
+          },
+          success: function(response) {
+            location.reload();
+          },
+          error: function(error) {
+            alert('When assigning User, something got wrong')
+          }
+        });
+      } else {
+        alert('Please select leads and choose a user to assign.');
+      }
+    });
+  });
+  // Handle "Select All" checkbox click
+  
+  
+</script>
+{% endblock %}
