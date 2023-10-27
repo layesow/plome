@@ -37,22 +37,37 @@
       gap: 10px;
     }
     .btn {
-      padding: 10px 15px;
+      padding: 7px 15px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
     }
     .add-button {
-      background-color: #007bff;
+      background-color: rgba(54,188,175,1);
       color: #ffffff;
+    }
+    .add-button:hover{
+      background-color: #ffffff;
+      border: 2px solid rgba(54,188,175,1);
+      color: rgba(54,188,175,1);
     }
     .import-button {
       background-color: #28a745;
       color: #ffffff;
     }
+    .import-button:hover{
+      background-color: #ffffff;
+      border: 2px solid #28a745;
+      color: #28a745;
+    }
     .export-button {
       background-color: #17a2b8;
       color: #ffffff;
+    }
+    .export-button:hover {
+      background-color: #ffffff;
+      color: #17a2b8;
+      border: 2px solid #17a2b8;
     }
     .filter-form {
       display: flex;
@@ -67,6 +82,11 @@
     .apply-button {
       background-color: #dc3545;
       color: #ffffff;
+    }
+    .apply-button:hover {
+      background-color: #ffffff;
+      color: #dc3545;
+      border: 2px solid #dc3545;
     }
     .assign-section {
       display: flex;
@@ -106,24 +126,36 @@
       color: #555;
     }
 
+    .btn-danger {
+      background-color: #dc3545;
+      color: #ffffff;
+  }
+    .btn-danger:hover {
+      background-color: #ffffff;
+      color: #dc3545;
+      border: 2px solid #dc3545;
+  }
+
     
     
 </style>
 
 <main role="main" class="main-content">
-  <div class="container-fluid">
-    <div class="container-fluid">
+  <div class="">
+    <div class="">
       {% if messages %}
-      <div class="container mt-3">
+      <div class="card shadow">
+        <div class="card-body">
         {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}" role="alert">
+        <div class="alert mb-0 alert-{{ message.tags }}" role="alert">
           {{ message }}
+        </div>
         </div>
         {% endfor %}
       </div>
       {% endif %}
 
- <script>
+    <script>
         var customFieldCounter = 0;
 
         function addCustomField() {
@@ -248,114 +280,139 @@
             }
         }
     </script>
-
-
-  <div class="container mt-2">
-    <div class="header">
-      <h2 class="page-title">Tableau de bord prospects</h2>
-      <div class="button ">
-        <button class="btn add-button" data-toggle="modal" data-target="#defaultModal"
-          style="background-color: #36BCAF;">Ajouter un lead</button>
-        <button class="btn import-button ml-2" data-toggle="modal" data-target="#importModal">Importer</button>
-        <a href="{% url 'export_leads' 'csv' %}" class="btn export-button ml-2">Exporter CSV</a>
-        <a href="{% url 'export_leads' 'xlsx' %}" class="btn export-button ml-2">Exporter XLSX</a>
-      </div>
-    </div>
-  
-  
-    <div class="filters">
-      <form method="GET" action="{% url 'lead_dashboard' %}" class="filter-form form-inline">
-        <div class="form-group" style="background-color: #313131; border-radius: 5px;">
-          <label for="user_filter" class="text-white ml-2 mr-2">Filtrer par Utilisateur :</label>
-          <select name="user_id" id="user_filter" class="form-control">
-            <option value="">Choisir l’utilisateur</option>
-            {% for user in users %}
-            <option value="{{ user.id }}" {% if request.GET.user_id == user.id|stringformat:"s" %}selected{% endif %}>
-              {{ user.username }}
-            </option>
-            {% endfor %}
-          </select>
-        </div>
-  
-        <div class="form-group" style="background-color: #313131; border-radius: 5px;">
-          <label for="qualification_filter" class="text-white ml-2 mr-2">Filtrer par Qualification :</label>
-          <select name="qualification" id="qualification_filter" class="form-control">
-            <option value="">Choisir qualification</option>
-            <option value="nrp1">NRP1</option>
-            <option value="nrp2">NRP2</option>
-            <option value="nrp3">NRP3</option>
+    <div class="row my-2">
+    <div class="col-md-12">
+      <div class="card shadow">
+        <div class="card-body">
+          <div class="header">
+            <h2 class="page-title">Tableau de bord prospects</h2>
+            <div class="button ">
+              <button class="btn add-button" data-toggle="modal" data-target="#defaultModal">Ajouter un lead</button>
+              <button class="btn import-button ml-2" data-toggle="modal" data-target="#importModal">Importer</button>
+              <a href="{% url 'export_leads' 'csv' %}" class="btn export-button ml-2">Exporter CSV</a>
+              <a href="{% url 'export_leads' 'xlsx' %}" class="btn export-button ml-2">Exporter XLSX</a>
+            </div>
+          </div>
+          <div class="filters">
+            <!--
+              <form method="GET" action="{% url 'lead_dashboard' %}" class="filter-form">
+                <div class="filter custom-dropdown">
+                  <label for="user_filter">Filter by User:</label>
+                  <select name="user_id" id="user_filter">
+                    <option value="">All</option>
+                    {% for user in users %}
+                    <option value="{{ user.id }}" {% if request.GET.user_id == user.id|stringformat:"s" %}selected{% endif %}>
+                      {{ user.username }}
+                    </option>
+                    {% endfor %}
+                  </select>
+                </div>
+          
+                <div class="filter custom-dropdown">
+                  <label for="qualification_filter">Filter by Qualification:</label>
+                  <select name="qualification" id="qualification_filter">
+                    <option value="">Qualification</option>
+                    <option value="nrp1">NRP1</option>
+                    <option value="nrp2">NRP2</option>
+                    <option value="nrp3">NRP3</option>
+                  </select>
+                </div>
+                <button type="submit" class="btn apply-button">Apply Filters</button>
+              </form>
+            -->
+            <form method="GET" action="{% url 'lead_dashboard' %}" class="filter-form form-inline">
+              <div class="form-group" style="background-color: #313131; border-radius: 5px;">
+                <label for="user_filter" class="text-white ml-2 mr-2">Filtrer par Utilisateur :</label>
+                <select name="user_id" id="user_filter" class="form-control">
+                  <option value="">Choisir l’utilisateur</option>
+                  {% for user in users %}
+                  <option value="{{ user.id }}" {% if request.GET.user_id == user.id|stringformat:"s" %}selected{% endif %}>
+                    {{ user.username }}
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
             
-            <!-- Ajoutez les autres options ici -->
-          </select>
-        </div>
-        <input type="submit" value="Appliquer les filtres" class="btn btn-danger">
-  
-      </form>
-  
-    </div>
-  
-  
-    <div class="form-inline">
-      <div class="form-group mr-1" style="background-color: #313131; border-radius: 5px;">
-        <label for="assignToUser" class="text-white ml-2 mr-2">Affecter à :</label>
-        <select name="" id="assignToUser" class="form-control">
-          <option value="">Choisir un utilisateur</option>
-          {% for user in users %}
-          <option value="{{ user.id }}">{{ user.username }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <input type="submit" id="assignButton" value="Assign" class="btn btn-secondary">
-  
-  
-      <form method="post" action="{% url 'fetch_facebook_leads' %}" class="form-inline">
-        {% csrf_token %}
-        <div class="form-group mr-1" style="background-color: #313131; border-radius: 5px;">
-          <label for="page_filter" class="text-white ml-2 mr-2">Filtrer par page Facebook:</label>
-          <select class="form-control" class="form-control" name="page_name" id="page_filter">
-            <option value="">Tous</option>
-            {% for name in page_names %}
-            <option value="{{ name }}">{{ name }}</option>
-            {% endfor %}
-          </select>
-        </div>
-        <input type="submit" name="fetch_facebook_leads" value="Trouver des prospects" class="btn btn-secondary">
-      </form>
-    </div>
-  
-    <div class="mt-3">
-      <!-- Votre modèle HTML pour l'ajout ou la mise à jour des jetons d'accès -->
-      <form method="post" action="{% url 'update_access_token' %}" class="form-inline">
-        {% csrf_token %}
-        <div class="form-group mr-1" style="background-color: #313131; border-radius: 5px;">
-          <label for="access_token" class="text-white ml-2 mr-2">Token d'accès:</label>
-          <input type="text" class="form-control" name="access_token" id="access_token">
-        </div>
-        <input type="submit" name="update_access_token" value="Mise à jour du token d'accès" class="btn btn-secondary">
-  
-      </form>
-    </div>
-  
-  </div>
-
-
-
-
-<!-- Your HTML template for adding or updating access tokens -->
-<form method="post" action="{% url 'update_access_token' %}">
-    {% csrf_token %}
+              <div class="form-group" style="background-color: #313131; border-radius: 5px;">
+                <label for="qualification_filter" class="text-white ml-2 mr-2">Filtrer par Qualification :</label>
+                <select name="qualification" id="qualification_filter" class="form-control">
+                  <option value="">Choisir qualification</option>
+                  <option value="nrp1">NRP1</option>
+                  <option value="nrp2">NRP2</option>
+                  <option value="nrp3">NRP3</option>
+                  <!-- Ajoutez les autres options ici -->
+                </select>
+              </div>
+              <input type="submit" value="Appliquer les filtres" class="btn btn-danger">
+              
+            </form>
+            
+          </div>
+          
+        
+          <div class="form-inline">
+            <div class="form-group mr-1" style="background-color: #313131; border-radius: 5px;">
+              <label for="assignToUser" class="text-white ml-2 mr-2">Affecter à :</label>
+              <select name="" id="assignToUser" class="form-control">
+                <option value="">Choisir l'utilisateur</option>
+                {% for user in users %}
+                <option value="{{ user.id }}">{{ user.username }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <input type="submit" id="assignButton" value="Assign" class="btn btn-secondary">
     
-    <br>
-    <label for="access_token">Access Token:</label>
-    <input type="text" name="access_token" id="access_token">
-    <br>
-    <input type="submit" name="update_access_token" value="Update Access Token">
-</form>
-</div>
+            <div class="form-group ml-3 mr-3">
+              <form method="post" action="{% url 'save_facebook_form_ids' %}">
+                {% csrf_token %}
+                <div class="form-control">
+                  ID form :
+                </div>
+                <input type="submit" name="save_facebook_form_ids" value="Save" class="btn text-white" style="background-color: #36BCAF; border-radius: 5px;">
+              </form>
+            </div>
+    
+            <form method="post" action="{% url 'fetch_facebook_leads' %}" class="form-inline">
+              {% csrf_token %}
+              <div class="form-group mr-1" style="background-color: #313131; border-radius: 5px;">
+                <label for="page_filter" class="text-white ml-2 mr-2">Filtre Facebook:</label>
+                <select class="form-control" class="form-control" name="page_name" id="page_filter">
+                  <option value="">Tous</option>
+                  {% for name in page_names %}
+                  <option value="{{ name }}">{{ name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <input type="submit" name="fetch_facebook_leads" value="Trouver des prospects" class="btn btn-secondary">
+            </form>
+          </div>
+    
+           <div class="mt-3">
+                <!-- Votre modèle HTML pour l'ajout ou la mise à jour des jetons d'accès -->
+              <form method="post" action="{% url 'update_access_token' %}" class="form-inline">
+                {% csrf_token %}
+                <div class="form-group mr-1" style="background-color: #313131; border-radius: 5px;">
+                <label for="access_token" class="text-white ml-2 mr-2">Token d'accès:</label>
+                <input type="text" class="form-control" name="access_token" id="access_token">
+              </div>
+              <input type="submit" name="update_access_token" value="Mise à jour du token d'accès" class="btn btn-secondary">
+    
+              </form>
+           </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    
 
 
 
 
+          <!-- Use button tags for the export buttons -->
+          {% comment %} <button type="button" class="btn btn-danger mb-2" id="deleteLeadsBtn" data-toggle="modal"
+            data-target="#deleteModal">
+            Delete Leads
+          </button> {% endcomment %}
 
           <!-- Modal -->
           <div class="modal fade" id="defaultModal" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel"
@@ -363,7 +420,7 @@
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="defaultModalLabel">Add lead</h5>
+                  <h5 class="modal-title" id="defaultModalLabel">Ajouter un prospect</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
@@ -386,27 +443,27 @@
                             {% comment %} <input type="text" class="form-control" id="nom" name="nom" required>
                             {% endcomment %}
                             <input type="text" name="nom_de_la_campagne" class="form-control" maxlength="100" required>
-                            <div class="invalid-feedback">Please provide a valid nom.</div>
+                            <div class="invalid-feedback">Veuillez fournir un nom valide.</div>
                           </div>
                           <div class="col-md-6 mb-3">
                             <label for="avez_vous_travaille">Avez-vous travaillé</label>
                             <input type="text" name="avez_vous_travaille" class="form-control" maxlength="100" required>
-                            <div class="invalid-feedback">Please provide a valid email.</div>
+                            <div class="invalid-feedback">Veuillez fournir un email valide.</div>
                           </div>
                           <div class="col-md-6 mb-3">
                             <label for="telephone">Nom & Prenom</label>
                             <input type="text" name="nom_prenom" class="form-control" maxlength="100" required>
-                            <div class="invalid-feedback">Please provide a valid telephone number.</div>
+                            <div class="invalid-feedback">Veuillez fournir un numéro de téléphone valide.</div>
                           </div>
                           {% comment %} <div class="col-md-6 mb-3">
                             <label for="date_de_soumission">Prénom</label>
                             <input type="text" name="prenom" class="form-control" maxlength="100" required>
-                            <div class="invalid-feedback">Please provide a valid date de soumission.</div>
+                            <div class="invalid-feedback">Veuillez fournir une date de soumission valide.</div>
                           </div> {% endcomment %}
                           <div class="col-md-6 mb-3">
                             <label for="Téléphone">Téléphone</label>
                             <input type="text" name="telephone" class="form-control" maxlength="20" required>
-                            <div class="invalid-feedback">Please provide a valid nom de la campagne.</div>
+                            <div class="invalid-feedback">Veuillez fournir un nom de campagne valide.</div>
                           </div>
                           <div class="form-group col-md-6 mb-3">
                             <label for="qualification">Qualification</label>
@@ -417,7 +474,6 @@
                                 <option value="nrp2">NRP2</option>
                                 <option value="nrp3">NRP3</option>
                                 <option value="en_cours">En cours</option>
-                                <option value ="demande_de_documentation">Demande de documentation</option>>
                                 <option value="rappel">Rappel</option>
                                 <option value="faux_numero">Faux numéro</option>
                                 <option value="pas_de_budget">Pas de budget</option>
@@ -426,7 +482,7 @@
                                 <option value="signe_pole_emploi">Signé Pôle Emploi</option>
                                 <option value="signe_cpf">Signé CPF</option>
                               </select>
-                              <div class="invalid-feedback">Please select a qualification.</div>
+                              <div class="invalid-feedback">Veuillez sélectionner une qualification.</div>
                           </div>
                           <div class="form-group col-md-6 mb-3">
                             <label for="Email">Email</label>
@@ -435,12 +491,12 @@
                           <div class="col-md-6 mb-3">
                             <label for="Comments">Comments</label>
                             <textarea name="comments" class="form-control" required></textarea>
-                            <div class="invalid-feedback">Please provide a valid nom de la campagne.</div>
+                            <div class="invalid-feedback">Veuillez fournir un nom de la campagne valide.</div>
                           </div>
                           <div class="col-md-6 mb-3">
-                            <label for="assigned_to">Assign To</label>
+                            <label for="assigned_to">Assigner à</label>
                             <select name="assigned_to" class="form-control">
-                              <option value="">-- Select User --</option>
+                              <option value="">-- Sélectionner un utilisateur --</option>
                               {% for user in users %}
                               <option value="{{ user.id }}">{{ user.username }}</option>
                               {% endfor %}
@@ -448,13 +504,15 @@
                           </div>
 
                           <div class="col-md-12 mb-3">
-                            
-                        
-                          <div class="col-md-6 mb-3">
-                            <button class="btn btn-primary" type="submit">Submit</button>
-                          </div>
-                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn close text-white" style="background-color: #555; padding: 10px; font-size: 15px;" id="fermerPopup" data-dismiss="modal">Fermer
+                                
+                              </button>
+                              
+                              <button type="button" class="btn btn-primary">Sauvegarder</button>
 
+                            </div>
+                          </div>
                       </form>
                     </div> <!-- /.card-body -->
                   </div>
@@ -473,7 +531,7 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="importModalLabel">Import Leads</h5>
+                <h5 class="modal-title" id="importModalLabel">Importer des prospects</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -482,10 +540,10 @@
                 <form method="post" enctype="multipart/form-data" action="{% url 'import_leads' %}">
                   {% csrf_token %}
                   <div class="form-group">
-                    <label for="file">Select CSV or Excel File</label>
+                    <label for="file">Sélectionner un fichier CSV ou Excel</label>
                     <input type="file" name="file" id="file" class="form-control-file" required>
                   </div>
-                  <button type="submit" class="btn btn-primary">Import</button>
+                  <button type="submit" class="btn btn-primary">Importer</button>
                 </form>
               </div>
             </div>
@@ -497,7 +555,7 @@
 
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">History Entries</h5>
+                <h5 class="modal-title">Entrées de l'histoire</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -507,7 +565,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="closeHistoryModel"
-                  data-dismiss="modal">Close</button>
+                  data-dismiss="modal">Fermer</button>
               </div>
             </div>
           </div>
@@ -521,7 +579,7 @@
                 <!-- table -->
                 <div class="table-responsive">
                   <table id="exampleDT" class="table table-bordered display nowrap" cellspacing="0" style="width:100%">
-                    <thead class="fw-bold">
+                    <thead class="table-dark">
                       <tr>
                         <th><input type="checkbox" id="selectAllCheckbox"></th>
                         <th data-toggle="select" data-lead-id="lead_id">Date de Soumission</th>
@@ -580,25 +638,25 @@
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dr4">
                               <a class="dropdown-item" href="{% url 'toggle_lead_status' lead.id %}">
                                 {% if lead.is_active %}
-                                Deactivate
+                                Désactiver
                                 {% else %}
-                                Activate
+                                Activer
                                 {% endif %}
                               </a>
 
                               <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal"
-                                data-target="#editModal-{{ lead.id }}">View</a>
+                                data-target="#editModal-{{ lead.id }}">Voir</a>
 
                             </div>
                           </div>
 
                           <!-- edit modal -->
-                          <div class="modal fade" id="editModal-{{ lead.id }}" tabindex="-1" role="dialog"
+                          <div class="modal fade modalBody" id="editModal-{{ lead.id }}" tabindex="-1" role="dialog"
                             aria-labelledby="editModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-xl" role="document">
                               <div class="modal-content">
                                 <div class="modal-header">
-                                  <h5 class="modal-title" id="editModalLabel">Edit Lead
+                                  <h5 class="modal-title" id="editModalLabel">Modifier le prospect
                                   </h5>
                                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -655,7 +713,7 @@
 
                                         <select name="qualification" id="qualification" class="form-control qualification-select" data-lead-id="{{ lead.id }}" required>
                                           <option value="" {% if not lead.select_qualification %}selected{% endif %}>
-                                            --Select Qualification--</option>
+                                            --Sélectionnez une qualification--</option>
                                           <option value="nrp1" {% if lead.qualification == 'nrp1' %} selected
                                             {% endif %}>
                                             NRP1
@@ -670,8 +728,6 @@
                                           </option>
                                           <option value="en_cours" {% if lead.qualification == 'en_cours' %} selected
                                             {% endif %}>En cours</option>
-                                          <option value="demande_de_documentation" {% if lead.qualification == 'demande_de_documentation' %} selected 
-                                            {% endif %}>Demande de documentation</option>
                                           <option value="rappel" {% if lead.qualification == 'rappel' %} selected
                                             {% endif %}>
                                             Rappel</option>
@@ -690,16 +746,15 @@
                                             {% endif %}>Signé CPF</option>
                                         </select>
                                       </div>
-
                                       <div class="form-group col-md-6">
-                                        <label for="comments">Comments</label>
+                                        <label for="comments">Commentaires</label>
                                         <textarea name="comments" id="comments" class="form-control"
                                           required>{{ lead.comments }}</textarea>
                                       </div>
                                       <div class="form-group col-md-6">
-                                        <label for="assigned_to">Assign To</label>
+                                        <label for="assigned_to">Assigner à</label>
                                         <select name="assigned_to" id="assigned_to" class="form-control" required>
-                                          <option value="">-- Select User --</option>
+                                          <option value="">-- Sélectionner un utilisateur --</option>
                                           {% for user in users %}
                                           <option value="{{ user.id }}"
                                             {% if user.id == lead.assigned_to.id %}selected{% endif %}>
@@ -711,18 +766,16 @@
                                       </div>
                                       
                                       <div class="form-group col-md-6" id="rappelappointment{{ lead.id }}" {% if lead.qualification == 'rappel' %} style="display:block;" {% else %} style="display:none;" {% endif %}>
-                                        <label for="appointment">Appointment Date & Time</label>
+                                        <label for="appointment">Date et heure du rendez-vous</label>
                                         <div class="input-group mb-3">
                                           <input type="text" class="form-control" name="appointmentStatDateTime" id="appointmentStatDateTime{{ lead.id }}" placeholder="Click Schedule" aria-label="Click Schedule" readonly  value="{{ lead.appointment_date_time }}" aria-describedby="button-addon2">
                                           <div class="input-group-append">
-                                            <button class="btn btn-primary clicktoschedule" data-lead-id="{{ lead.id }}" type="button" id="button-addon2">Schedule New</button>
+                                            <button class="btn btn-primary clicktoschedule" data-lead-id="{{ lead.id }}" type="button" id="button-addon2">Calendrier Nouveau</button>
                                           </div>
                                         </div>
                                       </div>
-
-                   
                                       <div class="form-group col-md-6" id="signecpfprice{{ lead.id }}" {% if lead.qualification == 'signe_cpf' %} style="display:block;" {% else %} style="display:none;" {% endif %}>
-                                        <label for="price">Price</label>
+                                        <label for="price">Prix</label>
                                           <input type="text" name="price" id="priceStat{{ lead.id }}" class="form-control"
                                             placeholder="Price" value="{{ lead.price }}" required autocomplete="off">
                                           <!-- Add a dropdown for selecting the company -->
@@ -730,9 +783,9 @@
                                         <form method="post" action="{% url 'lead_edit' lead.id %}">
                                           {% csrf_token %}
                                           <div class="form-group">
-                                            <label for="company_id">Select Company:</label>
+                                            <label for="company_id">Sélectionnez une entreprise:</label>
                                             <select name="company_id" id="company_id" class="form-control">
-                                              <option value="" disabled>Select a company</option>
+                                              <option value="" disabled>Sélectionnez une entreprise</option>
                                               {% for company in companies %}
                                               {% if company.id == lead.company.id %}
                                               <option value="{{ company.id }}" selected>{{ company.name }}</option>
@@ -783,7 +836,7 @@
                                           </li>
                                           <li class="nav-item">
                                             <a class="nav-link  show-otherhistory-btn" data-lead-id="{{ lead.id }}" data-toggle="tab"
-                                              href="#history{{ lead.id }}" data-url="{% url 'lead_otherhistory' lead.id %}">History</a>
+                                              href="#history{{ lead.id }}" data-url="{% url 'lead_otherhistory' lead.id %}">Historique</a>
                                           </li>
                                           <li class="nav-item">
                                             <a class="nav-link  show-history-btn" data-toggle="tab"
@@ -815,10 +868,10 @@
                                                       <thead class="thead-dark">
                                                         <tr>
                                                           <th>Timestamp</th>
-                                                          <th>User</th>
-                                                          <th>Previous To</th>
-                                                          <th>Assigned To</th>
-                                                          <th>Changes</th>
+                                                          <th>Utilisateur</th>
+                                                          <th>Précédent à</th>
+                                                          <th>Assigné à</th>
+                                                          <th>Changements</th>
                                                         </tr>
                                                       </thead>
                                                       <tbody>
@@ -869,9 +922,9 @@
                                                         <thead class="fw-bold">
                                                           <tr>
                                                             <th>ID</th>
-                                                            <th>User</th>
-                                                            <th>Action Time</th>
-                                                            <th>Action Made</th>
+                                                            <th>Utilisateur</th>
+                                                            <th>Temps d'action</th>
+                                                            <th>Action effectuée</th>
                                                           </tr>
                                                         </thead>
                                                         <tbody>
@@ -906,14 +959,14 @@
                                                     action="{% url 'attach_file_to_lead' lead_id=lead.id %}">
                                                     {% csrf_token %}
                                                     <div>
-                                                      <label for="attachment">Attachment:</label>
+                                                      <label for="attachment">Pièce jointe:</label>
                                                       <input type="file" name="attachment" id="attachment">
                                                     </div>
                                                     <div>
-                                                      <label for="title">Title:</label>
+                                                      <label for="title">Titre:</label>
                                                       <input type="text" name="title" id="title">
                                                     </div>
-                                                    <button type="submit">Attach File</button>
+                                                    <button type="submit">Joindre un fichier</button>
                                                   </form>
 
                                                 </blockquote>
@@ -934,7 +987,7 @@
                                                       {{ attachment.title }}
                                                     </a>
                                                     <button class="btn btn-sm btn-danger ml-2"
-                                                      onclick="confirmDelete({{ attachment.id }})">Delete</button>
+                                                      onclick="confirmDelete({{ attachment.id }})">Supprimer</button>
                                                   </li>
                                                   {% endfor %}
                                                 </ul>
@@ -944,32 +997,32 @@
                                           </div>
 
                                          <script>
-  function confirmDelete(attachmentId) {
-    if (confirm('Are you sure you want to delete this attachment?')) {
-      deleteAttachment(attachmentId);
-    }
-  }
+                                            function confirmDelete(attachmentId) {
+                                              if (confirm('Are you sure you want to delete this attachment?')) {
+                                                deleteAttachment(attachmentId);
+                                              }
+                                            }
 
-  function deleteAttachment(attachmentId) {
-    $.ajax({
-      type: 'POST',
-      url: '{% url 'delete_attachment' attachment_id=0 %}'.replace('0', attachmentId),
-      data: {
-        csrfmiddlewaretoken: '{{ csrf_token }}',
-      },
-      success: function() {
-        // Remove the deleted attachment from the UI
-        $('#attachment-list li').filter(function() {
-          return $(this).find('button').attr('onclick').includes(
-            attachmentId.toString());
-        }).remove();
-      },
-      error: function() {
-        alert('An error occurred while deleting the attachment.');
-      }
-    });
-  }
-</script>
+                                            function deleteAttachment(attachmentId) {
+                                              $.ajax({
+                                                type: 'POST',
+                                                url: '{% url 'delete_attachment' attachment_id=0 %}'.replace('0', attachmentId),
+                                                data: {
+                                                  csrfmiddlewaretoken: '{{ csrf_token }}',
+                                                },
+                                                success: function() {
+                                                  // Remove the deleted attachment from the UI
+                                                  $('#attachment-list li').filter(function() {
+                                                    return $(this).find('button').attr('onclick').includes(
+                                                      attachmentId.toString());
+                                                  }).remove();
+                                                },
+                                                error: function() {
+                                                  alert('An error occurred while deleting the attachment.');
+                                                }
+                                              });
+                                            }
+                                          </script>
 
                                         </div>
                                       </div>
@@ -985,9 +1038,12 @@
                                   <!-- Your form fields -->
                                   
                                   <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn close text-white" style="background-color: #555; padding: 10px; font-size: 15px;" id="fermerPopup" data-dismiss="modal">Fermer
+                                      
+                                    </button>
+                                    
                                     <button type="button" class="btn btn-primary"
-                                      onclick="updateLead('{{ lead.id }}')">Save</button>
+                                      onclick="updateLead('{{ lead.id }}')">Sauvegarder</button>
 
                                   </div>
 
@@ -1037,7 +1093,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="defaultModalLabel">Shortcuts</h5>
+          <h5 class="modal-title" id="defaultModalLabel">Raccourcis</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
