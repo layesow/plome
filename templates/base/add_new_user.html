@@ -1,60 +1,61 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block content %}
 <style>
-    /* Add this to your CSS file */
-    .user-deactivated {
-        background-color: #fa6262;
-        /* Red background color */
-    }
+/* Add this to your CSS file */
+.user-deactivated {
+    background-color: #fa6262; /* Red background color */
+}
+  .mention-textarea {
+    font-family: 'Arial';
+    color: rgb(20, 95, 245);
+    font-weight: bold;
+  }
+  @keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.greeting {
+  animation: fadeIn 1s ease-in-out;
+}
+.main-content {
+  animation: fadeIn 1s ease-in-out;
+}
+.table-header {
+    font-weight: bold;
+    background-color: #f8f9fa; /* Light gray background */
+    color: #333; /* Dark gray text color */
+}
+.gestion-bouton {
+    background-color: rgba(54,188,175,1);
+    color:#f8f9fa;
+}
 
-    .mention-textarea {
-        font-family: 'Arial';
-        color: rgb(20, 95, 245);
-        font-weight: bold;
-    }
+.gestion-bouton:hover {
+    background-color: rgb(255, 255, 255); /* Couleur de fond en cas de survol */
+    border: 2px solid rgba(54,188,175,1); /* Couleur de bordure en cas de survol */
+    color: rgba(54,188,175,1); /* Couleur du texte en cas de survol */
+}
 
-    @keyframes fadeIn {
-        0% {
-            opacity: 0;
-        }
-
-        100% {
-            opacity: 1;
-        }
-    }
-
-    .greeting {
-        animation: fadeIn 1s ease-in-out;
-    }
-
-    .main-content {
-        animation: fadeIn 1s ease-in-out;
-    }
-
-    .table-header {
-        font-weight: bold;
-        background-color: #f8f9fa;
-        /* Light gray background */
-        color: #333;
-        /* Dark gray text color */
-    }
 </style>
     <div class="wrapper">
         
-
         <main role="main" class="main-content">
             <div class="container-fluid">
                 <div class="row justify-content-center">
                     <div class="col-12">
-                        {% for fu in filtered_user %}
-                        <h1 class="greeting">Hello {{fu}} ✌</h1>
+                        <!--{% for fu in filtered_user %}
+                        <h1 class="greeting">Bonjour {{fu}} ✌</h1>
                         {% endfor %}
-                        <h2 class="mb-2 page-title">Users table</h2>
+                        -->
+                        <h3 class="mb-2 page-title">Gestion des utilisateurs</h3>
                         <p class="card-text">
-                            <button type="button" class="btn mb-2 btn-outline-success btn-lg" data-toggle="modal"
-                                data-target=".bd-example-modal-lg">Add New User</button>
+                            <button type="button" class="btn mb-1 btn-lg gestion-bouton" data-toggle="modal"
+                                data-target=".bd-example-modal-lg" >Ajouter un utilisateur</button>
                         </p>
                     </div>
                 </div>
@@ -63,7 +64,7 @@
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="userModalLabel">Add New User</h5>
+                            <h5 class="modal-title" id="userModalLabel">Ajouter un Nouvel Utilisateur</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -73,13 +74,13 @@
                                 action="{% url 'save_user' %}">
                                 {% csrf_token %}
                                 <div class="mx-auto text-center">
-                                    <h2 class="m-3">Add New User</h2>
+                                    <h2 class="m-3">Ajouter un Utilisateur</h2>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <!-- <label for="Username">Username</label> -->
                                         <input type="Username" name="Username" id="Username" class="form-control"
-                                            placeholder="User Name" required autocomplete="off">
+                                            placeholder="Nom d'utilisateur" required autocomplete="off">
                                     </div>
                                     <div class="form-group col-md-6">
                                         <!-- <label for="Email">Email</label> -->
@@ -89,33 +90,33 @@
                                     <div class="form-group col-md-6">
                                         <!-- <label for="firstname">Firstname</label> -->
                                         <input type="text" name="firstname" id="firstname" class="form-control"
-                                            placeholder="First Name" required autocomplete="off">
+                                            placeholder="Prénom" required autocomplete="off">
                                     </div>
                                     <div class="form-group col-md-6">
                                         <!-- <label for="lastname">Lastname</label> -->
                                         <input type="text" name="lastname" id="lastname" class="form-control"
-                                            placeholder="Last Name" required autocomplete="off">
+                                            placeholder="Nom de famille" required autocomplete="off">
                                     </div>
                                     <!--  -->
                                     <div class="form-group col-md-12">
                                         <div class="row">
-                                            <label class="col-md-2 pt-0">User Profiles</label>
-                                            <div class="col-md-10">
+                                            <label class="col-md-3 pt-0">Profils d'utilisateur</label>
+                                            <div class="col-md-9">
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio" name="user_type"
                                                         id="user_type_advisor" value="Advisor" required>
                                                     <label class="form-check-label"
-                                                        for="user_type_advisor">Advisor</label>
+                                                        for="user_type_advisor">Conseiller</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio" name="user_type"
                                                         id="user_type_sales" value="Sales" required>
-                                                    <label class="form-check-label" for="user_type_sales">Sales</label>
+                                                    <label class="form-check-label" for="user_type_sales">Vendeur</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio" name="user_type"
                                                         id="user_type_admin" value="Admin" required>
-                                                    <label class="form-check-label" for="user_type_admin">Admin</label>
+                                                    <label class="form-check-label" for="user_type_admin">Administrateur</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -124,22 +125,21 @@
                                     <div class="form-group col-md-6">
                                         <!-- <label for="password">New Password</label> -->
                                         <input type="password" name="password" class="form-control" id="password"
-                                            placeholder="Password" required>
+                                            placeholder="Mot de passe" required>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <!-- <label for="confirm_password">Confirm Password</label> -->
                                         <input type="password" name="confirm_password" class="form-control"
-                                            id="confirm_password" placeholder="Confirm Password" required>
+                                            id="confirm_password" placeholder="Confirmer le mot de passe" required>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn mb-2 btn-secondary"
-                                        data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn mb-2 btn-success">Add New User</button>
+                                        data-dismiss="modal">Fermer</button>
+                                    <button type="submit" class="btn mb-2 gestion-bouton">Ajouter</button>
                                 </div>
                                 <!-- <p class="mt-5 mb-3 text-muted text-center">© 2020</p> -->
                             </form>
-
                         </div>
                     </div>
                 </div>
@@ -155,7 +155,6 @@
                     };
                     xhr.send();
                 }
-
                 function deleteUser(userId) {
                     // Create an AJAX request to the `delete-user` URL
                     var xhr = new XMLHttpRequest();
@@ -198,11 +197,10 @@
                 <table class="table datatables" id="dataTable-1">
                     <thead class="thead-dark">
                         <tr>
-                            <th>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" />
-                                    <label class="custom-control-label"></label>
-                                </div>
+                            <th><div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" />
+                                <label class="custom-control-label"></label>
+                            </div>
                             </th>
                             <th class="table-header">N°Sl.</th>
                             <th class="table-header">Prénom</th>
@@ -226,7 +224,6 @@
                                         <td>
                                             {{forloop.counter}}
                                         </td>
-
                                         <td>
                                             {{vau.first_name}}
                                         </td>
@@ -264,16 +261,16 @@
                                                         {% endcomment %} -->
                                                         <a class="dropdown-item" href="javascript:void(0)"
                                                             onclick="sendEmail('{{ vau.id }}')"
-                                                            id="send-mail-{{ vau.id }}">Invite</a>
+                                                            id="send-mail-{{ vau.id }}">Inviter</a>
                                                         <a class="dropdown-item" href="javascript:void(0)"
                                                             data-toggle="modal"
-                                                            data-target="#editModal-{{ vau.id }}">Edit</a>
+                                                            data-target="#editModal-{{ vau.id }}">Modifier</a>
 
                                                         <a class="dropdown-item" href="javascript:void(0)"
                                                         onclick="toggleUserActivation('{{ vau.id }}', {{ vau.is_active|yesno:"true,false" }}, '{% url 'toggle_user' vau.id %}')"
                                                         id="user-action-{{ vau.id }}"
                                                         data-url="{% if vau.is_active %}{% url 'deactivate-user' vau.id %}{% else %}{% url 'activate-user' vau.id %}{% endif %}">
-                                                        {% if vau.is_active %}Deactivate{% else %}Activate{% endif %}
+                                                        {% if vau.is_active %}Désactiver{% else %}Activer{% endif %}
                                                     </a>
                                                     <script>
                                                         function toggleUserActivation(userId, isActive, url) {
@@ -324,12 +321,8 @@
                                                             .shift();
                                                         }
                                                     </script>
-
-
-
                                                     </div>
                                                 </div>
-
                                                 {% comment %} <script>
                                                     function sendemail(userId) {
                                                         var xhr = new XMLHttpRequest();
@@ -343,14 +336,13 @@
                                                         xhr.send();
                                                     }
                                                 </script> {% endcomment %}
-
                                                 <!-- Edit User Modal -->
                                                 <div class="modal fade" id="editModal-{{ vau.id }}" tabindex="-1"
                                                     role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h5 class="modal-title" id="editModalLabel">Edit User
+                                                                <h5 class="modal-title" id="editModalLabel">Modifier l'utilisateur
                                                                 </h5>
                                                                 <button type="button" class="close" data-dismiss="modal"
                                                                     aria-label="Close">
@@ -392,8 +384,8 @@
                                                                         </div>
                                                                         <div class="form-group col-md-12">
                                                                             <div class="row">
-                                                                                <label class="col-md-2 pt-0">User Profiles</label>
-                                                                                <div class="col-md-10">
+                                                                                <label class="col-md-3 pt-0">Profils d'utilisateur                                                                                </label>
+                                                                                <div class="col-md-9">
                                                                                     <div
                                                                                         class="form-check form-check-inline">
                                                                                         <input class="form-check-input"
@@ -404,7 +396,7 @@
                                                                                             {% if vau.is_advisor %}checked{% endif %}
                                                                                             required>
                                                                                         <label class="form-check-label"
-                                                                                            for="user_type_advisor">Advisor</label>
+                                                                                            for="user_type_advisor">Conseiller</label>
                                                                                     </div>
                                                                                     <div
                                                                                         class="form-check form-check-inline">
@@ -416,7 +408,7 @@
                                                                                             {% if vau.is_sales %}checked{% endif %}
                                                                                             required>
                                                                                         <label class="form-check-label"
-                                                                                            for="user_type_sales">Sales</label>
+                                                                                            for="user_type_sales">Vente</label>
                                                                                     </div>
                                                                                     <div
                                                                                         class="form-check form-check-inline">
@@ -450,14 +442,13 @@
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary"
-                                                                    data-dismiss="modal">Close</button>
+                                                                    data-dismiss="modal">Fermer</button>
                                                                 <button type="button" class="btn btn-primary"
-                                                                    onclick="updateUser('{{ vau.id }}')">Save</button>
+                                                                    onclick="updateUser('{{ vau.id }}')">Sauvegarder</button>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-
                                                 <script>
                                                     function updateUser(userId) {
                                                         var form = document.getElementById('editForm-' + userId);
@@ -479,12 +470,9 @@
                                                         xhr.send(formData);
                                                     }
                                                 </script>
-
                                         </td>
                                     </tr>
-
                                     {% endfor %}
-
                                 </tbody>
                             </table>
                         </div>
@@ -495,7 +483,6 @@
             <!--	end	section	-->
     </div>
     <!--	.col-12	-->
-
     <input type="hidden" name="csrfmiddlewaretoken" id="csrfmiddlewaretoken" value="{{ csrf_token }}">
     <!--	.container-fluid	-->
     <div class="modal fade modal-notif modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel"
@@ -515,7 +502,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">
-                        Clear All
+                        Tout effacer
                     </button>
                 </div>
             </div>
@@ -526,16 +513,13 @@
     </div>
     </div>
     </div>
-
 </main>
-
 {% endblock %}
 <!-- and add user script -->
 {% block javascript %}
 <!-- Include Bootstrap and jQuery dependencies -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script>
 $(document).ready(function() {
     $("#user-form").validate({
@@ -604,5 +588,3 @@ $(document).ready(function() {
 });
 </script>
 {% endblock %}
-
-
