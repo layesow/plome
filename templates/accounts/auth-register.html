@@ -1,5 +1,4 @@
 {% load static %}
-
 <!doctype html>
 <html lang="en">
 	<head>
@@ -8,7 +7,7 @@
 		<meta name="description" content="">
 		<meta name="author" content="">
 		<link rel="icon" href="favicon.ico">
-		<title>Sign-Up Page</title>
+		<title>Page d'inscription</title>
 		<link rel="stylesheet" href="{% static 'css/simplebar.css' %}">
 		<link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="{% static 'css/feather.css' %}">
@@ -25,19 +24,19 @@
 						<a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="./index.html">
 							<svg version="1.1" id="logo" class="navbar-brand-img brand-md" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 120 120" xml:space="preserve">
 								<g>
-									<polygon class="st0" points="78,105 15,105 24,87 87,87"/>
-									<polygon class="st0" points="96,69 33,69 42,51 105,51"/>
-									<polygon class="st0" points="78,33 15,33 24,15 87,15"/>
+									<polygon class="st0" style="fill: rgba(54, 188, 175, 1);" points="78,105 15,105 24,87 87,87" />
+									<polygon class="st0" style="fill: rgba(54, 188, 175, 1);" points="96,69 33,69 42,51 105,51" />
+									<polygon class="st0" style="fill: rgba(54, 188, 175, 1);" points="78,33 15,33 24,15 87,15" />
 								</g>
 							</svg>
 						</a>
-						<h2 class="my-3">Register</h2>
+						<h2 class="my-3">Inscription</h2>
 					</div>
-					
+
 					<div class="form-row">
 						<div class="form-group col-md-6">
 							<!-- <label for="Username">Username</label> -->
-							<input type="Username" name="Username" id="Username" class="form-control" placeholder="User Name" required>
+							<input type="Username" name="Username" id="Username" class="form-control" placeholder="Nom d'utilisateur" required>
 						</div>
 						<div class="form-group col-md-6">
 							<!-- <label for="Email">Email</label> -->
@@ -46,11 +45,11 @@
 						<!--  -->
 						<div class="form-group col-md-6">
 							<!-- <label for="firstname">Firstname</label> -->
-							<input type="text" name="firstname" id="firstname" class="form-control" placeholder="First Name" required>
+							<input type="text" name="firstname" id="firstname" class="form-control" placeholder="Prénom" required>
 						</div>
 						<div class="form-group col-md-6">
 							<!-- <label for="lastname">Lastname</label> -->
-							<input type="text" name="lastname" id="lastname" class="form-control" placeholder="Last Name" required>
+							<input type="text" name="lastname" id="lastname" class="form-control" placeholder="Nom de famille" required>
 						</div>
 					</div>
 					<hr class="my-4">
@@ -58,25 +57,25 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<!-- <label for="password">New Password</label> -->
-								<input type="password" name="password" class="form-control" id="password" placeholder="Password" required>
+								<input type="password" name="password" class="form-control" id="password" placeholder="Mot de passe" required>
 							</div>
 							<div class="form-group">
 								<!-- <label for="confirm_password">Confirm Password</label> -->
-								<input type="password" name="confirm_password" class="form-control" id="confirm_password" placeholder="Confirm Password" required>
+								<input type="password" name="confirm_password" class="form-control" id="confirm_password" placeholder="Confirmez le mot de passe" required>
 							</div>
 						</div>
 						<div class="col-md-6">
-							<p class="mb-2">Password requirements</p>
-							<p class="small text-muted mb-2"> To create a new password, you have to meet all of the following requirements: </p>
+							<p class="mb-2">Exigences relatives au mot de passe</p>
+							<p class="small text-muted mb-2"> Pour créer un nouveau mot de passe, vous devez remplir toutes les conditions suivantes : </p>
 							<ul class="small text-muted pl-4 mb-0">
-								<li> Minimum 8 character </li>
-								<li>At least one special character</li>
-								<li>At least one number</li>
-								<li>Can't be the same as a previous password </li>
+								<li> Minimum 8 caractères </li>
+								<li>Au moins un caractère spécial</li>
+								<li>Au moins un numéro</li>
+								<li>Ne peut être identique à un mot de passe antérieur </li>
 							</ul>
 						</div>
 					</div>
-					<button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+					<button class="btn btn-lg btn-primary btn-block" style="background-color: rgba(54,188,175,1);" type="submit">S'inscrire</button>
 					<!-- <p class="mt-5 mb-3 text-muted text-center">© 2020</p> -->
 				</form>
 			</div>
@@ -86,7 +85,7 @@
 		<script src="{% static 'js/moment.min.js' %}"></script>
 		<script src="{% static 'js/bootstrap.min.js' %}"></script>
 		<script src="{% static 'js/simplebar.min.js' %}"></script>
-		<script src="{% static 'js/daterangepicker.js' %}></script>
+		<script src="{% static 'js/daterangepicker.js' %}"></script>
         <script src="{% static 'js/jquery.stickOnScroll.js' %}"></script>
 		<script src="{% static 'js/tinycolor-min.js' %}"></script>
 		<script src="{% static 'js/config.js' %}"></script>
