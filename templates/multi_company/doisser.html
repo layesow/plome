@@ -28,6 +28,28 @@
     box-sizing: border-box;
     width: 100%;
   }
+
+  .gestion-bouton {
+    background-color: rgba(54,188,175,1);
+    color:#f8f9fa;
+}
+
+.gestion-bouton:hover {
+    background-color: rgb(255, 255, 255); /* Couleur de fond en cas de survol */
+    border: 1px solid rgba(54,188,175,1); /* Couleur de bordure en cas de survol */
+    color: rgba(54,188,175,1); /* Couleur du texte en cas de survol */
+}
+
+.nav-tabs .nav-link.active {
+  color: rgba(54,188,175,1);
+  border-color: rgba(54,188,175,1);
+}
+a {
+  color: rgba(54,188,175,1);
+}
+a:hover{
+  color: hsl(174, 52%, 31%);
+}
 </style>
 
 <main role="main" class="main-content">
@@ -35,13 +57,13 @@
     <div class="card shadow">
       <div class="card-body">
 
-        <h1>Dossier</h1>
+        <h3>Gestion du dossier</h3>
 
         <!-- Bouton d'importation -->
         <div class="row" style="display: flex; justify-content: start;">
           <div class="col-md-4">
-            <button class="btn mt-1 text-white" data-toggle="modal" data-target="#addDoisserLeadModal"
-              style="background-color: rgba(54,188,175,1);">Ajouter un Dossier</button>
+            <button class="btn mt-1 gestion-bouton" data-toggle="modal" data-target="#addDoisserLeadModal"
+              >Ajouter un Dossier</button>
           </div>
           <div class="col-md-6 mt-1">
             <form method="post" enctype="multipart/form-data" action="{% url 'import_doisser_leads' %}">
@@ -68,8 +90,7 @@
                 </script>
 
                 <div class="input-group-append ml-1">
-                  <button type="submit" class="btn text-white"
-                    style="background-color: rgba(54,188,175,1);">Importer</button>
+                  <button type="submit" class="btn gestion-bouton">Importer</button>
                 </div>
               </div>
             </form>
@@ -194,14 +215,13 @@
                       </div>
                       <div class="row mt-3">
                         <div class="col-md-6">
-                          <label for="inscription_visio_entree_num_facture">Inscription Visio Entrée Numéro
-                            Facture</label>
+                          <label for="inscription_visio_entree_num_facture">Numéro Facture</label>
                           <input type="text" name="inscription_visio_entree_num_facture"
                             class="form-control rectangle-form" placeholder="Inscription Visio Entrée Numéro Facture"
                             aria-label="Inscription Visio Entrée Numéro Facture">
                         </div>
                         <div class="col-md-6">
-                          <label for="inscription_visio_entree_somme_facturee">Inscription Visio Entrée Somme
+                          <label for="inscription_visio_entree_somme_facturee">Somme
                             Facturée</label>
                           <input type="number" name="inscription_visio_entree_somme_facturee"
                             class="form-control rectangle-form" placeholder="Inscription Visio Entrée Somme Facturée"
@@ -210,7 +230,7 @@
                       </div>
                       <div class="row mt-3">
                         <div class="col-md-12">
-                          <label for="inscription_visio_entree_date_d_encaissement">Inscription Visio Entrée Date
+                          <label for="inscription_visio_entree_date_d_encaissement">Date
                             d'Encaissement</label>
                           <input type="datetime-local" name="inscription_visio_entree_date_d_encaissement"
                             class="form-control rectangle-form"
@@ -270,7 +290,7 @@
                             aria-label="RDV Confirmé (Date et Heure)">
                         </div>
                         <div class="col-md-6">
-                          <label for="rdv_confirme_confirmateur">RDV Confirmé (Confirmateur)</label>
+                          <label for="rdv_confirme_confirmateur">Confirmateur</label>
                           <input type="text" name="rdv_confirme_confirmateur" class="form-control rectangle-form"
                             placeholder="RDV Confirmé (Confirmateur)" aria-label="RDV Confirmé (Confirmateur)">
                         </div>
@@ -298,7 +318,7 @@
                             aria-label="RDV Confirmé (Statut Service Confirmateur)">
                         </div>
                         <div class="col-md-6">
-                          <label for="inscription_visio_entree_niveau_de_relance">Inscription Visio Entrée Niveau de
+                          <label for="inscription_visio_entree_niveau_de_relance">Niveau de
                             Relance</label>
                           <input type="text" name="inscription_visio_entree_niveau_de_relance"
                             class="form-control rectangle-form" placeholder="Inscription Visio Entrée Niveau de Relance"
@@ -308,15 +328,14 @@
 
                       <div class="row mt-3">
                         <div class="col-md-6">
-                          <label for="inscription_visio_entree_date_de_facturation">Inscription Visio Entrée Date de
+                          <label for="inscription_visio_entree_date_de_facturation">Date de
                             Facturation</label>
                           <input type="datetime-local" name="inscription_visio_entree_date_de_facturation"
                             class="form-control rectangle-form" placeholder="RDV Confirmé (Statut Service Confirmateur)"
                             aria-label="RDV Confirmé (Statut Service Confirmateur)">
                         </div>
                         <div class="col-md-6">
-                          <label for="inscription_visio_entree_numero_de_suivi_vers_point_relais">Inscription Visio
-                            Entrée Numéro de Suivi vers Point Relais</label>
+                          <label for="inscription_visio_entree_numero_de_suivi_vers_point_relais">Numéro de Suivi vers Point Relais</label>
                           <input ttype="text" name="inscription_visio_entree_numero_de_suivi_vers_point_relais"
                             class="form-control rectangle-form"
                             placeholder="inscription_visio_entree_numero_de_suivi_vers_point_relais"
@@ -326,7 +345,7 @@
 
                       <div class="row mt-3">
                         <div class="col-md-6">
-                          <label for="inscription_visio_entree_audio">Inscription Visio Entrée Audio</label>
+                          <label for="inscription_visio_entree_audio">Audio</label>
                           <div class="custom-control custom-checkbox custom-control-inline">
                             <input type="checkbox" name="inscription_visio_entree_audio" class="custom-control-input"
                               id="customCheck1">
@@ -335,7 +354,8 @@
                           </div>
                         </div>
 
-                        <div class="col-md-6">
+                        <!--
+                          <div class="col-md-6">
                           <label for="inscription_visio_entree_facture">Inscription Visio Entrée Facture: </label>
                           <div class="custom-control custom-checkbox custom-control-inline">
                             <input type="checkbox" name="inscription_visio_entree_facture" class="custom-control-input"
@@ -344,6 +364,7 @@
                               boîte</label>
                           </div>
                         </div>
+                        -->
                       </div>
                     </div>
                   </div>
@@ -353,7 +374,7 @@
                       <h6 class="text-center">Information Colis</h6>
                       <div class="row">
                         <div class="col-md-6">
-                          <label for="inscription_visio_entree_colis_a_envoyer_le">Inscription Visio Entrée Colis à
+                          <label for="inscription_visio_entree_colis_a_envoyer_le">Colis à
                             Envoyer le</label>
                           <input type="datetime-local" name="inscription_visio_entree_colis_a_envoyer_le"
                             class="form-control rectangle-form"
@@ -368,7 +389,7 @@
                       </div>
                       <div class="row mt-3">
                         <div class="col-md-12">
-                          <label for="inscription_visio_entree_statut_colis">Inscription Visio Entrée Statut
+                          <label for="inscription_visio_entree_statut_colis">Statut
                             Colis</label>
                           <input type="text" name="inscription_visio_entree_statut_colis"
                             class="form-control rectangle-form" placeholder="Inscription Visio Entrée Statut Colis"
@@ -378,8 +399,7 @@
                       <div class="row mt-3">
                         <div class="col-md-12">
 
-                          <label for="inscription_visio_entree_commentaires">Inscription Visio Entrée
-                            Commentaires</label>
+                          <label for="inscription_visio_entree_commentaires">Commentaires</label>
                           <textarea name="inscription_visio_entree_commentaires" class="form-control rectangle-form"
                             rows="3"></textarea>
                         </div>
@@ -388,7 +408,7 @@
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn mb-2 btn-secondary mr-3 mb-4" data-dismiss="modal">Fermer</button>
-                    <button class="btn text-white float-right mr-3 mb-4" style="background-color: rgba(54,188,175,1);"
+                    <button class="btn gestion-bouton float-right mr-3 mb-4"
                       type="submit">Envoyer</button>
                   </div>
                 </form>
@@ -614,7 +634,7 @@
                           </div>
                           <div class="row mt-3">
                             <div class="col-md-6">
-                              <label for="inscription_visio_entree_num_facture">Inscription Visio Entrée Numéro
+                              <label for="inscription_visio_entree_num_facture">Numéro
                                 Facture</label>
                               <input type="text" name="inscription_visio_entree_num_facture"
                                 id="inscription_visio_entree_num_facture-{{ record.id }}"
@@ -622,7 +642,7 @@
                                 value="{{record.inscription_visio_entree_num_facture}}">
                             </div>
                             <div class="col-md-6">
-                              <label for="inscription_visio_entree_somme_facturee">Inscription Visio Entrée Somme
+                              <label for="inscription_visio_entree_somme_facturee">Somme
                                 Facturée</label>
                               <input type="text" name="inscription_visio_entree_somme_facturee"
                                 id="inscription_visio_entree_somme_facturee-{{ record.id }}"
@@ -633,7 +653,7 @@
                           </div>
                           <div class="row mt-3">
                             <div class="col-md-12">
-                              <label for="inscription_visio_entree_date_d_encaissement">Inscription Visio Entrée Date
+                              <label for="inscription_visio_entree_date_d_encaissement">Date
                                 d'Encaissement</label>
                               <input type="datetime-local" name="inscription_visio_entree_date_d_encaissement"
                                 id="inscription_visio_entree_date_d_encaissement-{{ record.id }}"
@@ -730,7 +750,7 @@
                                 value="{{record.appel_effectue_le_motifs|date:'Y-m-d\TH:i'}}">
                             </div>
                             <div class="col-md-6">
-                              <label for="inscription_visio_entree_niveau_de_relance">Inscription Visio Entrée Niveau de
+                              <label for="inscription_visio_entree_niveau_de_relance">Niveau de
                                 Relance</label>
                               <input type="text" name="inscription_visio_entree_niveau_de_relance"
                                 id="inscription_visio_entree_niveau_de_relance-{{ record.id }}"
@@ -742,7 +762,7 @@
 
                           <div class="row mt-3">
                             <div class="col-md-6">
-                              <label for="inscription_visio_entree_date_de_facturation">Inscription Visio Entrée Date de
+                              <label for="inscription_visio_entree_date_de_facturation">Date de
                                 Facturation</label>
                               <input type="datetime-local" name="inscription_visio_entree_date_de_facturation"
                                 id="inscription_visio_entree_date_de_facturation-{{ record.id }}"
@@ -751,8 +771,7 @@
                                 value="{{record.inscription_visio_entree_date_de_facturation|date:'Y-m-d\TH:i'}}">
                             </div>
                             <div class="col-md-6">
-                              <label for="inscription_visio_entree_numero_de_suivi_vers_point_relais">Inscription Visio
-                                Entrée Numéro de Suivi vers Point Relais</label>
+                              <label for="inscription_visio_entree_numero_de_suivi_vers_point_relais">Numéro de Suivi vers Point Relais</label>
                               <input type="text" name="inscription_visio_entree_numero_de_suivi_vers_point_relais"
                                 id="inscription_visio_entree_numero_de_suivi_vers_point_relais-{{ record.id }}"
                                 placeholder="inscription_visio_entree_numero_de_suivi_vers_point_relais"
@@ -763,7 +782,7 @@
 
                           <div class="row mt-3">
                             <div class="col-md-6">
-                              <label for="inscription_visio_entree_audio">Inscription Visio Entrée Audio</label>
+                              <label for="inscription_visio_entree_audio">Entrée Audio</label>
                               <div class="custom-control custom-checkbox custom-control-inline">
                                 <input type="text" name="inscription_visio_entree_audio"
                                   id="inscription_visio_entree_audio-{{ record.id }}"
@@ -771,7 +790,7 @@
                                   value="{{record.inscription_visio_entree_audio}}">
                               </div>
                             </div>
-
+                            <!--
                             <div class="col-md-6">
                               <label for="inscription_visio_entree_facture">Inscription Visio Entrée Facture: </label>
                               <div class="custom-control custom-checkbox custom-control-inline">
@@ -781,6 +800,7 @@
                                   value="{{record.inscription_visio_entree_facture}}">
                               </div>
                             </div>
+                          -->
                           </div>
                         </div>
                       </div>
@@ -790,7 +810,7 @@
                           <h6 class="text-center">Information Colis</h6>
                           <div class="row">
                             <div class="col-md-6">
-                              <label for="inscription_visio_entree_colis_a_envoyer_le">Inscription Visio Entrée Colis à
+                              <label for="inscription_visio_entree_colis_a_envoyer_le"> Colis à
                                 Envoyer le</label>
                               <input type="datetime-local" name="inscription_visio_entree_colis_a_envoyer_le"
                                 id="inscription_visio_entree_colis_a_envoyer_le-{{ record.id }}"
@@ -807,7 +827,7 @@
                           </div>
                           <div class="row mt-3">
                             <div class="col-md-12">
-                              <label for="inscription_visio_entree_statut_colis">Inscription Visio Entrée Statut
+                              <label for="inscription_visio_entree_statut_colis">Statut
                                 Colis</label>
                               <input type="text" name="inscription_visio_entree_statut_colis"
                                 id="inscription_visio_entree_statut_colis-{{ record.id }}"
@@ -818,7 +838,7 @@
                           <div class="row mt-3">
                             <div class="col-md-12">
 
-                              <label for="inscription_visio_entree_commentaires">Inscription Visio Entrée
+                              <label for="inscription_visio_entree_commentaires">
                                 Commentaires</label>
                               <input type="text" name="inscription_visio_entree_commentaires"
                                 id="inscription_visio_entree_commentaires-{{ record.id }}"
@@ -856,11 +876,11 @@
                                 <table class="table table-bordered table-striped">
                                   <thead class="thead-dark">
                                     <tr>
-                                      <th>Timestamp</th>
-                                      <th>User</th>
-                                      <th>Previous Assigned To</th>
-                                      <th>Current Assigned To</th>
-                                      <th>Changes</th>
+                                      <th>Horaire</th>
+                                      <th>Utilisateur</th>
+                                      <th>Précédent Attribué à</th>
+                                      <th>Actuel Attribué à</th>
+                                      <th>Changements</th>
                                     </tr>
                                   </thead>
                                   <tbody>
@@ -904,8 +924,7 @@
 
                     <div class="modal-footer">
                       <button type="button" class="btn mb-2 btn-secondary" data-dismiss="modal">Fermer</button>
-                      <button type="submit" class="btn mb-2 text-white"
-                        style="background-color: rgba(54,188,175,1);">Sauvegarder</button>
+                      <button type="submit" class="btn mb-2 gestion-bouton">Sauvegarder</button>
                     </div>
 
                   </form>
