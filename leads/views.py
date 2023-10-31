@@ -2655,7 +2655,7 @@ def transfer_leads(request):
                     category='mention'
                 )
 
-                notification_message = f'You have a new mention lead'
+                notification_message = f'Vous avez un nouveau prospect de mention'
 
                 # Create a notification for the mentioned user
                 notification = Notification(user=new_assigned_transfer, lead=lead, message=notification_message)
