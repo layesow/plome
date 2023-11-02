@@ -50,6 +50,9 @@ a {
 a:hover{
   color: hsl(174, 52%, 31%);
 }
+.custom-file-input:lang(en) ~ .custom-file-label::after {
+  content: "Parcourir";
+}
 </style>
 
 <main role="main" class="main-content">
@@ -894,7 +897,7 @@ a:hover{
                                     </tr>
                                     {% empty %}
                                     <tr>
-                                      <td colspan="5">No history available.</td>
+                                      <td colspan="5">Pas d'historique disponible.</td>
                                     </tr>
                                     {% endfor %}
                                   </tbody>
@@ -966,13 +969,13 @@ a:hover{
         data: formData,
         success: function (response) {
           if (response.success) {
-            $('#savingMessage').text('Data saved successfully').show();
+            $('#savingMessage').text('Les données ont été sauvegardées avec succès').show();
           } else {
-            $('#savingMessage').text('Error: ' + response.error_message).show();
+            $('#savingMessage').text('Erreur: ' + response.error_message).show();
           }
         },
         error: function () {
-          $('#savingMessage').text('An error occurred. Please try again.').show();
+          $('#savingMessage').text('Une erreur s\'est produite. Veuillez réessayer.').show();
         }
       });
     });
