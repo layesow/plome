@@ -1,100 +1,154 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<style>
+    .gestion-bouton {
+        background-color: rgba(54,188,175,1);
+        color:#f8f9fa;
+    }
+    
+    .gestion-bouton:hover {
+        background-color: rgb(255, 255, 255); /* Couleur de fond en cas de survol */
+        border: 1px solid rgba(54,188,175,1); /* Couleur de bordure en cas de survol */
+        color: rgba(54,188,175,1); /* Couleur du texte en cas de survol */
+    }
+    .custom-file-input:lang(en) ~ .custom-file-label::after {
+        content: "Parcourir";
+    }
+</style>
 
 <main role="main" class="main-content">
     <div class="container-fluid">
-        <div class="card shadow">
-            <div class="card-body">
-                <h1>Imported JotForm Data of AA</h1>
-                <form method="post" action="{% url 'import_jotform_data_aa' %}">
-                    {% csrf_token %}
-                    <button type="submit">Import Data</button>
-                </form>
-            </div>
-            <div class="table-responsive mt-4">
-                <table id="exampleDT" class="table table-bordered display nowrap" cellspacing="0" style="width:100%">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Submission Date</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Email</th>
-                            <th>Signature</th>
-                            <th>Numéro de téléphone</th>
-                            <th>Address</th>
-                            <th>Choix de la formation</th>
-                            <th>Date de début</th>
-                            <th>Date de fin</th>
-                            <th>Nombre d'heure</th>
-                            <th>Prix de la formation</th>
-                            <th>Passage au</th>
-                            <th>Votre Conseiller/ère</th>
-                            <th>Formation</th>
-                            <th>Audio Appel Qualité</th>
-                            <th>Audio Suivi Formation</th>
-                            <!-- Add other headers here -->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for submission in jotform_submissions_aa %}
-                        <tr>
-                            <td>{{ submission.submission_date }}</td>
-                            <td>{{ submission.first_name }}</td>
-                            <td>{{ submission.last_name }}</td>
-                            <td>{{ submission.email }}</td>
-                            <td>{{ submission.signature }}</td>
+        <div class="row justify-content-center my-2">
+            <div class="col-md-12">
+                <div class="card shadow">
+                    <div class="card-body">
 
-                            <td>
-                                {{ submission.numero_telephone }}
-                            </td>
-                            <td>
-                                {{ submission.address }}
-                            </td>
-
-
-
-
-                            <td>{{ submission.choix_formation }}</td>
-
-                            <td>
-                                {{ submission.date_debut }}
-                            </td>
-
-                            <td>
-                                {{ submission.date_fin }}
-
-                            </td>
-
-                            <td>
-
-                                {{ submission.nombre_heure }}
-
-                            </td>
-
-                            <td>
-                                {{ submission.prix_formation }}
-                            </td>
-                            <td>{{ submission.passage_au }}</td>
-
-                            <td>
-                                {% if submission.votre_conseiller %}
-                                {{ submission.votre_conseiller.answer }}: {{ submission.votre_conseiller.value }}
-                                {% else %}
-                                N/A
-                                {% endif %}
-                            </td>
-
-                            <td>{{ submission.formation }}</td>
-                            <td>{{ submission.audio_appel_qualite }}</td>
-                            <td>{{ submission.audio_suivi_formation }}</td>
-                            <!-- Add other data fields here -->
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        <div class="row" style="display: flex; justify-content: start;">
+                            <div class="col-md-5 p-2">
+                                <h2>Données JotForm importées</h2>
+                            </div>
+                            <div class="col-md-1 p-2">
+                            </div>
+                            <div class="col-md-6 mt-1">
+                                <form method="post" action="{% url 'import_jotform_data_aa' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="" value="">
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="excel_file" name="excel_file" accept=".csv" onchange="displayFileName()">
+                                            <label class="custom-file-label" for="excel_file" id="file-label">Importer un fichier</label>
+                                        </div>
+                        
+                                        <script>
+                                            function displayFileName() {
+                                            const fileInput = document.getElementById('excel_file');
+                                            const fileLabel = document.getElementById('file-label');
+                        
+                                            if (fileInput.files.length > 0) {
+                                                const fileName = fileInput.files[0].name;
+                                                fileLabel.innerText = fileName;
+                                            } else {
+                                                fileLabel.innerText = 'Experter un fichier CSV';
+                                            }
+                                            }
+                                        </script>
+                        
+                                        <div class="input-group-append ml-1">
+                                            <button type="submit" class="btn gestion-bouton">Importer des données</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                          </div>
+                        <hr>
+                        <div class="table-responsive mt-4">
+                            <div id="exampleDT" class="dataTables_wrapper no-footer"><div class="dataTables_length" id="exampleDT_length"><label>Show <select name="exampleDT_length" aria-controls="exampleDT" class=""><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select> entries</label></div><div id="exampleDT_filter" class="dataTables_filter"><label>Search:<input type="search" class="" placeholder="" aria-controls="exampleDT"></label></div><table id="exampleDT" class="table table-bordered display nowrap dataTable no-footer" cellspacing="0" style="width: 100%;" aria-describedby="exampleDT_info">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Date de soumission</th>
+                                        <th>Prénom</th>
+                                        <th>Nom de famille</th>
+                                        <th>Email</th>
+                                        <th>Signature</th>
+                                        <th>Numéro de téléphone</th>
+                                        <th>Adresse</th>
+                                        <th>Choix de la formation</th>
+                                        <th>Date de début</th>
+                                        <th>Date de fin</th>
+                                        <th>Nombre d'heure</th>
+                                        <th>Prix de la formation</th>
+                                        <th>Passage au</th>
+                                        <th>Votre Conseiller/ère</th>
+                                        <th>Formation</th>
+                                        <th>Audio Appel Qualité</th>
+                                        <th>Audio Suivi Formation</th>
+                                        <!-- Add other headers here -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for submission in jotform_submissions_aa %}
+                                    <tr>
+                                        <td>{{ submission.submission_date }}</td>
+                                        <td>{{ submission.first_name }}</td>
+                                        <td>{{ submission.last_name }}</td>
+                                        <td>{{ submission.email }}</td>
+                                        <td>{{ submission.signature }}</td>
+            
+                                        <td>
+                                            {{ submission.numero_telephone }}
+                                        </td>
+                                        <td>
+                                            {{ submission.address }}
+                                        </td>
+            
+            
+            
+            
+                                        <td>{{ submission.choix_formation }}</td>
+            
+                                        <td>
+                                            {{ submission.date_debut }}
+                                        </td>
+            
+                                        <td>
+                                            {{ submission.date_fin }}
+            
+                                        </td>
+            
+                                        <td>
+            
+                                            {{ submission.nombre_heure }}
+            
+                                        </td>
+            
+                                        <td>
+                                            {{ submission.prix_formation }}
+                                        </td>
+                                        <td>{{ submission.passage_au }}</td>
+            
+                                        <td>
+                                            {% if submission.votre_conseiller %}
+                                            {{ submission.votre_conseiller.answer }}: {{ submission.votre_conseiller.value }}
+                                            {% else %}
+                                            N/A
+                                            {% endif %}
+                                        </td>
+            
+                                        <td>{{ submission.formation }}</td>
+                                        <td>{{ submission.audio_appel_qualite }}</td>
+                                        <td>{{ submission.audio_suivi_formation }}</td>
+                                        <!-- Add other data fields here -->
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table><div class="dataTables_info" id="exampleDT_info" role="status" aria-live="polite">Showing 0 to 0 of 0 entries</div><div class="dataTables_paginate paging_simple_numbers" id="exampleDT_paginate"><a class="paginate_button previous disabled" aria-controls="exampleDT" aria-disabled="true" role="link" data-dt-idx="previous" tabindex="-1" id="exampleDT_previous">Previous</a><span></span><a class="paginate_button next disabled" aria-controls="exampleDT" aria-disabled="true" role="link" data-dt-idx="next" tabindex="-1" id="exampleDT_next">Next</a></div></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
     </div>
 </main>
 
